@@ -1,0 +1,213 @@
+<div class="main-container">
+  <div class="tools-container">
+    <h2>Travel Plan </h2>
+
+    <div class="left-auto df ac flex-gap-10">
+      <button mat-icon-button matTooltip="Refresh" (click)="refresh();">
+        <i class="material-icons">refresh</i>
+      </button>
+
+
+      <div class="pagination">
+        <div class="pagination-content">
+          Pages
+          <span>{{pagenumber}}</span>
+          of
+          <span>{{total_page}}</span>
+        </div>
+        <div class="page-nav">
+          <button mat-icon-button matTooltip="Older" (click)="pervious()" [disabled]="start == 0">
+            <i class="material-icons">navigate_before</i>
+          </button>
+          <button mat-icon-button matTooltip="Newer" (click)="nextPage()" [disabled]="pagenumber == total_page ">
+            <i class="material-icons">navigate_next</i>
+          </button>
+        </div>
+      </div>
+
+
+    </div>
+  </div>
+
+  <div class="container pb100">
+   
+    <div class="cs-table horizontal-scroll" style="width: 100%">
+      <div class="sticky-head">
+        <div class="table-head">
+          <table>
+            <tr>
+
+              <th class="w60">Sr.no</th>
+              <th class="w100">Employee Code</th>
+              <th class="w150">Employee Name </th>
+              <th class="w150">Reporting Manager </th>
+              <th class="w100">Month</th>
+              <th class="w60 text-center">Year</th>
+              <th class="w100 text-center">Total Working Days</th>
+              <th class="w70 text-center">Plan Updated</th>
+              <th class="w70 text-center">Action</th>
+              
+            </tr>
+          </table>
+        </div>
+        <div class="table-head border-top">
+          <table>
+            <tr>
+              <th class="w60">&nbsp;</th>
+              <th class="w100">
+                <div class="th-search-acmt">
+                  <mat-form-field class="example-full-width cs-input">
+                    <input matInput placeholder="Search" name="employee_id" [(ngModel)]="search.employee_id"
+                      (keyup.enter)="getTravelList()">
+                  </mat-form-field>
+                </div>
+              </th>
+              <th class="w150">
+                <div class="th-search-acmt">
+                  <mat-form-field class="example-full-width cs-input">
+                    <input matInput placeholder="Search" name="sales_user" [(ngModel)]="search.sales_user"
+                      (keyup.enter)="getTravelList()">
+                  </mat-form-field>
+                </div>
+              </th>
+              <th class="w150">
+                <div class="th-search-acmt">
+                  <mat-form-field class="cs-input select-input">
+                    <mat-select name="reporting_manager_id" #reporting_manager_id="ngModel"
+                      [(ngModel)]="search.reporting_manager_id" (selectionChange)="getTravelList();">
+                      <mat-option>
+                        <ngx-mat-select-search noEntriesFoundLabel="'no data found'" placeholderLabel="Search.."
+                          (keyup)="getReportManager($event.target.value)"></ngx-mat-select-search>
+                      </mat-option>
+                      <mat-option *ngFor="let list of report_manager;let index=index" value="{{list.id}}">
+                        {{list.name}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </th>
+              <th class="w100">
+                <div class="th-search-acmt">
+                  <mat-form-field class="cs-input select-input">
+                    <mat-select name="month" #month="ngModel" [(ngModel)]="search.month"
+                      (selectionChange)="getTravelList()">
+                      <mat-option value="01">January</mat-option>
+                      <mat-option value="02">February</mat-option>
+                      <mat-option value="03">March</mat-option>
+                      <mat-option value="04">April</mat-option>
+                      <mat-option value="05">May</mat-option>
+                      <mat-option value="06">June</mat-option>
+                      <mat-option value="07">July</mat-option>
+                      <mat-option value="08">August</mat-option>
+                      <mat-option value="09">September</mat-option>
+                      <mat-option value="10">October</mat-option>
+                      <mat-option value="11">November</mat-option>
+                      <mat-option value="12">December</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </th>
+              <th class="w60 text-center">
+                <div class="th-search-acmt">
+                  <mat-form-field class="cs-input select-input">
+                    <mat-select name="year" #year="ngModel" [(ngModel)]="search.year"
+                      (selectionChange)="getTravelList()">
+                      <mat-option value="2022">2022</mat-option>
+                      <mat-option value="2023">2023</mat-option>
+                      <mat-option value="2024">2024</mat-option>
+                      <mat-option value="2025">2025</mat-option>
+                      <mat-option value="2026">2026</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </th>
+              <th class="w100 text-center"></th>
+              <th class="w70 text-center">&nbsp;</th>
+              <th class="w70 text-center">&nbsp;</th>
+            </tr>
+
+          </table>
+        </div>
+      </div>
+
+      <div class="table-container">
+        <div class="table-content">
+          <table>
+            <ng-container *ngIf="!loader">
+              <tr *ngFor="let list of travel_list; let i = index;"  [ngClass]="{'Current': serve.currentUserID == list.id}" >
+
+                <td class="w60">{{ i + 1 + sr_no }}</td>
+                <td class="w100">{{list.employee_id}}</td>
+                <td class="w150">{{list.name | titlecase}}</td>
+                <td class="w150">{{list.reporting_manager_name | titlecase}}</td>
+                <td class="w100">{{list.month}}</td>
+                <td class="w60 text-center">{{list.year}}</td>
+                <td class="w100 text-center light-blue"><strong>{{list.working_days}}</strong></td>
+                <td class="w70 text-center light-green"><strong>{{list.plan_updated}}</strong></td>
+                <td class="w70 text-center"><a class="link-btn" (click)="serve.setData(search)"
+                  [routerLink]="[ 'travel-sub-detail/', list.id ]" [queryParams]="{'id':list.id, 'month':list.month, 'year':list.year}"
+                    >View Details</a></td>
+              </tr>
+            </ng-container>
+
+            <ng-container *ngIf="loader">
+              <tr class="sk-loading" *ngFor="let lead of skelton">
+                <td class="w60">
+                  <div>&nbsp;</div>
+                </td>
+                <td class="w100">
+                  <div>&nbsp;</div>
+                </td>
+                <td class="w150">
+                  <div>&nbsp;</div>
+                </td>
+                <td class="w150">
+                  <div>&nbsp;</div>
+                </td>
+                <td class="w100">
+                  <div>&nbsp;</div>
+                </td>
+                <td class="w60 text-center">
+                  <div>&nbsp;</div>
+                </td>
+                <td class="w100 text-center">
+                  <div>&nbsp;</div>
+                </td>
+                <td class="w70 text-center">
+                  <div>&nbsp;</div>
+                </td>
+                <td class="w70 text-center">
+                  <div>&nbsp;</div>
+                </td>
+              </tr>
+            </ng-container>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+
+    <ng-container *ngIf="travel_list.length == 0 && datanotfound == true">
+      <app-not-result-found></app-not-result-found>
+    </ng-container>
+  </div>
+
+</div>
+<div class="fab-btns">
+    <button class="pulse excel" mat-fab color="primary" 
+      [matMenuTriggerFor]="menu">
+      <i class="material-icons">apps</i>
+      Action
+    </button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item (click)="openTravelListModal('Travel Plan')">
+        <mat-icon>add</mat-icon>
+        <span>Import</span>
+      </button>
+      <button mat-menu-item *ngIf="travel_list.length > 0 && assign_login_data2.export_travel_list=='1'" (click)="exportAsXLSX(active_tab)">
+        <mat-icon>download</mat-icon>
+        <span>Download Excel</span>
+      </button>
+    </mat-menu>
+  </div>

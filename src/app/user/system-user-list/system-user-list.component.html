@@ -1,0 +1,104 @@
+<div class="main-container" >
+  <div class="tools-container">
+    <div class="page-heading">
+      <img src="assets/img/leads_icon.svg" class="h-icon">
+      <div class="heading-text w250">
+        <h2>Total System Users</h2>
+        <p>{{system_user_list.length}}</p>
+      </div>
+    </div>
+    <div class="tabs">
+      <ul>
+        <li><a routerLink="/sale-user-list" routerLinkActive="active">SALES USERS</a></li>
+        <li><a routerLink="/system-user-list" routerLinkActive="active">SYSTEM USERS</a></li>
+      </ul>
+    </div>
+    <div class="top-search wp20 ml15">
+      <input type="text" placeholder="SEARCH. . ." (input)="getItemsList()" #search="ngModel" [(ngModel)]="value.search">
+      <i class="material-icons">search</i>
+    </div>
+
+    
+    
+    <div class="top-pagination">
+      <ul>
+        <li class="refresh-area">
+          <a class="refresh-btn" mat-raised-button  matTooltip="Refresh" (click)="refresh()"><i class="material-icons"> refresh</i></a>
+        </li>
+        <li><p>Pages {{pagenumber}} Of {{total_page}}</p></li>
+        
+        <li>
+          <button mat-button class="left-btn" (click)="systemUserList()" [disabled]="pagenumber==1">
+            <i class="material-icons">keyboard_arrow_left</i></button>
+          </li>
+          
+          <li>
+            <input type="text" placeholder="GO TO" name="pagenumber" (keyup.enter)="systemUserList()" [(ngModel)]="pagenumber"  min="1" max={{total_page}}>
+          </li>
+          
+          <li>
+            <button mat-button class="right-btn"  (click)="systemUserList()" [disabled]="pagenumber == total_page">
+              <i class="material-icons">keyboard_arrow_right</i>
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+    
+    
+    <div class="container-outer padding0">
+      <app-master-tab-list></app-master-tab-list>
+      <div class="container tab-container" >
+        <div class="cs-table">
+          <div class="table-head">
+            <table class="sno-border">
+              <tr>
+                <th class="w160">Name</th>
+                
+                <th class="w130">Role</th>
+                <th class="w110">Mobile no</th>
+                <th>Email</th>
+                <th >Address</th>
+                <th class="w110"> Status</th>
+              </tr>
+            </table>
+          </div>
+          
+          <div class="table-container">
+            <div *ngIf="loader">
+              <mat-spinner class="loader">
+                <div><p>Loading....</p></div>
+              </mat-spinner>
+            </div>
+            <div class="table-content">
+              <table class="sno-border">
+                <tr *ngFor="let u of system_user_list;let i=index ">
+                  <td class="w160"><a class="link-btn" routerLink="/system-user-detail/{{u.id}}" routerLinkActive="active" mat-button>{{u.name}}</a></td>
+                  
+                  <td class="w130">{{u.role_name}}</td>
+                  <td class="w110">{{u.contact_01}}</td>
+                  <td>{{u.email}}</td>
+                  <td >{{u.city}},{{u.district_name}},{{u.state_name}}
+                    <div class="action-btns">
+                      <a mat-button class="view" (click)="userDetail(u.id)"><i class="material-icons">remove_red_eye</i> View</a>
+                      <button mat-button class="delete" (click)="deleteUser(u.id)"><i class="material-icons">delete_sweep</i> Delete</button>
+                    </div>
+                  </td>
+                  <td class="w110">
+                    <mat-slide-toggle class="switch-toggle" [checked]="u.status"  (click)="userStatus(i,u.id)"  color="warn"></mat-slide-toggle>
+                  </td>
+                  
+                </tr>
+                
+              </table>
+            </div>
+          </div>
+          
+        </div>
+        <div class="no-data" *ngIf="system_user_list.length==0">
+          <img src="assets/img/no-data.gif" alt="">
+          <p>Data not <span>available !</span></p>
+        </div>
+      </div>
+    </div>
+  </div>

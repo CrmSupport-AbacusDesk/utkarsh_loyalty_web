@@ -1,0 +1,335 @@
+<div class="main-container">
+  <div class="tools-container">
+    <a mat-icon-button matTooltip="Back" (click)="back()">
+      <i class="material-icons">arrow_back</i>
+    </a>
+    <h2>Secondary Order Details :- {{secondaryOrderDetail.company_name}}</h2>
+
+    <div class="left-auto left-auto df ac flex-gap-10">
+      <div class="group-btn">
+        <button mat-button class="ouline-btns pdf"><img src="assets/img/icons/pdf.png"> Export PDF</button>
+        <button mat-button class="ouline-btns whatsapp"><img src="assets/img/icons/whatsapp.png"> Send Whatsapp</button>
+        <button mat-button class="ouline-btns email"><img src="assets/img/icons/email.png"> Send Mail</button>
+        <ng-container *ngIf="login_data.edit_order=='1' || login_data.edit_secondary_orders=='1'">
+          <button mat-button class="ouline-btns status"
+            *ngIf="((login_data.access_level == '1') || (login_data.access_level != '1' )) && secondaryOrderDetail.order_status=='Pending'"
+            (click)="openDialog()"><img src="assets/img/icons/update.png"> Change Status</button>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+
+  <div class="container pt10 pl10 pr10 pb50">
+    <div class="row">
+      <div class="col s12 m8 l8">
+        <div class="card" *ngIf="!skLoading">
+          <div class="card-head">
+            <h2>Retailer Details</h2>
+          </div>
+          <div class="card-body">
+            <div class="grid-box">
+              <div class="block-feilds">
+                <span>Company Name</span>
+                <p>{{secondaryOrderDetail.company_name}}</p>
+              </div>
+              <div class="block-feilds">
+                <span>Account Code</span>
+                <p>{{secondaryOrderDetail.dr_code}}</p>
+              </div>
+
+              <div class="block-feilds">
+                <span>Contact Person</span>
+                <p>{{secondaryOrderDetail.name}}</p>
+              </div>
+
+              <div class="block-feilds">
+                <span>Contact Details</span>
+                <p>{{secondaryOrderDetail.mobile}}</p>
+              </div>
+            </div>
+
+            <div class="grid-box single mt16 mb16">
+              <div class="block-feilds">
+                <span>Address</span>
+                <p>{{secondaryOrderDetail.address}}</p>
+              </div>
+            </div>
+          </div>
+
+
+
+          <div class="card-head mt15">
+            <h2>Distributor Details</h2>
+          </div>
+          <div class="card-body">
+            <div class="grid-box">
+              <div class="block-feilds">
+                <span>Company Name</span>
+                <p>{{distributorInfo.company_name}}</p>
+              </div>
+              <div class="block-feilds">
+                <span>Account Code</span>
+                <p>{{distributorInfo.dr_code}}</p>
+              </div>
+
+              <div class="block-feilds">
+                <span>Contact Person</span>
+                <p>{{distributorInfo.name}}</p>
+              </div>
+
+              <div class="block-feilds">
+                <span>Contact Details</span>
+                <p>{{secondaryOrderDetail.mobile}}</p>
+              </div>
+            </div>
+
+            <div class="grid-box single mt16 mb16">
+              <div class="block-feilds">
+                <span>Address</span>
+                <p>{{secondaryOrderDetail.address}}</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="card-head mt15">
+            <h2>Order Details</h2>
+            <!-- <div class="left-auto">
+              <a class="sm-mat-icon-button" mat-icon-button  matTooltip="Edit Detail" (click)="editDetails()">
+                <i class="material-icons">edit</i>
+              </a>
+            </div> -->
+          </div>
+          <div class="card-body">
+            <div class="grid-box">
+              <div class="block-feilds">
+                <span>Date</span>
+                <p>{{secondaryOrderDetail.date_created | date : 'd MMM yyyy , h:mm a'}}</p>
+              </div>
+
+              <div class="block-feilds">
+                <span>Created By</span>
+                <p>{{secondaryOrderDetail.created_by_name}}</p>
+              </div>
+
+              <div class="block-feilds">
+                <span>Order Id</span>
+                <p>{{secondaryOrderDetail.order_no}}</p>
+
+              </div>
+
+              <div class="block-feilds">
+                <span>Total Items</span>
+                <p>{{secondaryOrderDetail.order_item}}</p>
+              </div>
+
+              <div class="block-feilds">
+                <span>Item QTY.</span>
+                <p>{{secondaryOrderDetail.total_order_qty}}</p>
+              </div>
+              <div class="block-feilds">
+                <span>GST Type</span>
+                <p>{{secondaryOrderDetail.gst_type}}</p>
+              </div>
+
+              <div class="block-feilds">
+                <span>Order Amount</span>
+                <p>&#x20B9; {{secondaryOrderDetail.order_grand_total}}</p>
+              </div>
+              <div class="block-feilds {{secondaryOrderDetail.order_status}}">
+                <span>Status</span>
+                <p>{{secondaryOrderDetail.order_status}}</p>
+              </div>
+            </div>
+
+            <div class="grid-box single mt16">
+              <div class="block-feilds">
+                <span>Remark</span>
+                <p>{{secondaryOrderDetail.order_create_remark}}</p>
+
+              </div>
+              <div class="block-feilds" *ngIf="secondaryOrderDetail.reason_reject">
+                <span>Reason Reject</span>
+                <p>{{secondaryOrderDetail.reason_reject}}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="card" *ngIf="skLoading">
+          <div class="sk-head">
+            <h2>&nbsp;</h2>
+          </div>
+          <div class="card-body">
+            <div class="grid-box">
+              <div class="sk-box" *ngFor="let row of [].constructor(10)">
+                &nbsp;
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="col s12 m4 l4">
+        <div class="card" *ngIf="!skLoading">
+          <div class="card-head">
+            <h2>Logs</h2>
+
+          </div>
+          <div class="card-body">
+            <div class="logs-box" style="max-height: 390px;">
+              <ng-container *ngFor="let row of order_logs">
+                <div class="logshead">Admin : - {{row.date_created | date: 'd-MMM-yyyy, h:mm a'}}</div>
+                <div class="logscontent">
+                  <span>Remark : -</span> <span>{{row.remark}}</span>
+                </div>
+              </ng-container>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="card" *ngIf="skLoading">
+          <div class="sk-head">
+            <h2>&nbsp;</h2>
+          </div>
+          <div class="card-body">
+            <div class="grid-box single mt10" *ngFor="let row of [].constructor(5)">
+              <div class="sk-box">
+                &nbsp;
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="tools-container no-sticky">
+        <div class="mat-tabbar">
+          <button mat-button [ngClass]="{'active' :orderType== 'order'}" (click)="orderType= 'order'"><i
+              class="material-icons">pending_actions</i>Item Details</button>
+        </div>
+      </div>
+      <div class="cs-table" *ngIf="orderType== 'order'">
+        <div class="sticky-head" style="top: -10px;">
+          <div class="table-head">
+            <table>
+              <tr>
+                <th class="w50">S.no.</th>
+                <th>Item Details</th>
+                <th class="w100">Brand</th>
+                <th class="w100">Color</th>
+                <th class="w100 text-right">Price</th>
+                <th class="w100 text-center">QTY.</th>
+                <th class="w130">Discount</th>
+                <th class="w130">GST</th>
+                <th class="w100 text-right">Net Amount</th>
+                <!-- <ng-container *ngIf="login_data.delete_order=='1'">
+                  <th class="w50 text-center" *ngIf="secondaryOrderDetail.order_status == 'Pending'">Action</th>
+                </ng-container> -->
+              </tr>
+            </table>
+          </div>
+        </div>
+
+
+        <div class="table-container">
+          <div class="table-content">
+            <table>
+              <tr *ngFor="let row of item_details; let i =index">
+                <td class="w50">{{i+1}}</td>
+                <td>{{row.product_name}}</td>
+                <td class="w100">{{row.brand}}</td>
+                <td class="w100">{{row.color}}</td>
+                <td class="w100 text-right">&#x20B9; {{row.price}} </td>
+                <td class="w100 text-right" *ngIf="status  == 'Approved'">{{row.qty}}</td>
+                <td class="w100  text-center" *ngIf="status  == 'Pending'">
+                  <ng-container *ngIf="editqty == true">
+                    <div class="th-search-acmt mr30">
+                      <mat-form-field>
+                        <input type="text" matInput class="text-right"
+                          onkeypress="return event.charCode>=48 && event.charCode<=57" placeholder="Enter Qty"
+                          name="qty{{i}}" #qty="ngModel" [(ngModel)]="row.qty">
+                      </mat-form-field>
+                    </div>
+                    <div class="action-button text-right">
+                      <a mat-icon-button matTooltip="Save" (click)="Update_qty(row.id, row.qty)">
+                        <i class="material-icons edit">save</i>
+                      </a>
+                    </div>
+                  </ng-container>
+
+                  <ng-container *ngIf="editqty == false">
+                    {{row.qty}}
+                    <ng-container *ngIf="login_data.edit_order=='1'">
+                      <!-- <div class="action-button text-right" *ngIf="secondaryOrderDetail.order_status  == 'Pending'">
+                      <a mat-icon-button matTooltip="Discount Edit" (click)="edit_qty()">
+                        <i class="material-icons edit">edit</i>
+                      </a>
+                    </div> -->
+                    </ng-container>
+                  </ng-container>
+                </td>
+                <td class="w130">&#x20B9; {{row.discount_amount | number:'1.2-2'}} {{row.discount_percent > 0 ? ( '(' +
+                  row.discount_percent + '%)') : ''}}</td>
+                <td class="w130">&#x20B9; {{row.gst_amount | number:'1.2-2'}} {{row.gst_percent > 0 ? ( '(' +
+                  row.gst_percent + '%)') : ''}}</td>
+
+                <td class="w100 text-right"><strong>&#x20B9; {{row.total_amount | number:'1.1-2'}}</strong></td>
+                <!-- <ng-container *ngIf="login_data.delete_order=='1'">
+                <td class="w50 text-center" >
+                  <div class="action-button text-center" *ngIf="row.order_status  == 'Pending'">
+                    <a (click)="deleteOrderitem(row.id,index)" mat-icon-button  matTooltip="Delete">
+                      <i  class="material-icons del">delete</i>
+                    </a>
+                  </div>
+                </td>
+              </ng-container> -->
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="row">
+      <div class="col s4 offset-s8">
+        <div class="invoice-table">
+          <table>
+            <tr>
+              <td>Order Amount</td>
+              <td class="w10 text-center"><strong>:</strong></td>
+              <td class="w120 text-right ">&#8377; {{Order_Amount| number:'1.1-2'}}</td>
+            </tr>
+            <tr>
+              <td>Discount</td>
+              <td class="w10 text-center"><strong>:</strong></td>
+              <td class="w120 text-right ">&#8377;{{secondaryOrderDetail.order_discount | number:'1.1-2'}} </td>
+            </tr>
+
+            <tr>
+              <td>Sub-Total</td>
+              <td class="text-center">:</td>
+              <td class="text-right ">&#8377;{{secondaryOrderDetail.order_total | number:'1.1-2'}}</td>
+            </tr>
+
+            <tr>
+              <td>GST</td>
+              <td class="text-center">:</td>
+              <td class="text-right ">&#8377;{{secondaryOrderDetail.order_gst | number:'1.1-2'}}</td>
+            </tr>
+
+            <tr>
+              <td>Net Amount</td>
+              <td class="text-center">:</td>
+              <td class="text-right ">&#8377;{{secondaryOrderDetail.order_grand_total | number:'1.1-2'}}</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

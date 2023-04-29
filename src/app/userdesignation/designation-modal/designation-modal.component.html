@@ -1,0 +1,133 @@
+<div class="edit-modal">
+  <form name="detail" #f="ngForm" (ngSubmit)="f.valid && submitDetail()">
+    <p class="heading mb0">Update Module Rights</p>
+    <div mat-dialog-content>
+      <div class="cs-table left-right-10">
+        <div class="stickyHead">
+          <div class="table-head">
+            <table>
+              <tr>
+                <th class="w50">S.No.</th>
+                <th>Module Name</th>
+                <th class="w120 text-center">View</th>
+                <th class="w120 text-center">Edit</th>
+                <th class="w120 text-center">Delete</th>
+                <th class="w120 text-center">Add</th>
+                <th class="w120 text-center">Download Excel</th>
+                <th class="w120 text-center">Upload Excel</th>
+              </tr>
+            </table>
+          </div>
+
+        </div>
+
+        <div class="table-container">
+          <div class="table-content">
+            <table>
+              <ng-container *ngIf="!skLoading">
+                <tr *ngFor="let data of assign_module_data; let i = index">
+                  <td class="w50">{{i+1}}</td>
+                  <td>{{data.module_name}}</td>
+                  <td class="w120 text-center">
+
+                    <mat-checkbox
+                      *ngIf="data.view!= '' &&  data.view  == false || data.view  == 'false' || data.view  == 'true' || data.view  == true"
+                      [checked]="data.view==true || data.view== 'true'"
+                      (change)="assign_module('view',$event,i)"></mat-checkbox>
+                    <mat-checkbox *ngIf="data.view== 'disable'" [disabled]=true></mat-checkbox>
+
+                  </td>
+                  <td class="w120 text-center">
+
+                    <mat-checkbox
+                      *ngIf="data.edit!= '' &&  data.edit  == false || data.edit  == 'false' || data.edit  == 'true' || data.edit  == true"
+                      [checked]="data.edit==true || data.edit== 'true'"
+                      (change)="assign_module('edit',$event,i)"></mat-checkbox>
+                    <mat-checkbox *ngIf="data.edit== 'disable'" [disabled]=true [indeterminate]=true></mat-checkbox>
+
+                  </td>
+                  <td class="w120 text-center">
+
+                    <mat-checkbox
+                      *ngIf="data.delete!= '' &&  data.delete  == false || data.delete  == 'false' || data.delete  == 'true' || data.delete  == true"
+                      [checked]="data.delete==true || data.delete== 'true'"
+                      (change)="assign_module('delete',$event,i)"></mat-checkbox>
+                    <mat-checkbox *ngIf="data.delete== 'disable'" [disabled]=true [indeterminate]=true></mat-checkbox>
+
+                  </td>
+                  <td class="w120 text-center">
+
+                    <mat-checkbox
+                      *ngIf="data.add!= '' &&  data.add  == false || data.add  == 'false' || data.add  == 'true' || data.add  == true"
+                      [checked]="data.add==true || data.add== 'true'"
+                      (change)="assign_module('add',$event,i)"></mat-checkbox>
+                    <mat-checkbox *ngIf="data.add== 'disable'" [disabled]=true [indeterminate]=true></mat-checkbox>
+
+                  </td>
+                  <td class="w120 text-center">
+
+                    <mat-checkbox
+                      *ngIf="data.export!= '' &&  data.export  == false || data.export  == 'false' || data.export  == 'true' || data.export  == true"
+                      [checked]="data.export==true || data.export== 'true'"
+                      (change)="assign_module('export',$event,i)"></mat-checkbox>
+                    <mat-checkbox *ngIf="data.export== 'disable'" [disabled]=true [indeterminate]=true></mat-checkbox>
+
+                  </td>
+                  <td class="w120 text-center">
+
+                    <mat-checkbox
+                      *ngIf="data.import!= '' &&  data.import  == false || data.import  == 'false' || data.import  == 'true' || data.import  == true"
+                      [checked]="data.import==true || data.import== 'true'"
+                      (change)="assign_module('import',$event,i)"></mat-checkbox>
+                    <mat-checkbox *ngIf="data.import== 'disable'" [disabled]=true [indeterminate]=true></mat-checkbox>
+
+                  </td>
+                </tr>
+              </ng-container>
+
+
+              <ng-container *ngIf="skLoading">
+                <tr class="sk-loading" *ngFor="let row of [].constructor(10);">
+                  <td class="w50">
+                    <div>&nbsp;</div>
+                  </td>
+                  <td>
+                    <div>&nbsp;</div>
+                  </td>
+                  <td class="w120">
+                    <div>&nbsp;</div>
+                  </td>
+                  <td class="w120">
+                    <div>&nbsp;</div>
+                  </td>
+                  <td class="w120">
+                    <div>&nbsp;</div>
+                  </td>
+                  <td class="w120">
+                    <div>&nbsp;</div>
+                  </td>
+                  <td class="w120">
+                    <div>&nbsp;</div>
+                  </td>
+                  <td class="w120">
+                    <div>&nbsp;</div>
+                  </td>
+                  <td class="w120">
+                    <div>&nbsp;</div>
+                  </td>
+                </tr>
+              </ng-container>
+            </table>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <div mat-dialog-actions>
+      <button mat-stroked-button color="warn" [mat-dialog-close]="false">Cancel</button>
+      <button [ngClass]="{'loading': savingFlag == true}" mat-raised-button color="accent" type="submit"
+        [disabled]="savingFlag == true">{{savingFlag == true ? 'Updating' : 'Update'}}</button>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,2091 @@
+<div class="main-container">
+    <div class="tools-container">
+        <a mat-icon-button matTooltip="Back" (click)="back()">
+            <i class="material-icons">arrow_back</i>
+        </a>
+        <h2>{{dr_detail.company_name | titlecase}}</h2>
+
+        <div class="left-auto">
+            <div class="mat-tabbar">
+                <button mat-button [ngClass]="{'active' :tabType== 'Profile'}"
+                    (click)="distributorDetail();DistributorTarget();DistributorSalesChr();distributorTopSelling(); tabType= 'Profile'"><i
+                        class="material-icons">person</i>Basic Detail</button>
+                <button mat-button [ngClass]="{'active' :tabType== 'Checkin'}"
+                    (click)="clearFilter();  getCheckin(); tabType = 'Checkin'"><i
+                        class="material-icons">location_pin</i>Checkin</button>
+                <button mat-button *ngIf="user_type == '1' || user_type == '7'"
+                    [ngClass]="{'active' :tabType== 'Segment'}"
+                    (click)=" clearFilter();  getSegment();tabType = 'Segment'"><i
+                        class="material-icons">discount</i>Segment Discount</button>
+                <button mat-button *ngIf="user_type == '1' || user_type == '7'"
+                    [ngClass]="{'active' :tabType== 'Primary Order'}"
+                    (click)="clearFilter(); getPrimaryOrder('',currentMonth_no,currentYear,'Approved');  tabType = 'Primary Order'"><i
+                        class="material-icons">shopping_cart</i>{{user_type == '1' ? 'Primary' : ''}} Order</button>
+                <button mat-button *ngIf="user_type == '1' || user_type == '3'"
+                    [ngClass]="{'active' :tabType== 'Secondary Order'}"
+                    (click)="clearFilter();  getSecondaryOrder('',currentMonth_no,currentYear,'Approved'); tabType = 'Secondary Order'"><i
+                        class="material-icons">shopping_cart</i> {{user_type == '1' ? 'Secondary' : ''}} Order</button>
+                <button mat-button *ngIf="user_type == '1'" [ngClass]="{'active' :tabType== 'Retailer'}"
+                    (click)="clearFilter();  getRetailer(); tabType = 'Retailer'"><i
+                        class="material-icons">storefront</i>Dealer</button>
+                <button mat-button *ngIf="user_type != '3'" [ngClass]="{'active' :tabType== 'Target'}"
+                    (click)="clearFilter(); getTarget(currentMonth_no,currentYear); tabType = 'Target'"><i
+                        class="material-icons">trending_up</i>Target</button>
+                <button mat-button *ngIf="user_type != '3'" [ngClass]="{'active' :tabType== 'Ledger'}"
+                    (click)="clearFilter(); getLedger(); tabType = 'Ledger'"><i
+                        class="material-icons">receipt_long</i>Account Ledger</button>
+
+                <!-- <button mat-button *ngIf="user_type != '7'" [ngClass]="{'active' :tabType== 'Point Ledger'}"
+                    (click)="clearFilter(); getPointLedger(); tabType = 'Point Ledger'"><i
+                    class="material-icons">receipt_long</i>Point Ledger</button> -->
+
+            </div>
+
+        </div>
+    </div>
+
+    <div class="container pt10 pl10 pr10 pb50">
+        <ng-container *ngIf="tabType== 'Profile'">
+            <div class="row">
+                <div class="col s12 m8 l8">
+                    <div class="card-container" *ngIf="!skLoading">
+                        <div class="card-box or-gr">
+                            <p>{{dr_detail.dr_sale_category ? dr_detail.dr_sale_category : '---'}}</p>
+                            <span>Customer Category</span>
+                        </div>
+                        <div class="card-box pn-gr">
+                            <p *ngIf="dr_detail.last_visit_days">
+                                {{dr_detail.last_visit_days == 0 ? 'Today' : dr_detail.last_visit_days + " day's ago" }}
+                            </p>
+                            <p *ngIf="!dr_detail.last_visit_days">---</p>
+                            <span>Last Visit</span>
+                        </div>
+                        <div class="card-box bl-gr">
+                            <p *ngIf="dr_detail.last_order_days">
+                                {{dr_detail.last_order_days == 0 ? 'Today' : dr_detail.last_order_days + " day's ago" }}
+                            </p>
+                            <p *ngIf="!dr_detail.last_order_days">---</p>
+                            <span>Last Order</span>
+                        </div>
+
+                        <div class="card-box grey-gr">
+                            <p>{{dr_detail.order_frequency == '0' ? '---' : dr_detail.order_frequency + " day"}}</p>
+                            <span>Order Frequency</span>
+                        </div>
+                        <ng-container *ngIf="user_type == '1' || user_type == '7'">
+                            <div class="card-box rd-gr">
+                                <p>{{dr_detail.last_payment_days ?dr_detail.last_payment_days+" "+"Day's ago" : 0}}</p>
+                                <span>Last Payment</span>
+                            </div>
+                            <div class="card-box pink-gr">
+                                <p>{{dr_detail.total_retailer}}</p>
+                                <span>Retailer Network</span>
+                            </div>
+                            <div class="card-box rd-gr">
+                                <p>&#x20B9; {{dr_detail.current_year_sales ?dr_detail.current_year_sales : 0}}</p>
+                                <span>Primary Sale</span>
+                            </div>
+                            <div class="card-box pr-gr">
+                                <p>&#x20B9; {{dr_detail.current_year_secondary_sales
+                                    ?dr_detail.current_year_secondary_sales : 0}}</p>
+                                <span>Secondary Sale</span>
+                            </div>
+                        </ng-container>
+                    </div>
+
+
+                    <div class="card" *ngIf="!skLoading">
+                        <div class="card-head">
+                            <h2>Basic Details</h2>
+                            <div class="left-auto" *ngIf="(login_data.edit_customer_network=='1') ||  (user_type == '1' && login_data.edit_channel_partner=='1')|| (user_type == '3' && login_data.edit_dealer=='1') || (user_type == '7' && login_data.edit_direct_dealers=='1')">
+                                <a class="sm-mat-icon-button" mat-icon-button matTooltip="Edit Detail"
+                                    [routerLink]="[ 'edit-distribution/', dr_id, user_type, 'edit' ]"
+                                    [queryParams]="{'state':dr_detail.state, 'id':dr_id, 'type':user_type}">
+                                    <i class="material-icons">edit</i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="grid-box">
+                                <div class="block-feilds">
+                                    <span>Company Name</span>
+                                    <p>{{dr_detail.company_name}}</p>
+                                </div>
+
+                                <div class="block-feilds">
+                                    <span>Contact Person</span>
+                                    <p>{{dr_detail.name | titlecase}}</p>
+                                </div>
+
+                                <div class="block-feilds">
+                                    <span>Mobile Number</span>
+                                    <p>{{dr_detail.mobile}}</p>
+                                </div>
+
+
+                                <div class="block-feilds" *ngIf="user_type != '3'">
+                                    <span>ERP</span>
+                                    <p>{{dr_detail.dr_code}}</p>
+                                </div>
+                                <div class="block-feilds" *ngIf="user_type != '3'">
+                                    <span>Cash Discount</span>
+                                    <p>{{dr_detail.cash_discount_percentage}}</p>
+                                </div>
+                                <div class="block-feilds" *ngIf="user_type != '3'">
+                                    <span>TCS Discount</span>
+                                    <p>{{dr_detail.tcs_percentage}}</p>
+                                </div>
+
+
+
+
+                                <div class="block-feilds">
+                                    <span>Alternative Number</span>
+                                    <p>{{dr_detail.altNumber ? dr_detail.altNumber :'---'}}</p>
+                                </div>
+
+                                <div class="block-feilds">
+                                    <span>Email Id</span>
+                                    <p>{{dr_detail.email ? dr_detail.email :'---'}}</p>
+                                </div>
+
+                                <div class="block-feilds">
+                                    <span>Date Of Birth</span>
+                                    <p *ngIf="dr_detail.dob != '0000-00-00'">{{dr_detail.dob | date}}</p>
+                                    <p *ngIf="dr_detail.dob == '0000-00-00'">---</p>
+
+                                </div>
+
+                                <div class="block-feilds">
+                                    <span>Date Of Anniversary</span>
+                                    <p *ngIf="dr_detail.doa != '0000-00-00'">{{dr_detail.doa | date}}</p>
+                                    <p *ngIf="dr_detail.doa == '0000-00-00'">---</p>
+
+                                </div>
+
+                                <div class="block-feilds">
+                                    <span>GST Number</span>
+                                    <p>{{dr_detail.gst ? dr_detail.gst :'---'}}</p>
+                                </div>
+
+                                <div class="block-feilds">
+                                    <span>Status</span>
+                                    <p>{{dr_detail.status == '1' ? 'Active' : 'Deactive'}}</p>
+                                </div>
+
+
+
+                                <div class="block-feilds">
+                                    <span>First Mobile App Login</span>
+                                    <p>
+                                        {{dr_detail.first_login && dr_detail.first_login != '0000-00-00 00:00:00'?
+                                        (dr_detail.first_login | date:'MMM d, y, h:mm:a') : '--'}}
+                                    </p>
+                                </div>
+                                <div class="block-feilds">
+                                    <span>Latest Mobile App Login</span>
+                                    <p>
+                                        {{dr_detail.latest_login && dr_detail.latest_login != '0000-00-00 00:00:00'?
+                                        (dr_detail.latest_login | date:'MMM d, y, h:mm:a') : '--'}}
+                                    </p>
+                                </div>
+
+
+                                <div class="block-feilds" *ngIf="user_type != 1">
+                                    <span>Distributor Detail</span>
+                                    <p>{{dr_detail.assign_distributors_company_name | titlecase}} -
+                                        {{dr_detail.assign_distributors_mobile_no}}</p>
+                                    <p *ngIf="!dr_detail.assign_distributors_company_name && !dr_detail.assign_distributors_mobile_no">---</p>
+                                </div>
+
+                                <div class="block-feilds">
+                                    <span>Last Updated By</span>
+                                    <p>{{dr_detail.last_updated_by_name ? dr_detail.last_updated_by_name : '--'}}</p>
+                                </div>
+
+                                <div class="block-feilds">
+                                    <span>Last Updated On</span>
+                                    <p>{{dr_detail.last_updated_on && dr_detail.last_updated_on != '0000-00-00 00:00:00'? (dr_detail.last_updated_on | date : 'dd MMM yyy ,h:mm a') : '--'}}
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="grid-box single mt16">
+                                <div class="block-feilds">
+                                    <span>Address</span>
+                                    <p>{{dr_detail.address?dr_detail.address+',':''}}
+                                        {{dr_detail.city?dr_detail.city+',':''}}
+                                        {{dr_detail.district?dr_detail.district+',':''}}
+                                        {{dr_detail.state?dr_detail.state+',':''}}
+                                        {{dr_detail.pincode?dr_detail.pincode+',':''}} </p>
+                                </div>
+                            </div>
+
+                            <div class="grid-box single mt16">
+                                <div class="block-feilds">
+                                    <span>Assigned Brand</span>
+                                    <p>{{dr_detail.brand}} </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="card" *ngIf="skLoading">
+                        <div class="sk-head">
+                            <h2>&nbsp;</h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="grid-box">
+                                <div class="sk-box" *ngFor="let row of [].constructor(10)">
+                                    &nbsp;
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt10" *ngIf="!skLoading">
+                        <div class="col s12 m6 l6">
+                            <div class="card mb10" *ngIf="user_type == '1' || user_type == '7'">
+                                <div class="card-head afs">
+                                    <h2>Payment Information</h2>
+                                    <div class="left-auto" *ngIf="dr_detail.last_payment_days != ''">
+                                        <div class="highlight-text">Last payment on
+                                            <strong>{{dr_detail.last_payment_days ? (dr_detail.last_payment_days == 0
+                                                ?'Today ' : dr_detail.last_payment_days+" "+"Day's ago" ):
+                                                '---'}}</strong>
+                                            <strong class="green-clr"
+                                                *ngIf="dr_detail.payment != null ">{{dr_detail.payment.net_amount ? "₹"+
+                                                ''+ dr_detail.payment.net_amount : 0}}</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="grid-box two">
+                                        <div class="block-feilds">
+                                            <span>Credit Limit</span>
+                                            <p>&#x20B9; {{payment_upper_info.credit_limit ?
+                                                payment_upper_info.credit_limit : 0}}</p>
+                                        </div>
+                                        <div class="block-feilds">
+                                            <span>Credit Day's</span>
+                                            <p>{{payment_upper_info.credit_period ? payment_upper_info.credit_period : 0}}</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="grid-box two mt10">
+                                        <div class="block-feilds approved">
+                                            <span>Outstanding</span>
+                                            <p>&#x20B9; {{payment_upper_info.Outstanding_balance ? payment_upper_info.Outstanding_balance : 0}}</p>
+                                        </div>
+                                        <div class="block-feilds reject">
+                                            <span>Overdue</span>
+                                            <p>&#x20B9; {{payment_upper_info.Overdue_balance ?
+                                                payment_upper_info.Overdue_balance : 0}}</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb0">
+                                        <div class="col s12">
+                                            <div class="cs-table pt10">
+                                                <div class="table-container padding0">
+                                                    <div class="table-content none-shadow">
+                                                        <table>
+                                                            <tr *ngFor="let row of payment_lower_info; let i = index">
+                                                                <td class="w120 text-center primary-bg">{{row.days}}
+                                                                    Day's</td>
+                                                                <td><strong>&#x20B9; {{row.value}}</strong></td>
+                                                                <td class="w120 yellow-bgclr"
+                                                                    [ngClass]="row.payment_slab == 'OVERDUE' ? 'yellow-bg' : 'red-bg'">
+                                                                    {{row.payment_slab}}
+                                                                </td>
+                                                                <td class="w50"><a
+                                                                        (click)="viewInvoice(row.start_date, row.end_date)"
+                                                                        class="link-btn">View</a></td>
+                                                            </tr>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div class="card pb0">
+                                <div class="card-head">
+                                    <h2>Assigned Sales User</h2>
+                                    <div class="left-auto" *ngIf="(login_data.edit_customer_network=='1') ||  (user_type == '1' && login_data.edit_channel_partner=='1')|| (user_type == '3' && login_data.edit_dealer=='1') || (user_type == '7' && login_data.edit_direct_dealers=='1')">
+                                        <a class="sm-mat-icon-button" mat-icon-button matTooltip="Update Sales User"
+                                            (click)="openDialog('assignSales')">
+                                            <i class="material-icons">edit</i>
+                                        </a>
+                                    </div>
+                                </div>
+
+                                <div class="card-body pt0">
+                                    <mat-list class="cs-list-box pt0">
+                                        <mat-list-item *ngFor="let row of assign_sales_user;">
+                                            <div class="alphabet">{{row.name ? row.name[0].toUpperCase():'' }}</div>
+                                            {{row.name | titlecase}}
+                                            <strong *ngIf="row.employee_id">&nbsp; &nbsp;({{row.employee_id}})</strong>
+                                        </mat-list-item>
+                                    </mat-list>
+                                </div>
+                            </div>
+
+                            <!-- <div class="card pb0 mt10" *ngIf="!skLoading">
+                                                            <div class="card-head">
+                                                                <h2>Assigned Brand</h2>
+                                                            </div>
+                                                            <div class="card-body pt0">
+                                                                <mat-list class="cs-list-box pt0">
+                                                                    <mat-list-item *ngFor="let row of dr_detail.brand;">
+                                                                        <div class="alphabet">{{row ? row[0].toUpperCase():'' }}</div>
+                                                                        {{row | titlecase}} 
+                                                                    </mat-list-item>
+                                                                </mat-list>
+                                                            </div>
+                                                        </div> -->
+
+
+                            <div class="card mt10"
+                                *ngIf="user_type == 3 && distributors.length >0 ">
+                                <div class="card-head">
+                                    <h2>Assigned Distributor</h2>
+                                    <div class="left-auto" *ngIf="(login_data.edit_customer_network=='1') ||  (user_type == '1' && login_data.edit_channel_partner=='1')|| (user_type == '3' && login_data.edit_dealer=='1') || (user_type == '7' && login_data.edit_direct_dealers=='1')">
+                                        <a class="sm-mat-icon-button" mat-icon-button matTooltip="Update Sales User"
+                                            (click)="openDialog('assignDist')">
+                                            <i class="material-icons">edit</i>
+                                        </a>
+                                    </div>
+                                </div>
+
+                                <div class="card-body pt0">
+                                    <mat-list class="cs-list-box pt0">
+                                        <mat-list-item *ngFor="let row of distributors">
+                                            <div class="alphabet">
+                                                {{row.company_name ? row.company_name[0].toUpperCase():'' }}
+                                            </div>{{row.company_name | titlecase}}
+                                            <strong>&nbsp; &nbsp;({{row.mobile}})</strong>
+                                        </mat-list-item>
+                                    </mat-list>
+                                </div>
+                            </div>
+
+                            <div class="card mt10" *ngIf="!skLoading">
+                                <div class="card-head">
+                                    <h2>Branding Budget V/S Actual</h2>
+                                </div>
+
+                                <div class="card-body">
+                                    <div class="grid-box two">
+                                        <div class="block-feilds approved">
+                                            <span>Branding Budget</span>
+                                            <p>&#x20B9; 10,000</p>
+                                        </div>
+                                        <div class="block-feilds reject">
+                                            <span>Actual</span>
+                                            <p>&#x20B9; 10,000</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col s12 m6 l6">
+                            <div class="card mb10">
+                                <div class="card-head afs">
+                                    <h2>Point Location</h2>
+                                    <div class="left-auto" *ngIf="(login_data.edit_customer_network=='1') ||  (user_type == '1' && login_data.edit_channel_partner=='1')|| (user_type == '3' && login_data.edit_dealer=='1') || (user_type == '7' && login_data.edit_direct_dealers=='1')">
+                                        <button matTooltip="Update Location" mat-raised-button color="primary"
+                                            (click)="update_google_location('India',dr_detail.state,dr_detail.district,dr_detail.city,dr_detail.pincode,dr_detail.address,'updateGoogleLocation')">Update
+                                            Location</button>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <!-- <div style="margin: -10px;"> -->
+                                    <agm-map [zoom]="zoom" center="[latitude, longitude]" [latitude]="latitude"
+                                        [longitude]="longitude" [mapTypeId]='mapType'>
+                                        <agm-marker [latitude]="latitude" [longitude]="longitude"></agm-marker>
+                                    </agm-map>
+                                    <div class="grid-box two mt10">
+                                        <div class="block-feilds">
+                                            <span>Latitude</span>
+                                            <p>{{latitude}}</p>
+                                        </div>
+                                        <div class="block-feilds">
+                                            <span>Longitude</span>
+                                            <p>{{longitude}}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+
+                    </div>
+                </div>
+
+                <div class="col s12 m4 l4">
+                    <div [hidden]="hide_bar_chart" class="card mb10"
+                        *ngIf="!skLoading && (user_type == 1 || user_type == 7)">
+                        <div class="card-head">
+                            <h2>Target V/S Achievement ({{target_month}})</h2>
+                        </div>
+                        <canvas #barCanvas></canvas>
+                    </div>
+
+                    <div [hidden]="hide_line_chart" class="card" *ngIf="!skLoading">
+                        <div class="card-head">
+                            <h2>Sales Graph Last 6 Month {{salesMonth}}</h2>
+                        </div>
+                        <canvas #lineCanvas></canvas>
+                    </div>
+
+
+                    <div class="card mt10" *ngIf="!skLoading">
+                        <div class="tabs">
+                            <button mat-button [ngClass]="productType == 'top' ? 'active' : ''"
+                                (click)="productType = 'top';distributorTopSelling()">Top {{top_count}} Selling
+                                Product</button>
+                            <button mat-button [ngClass]="productType == 'least' ? 'active' : ''"
+                                (click)="productType = 'least';distributorTopSelling()">Least Selling Product</button>
+                        </div>
+
+                        <div class="card-body">
+                            <div class="card-body pt0">
+                                <mat-list class="cs-list-box pt0" *ngIf="productType == 'top'">
+                                    <mat-list-item *ngFor="let row of dr_top_selling; let i = index">
+                                        <div class="alphabet">{{i+1}}</div>
+                                        <div>{{row.product_name}}<br>
+                                            <strong class="blue-clr">{{row.product_id}}</strong>
+                                        </div>
+                                        <div class="left-auto">
+                                            <strong class="right-text"> {{row.qty}}</strong>
+                                        </div>
+                                    </mat-list-item>
+                                    <ng-container *ngIf="!top_selling">
+                                        <app-not-result-found></app-not-result-found>
+                                    </ng-container>
+                                </mat-list>
+
+                                <mat-list class="cs-list-box pt0" *ngIf="productType == 'least'">
+                                    <mat-list-item *ngFor="let row of dr_least_selling; let i = index">
+                                        <div class="alphabet">{{i+1}}</div>
+                                        <div>{{row.product_name}}<br>
+                                            <strong class="blue-clr">{{row.product_id}}</strong>
+                                        </div>
+                                        <div class="left-auto">
+                                            <strong class="right-text"> {{row.qty}}</strong>
+                                        </div>
+                                    </mat-list-item>
+                                    <ng-container *ngIf="!top_selling">
+                                        <app-not-result-found></app-not-result-found>
+                                    </ng-container>
+                                </mat-list>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+
+
+                    <div class="card" *ngIf="skLoading">
+                        <div class="sk-head">
+                            <h2>&nbsp;</h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="grid-box single mt10" *ngFor="let row of [].constructor(5)">
+                                <div class="sk-box">
+                                    &nbsp;
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </ng-container>
+        <div *ngIf="tabType== 'Checkin'" style="margin: -10px -10px 0px -10px;">
+            <div class="cs-table">
+                <div class="left-auto jfe df flex-gap-10">
+                    <a mat-icon-button matTooltip="Refresh" (click)="refresh(tabType)">
+                        <i class="material-icons">refresh</i>
+                    </a>
+
+                    <div class="pagination" *ngIf="checkinData.length > 0">
+                        <div class="pagination-content">
+                            Pages
+                            <span>{{pagenumber}}</span>
+                            of
+                            <span>{{total_page}}</span>
+                        </div>
+                        <div class="page-nav">
+                            <button mat-icon-button matTooltip="Older" (click)="pervious('checkin')"
+                                [disabled]="start == 0 || total_page == 0">
+                                <i class="material-icons">navigate_before</i>
+                            </button>
+                            <button mat-icon-button matTooltip="Newer" (click)="nextPage('checkin')"
+                                [disabled]="pagenumber == total_page || total_page == 0 ">
+                                <i class="material-icons">navigate_next</i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="sticky-head" style="top: -10px;">
+                    <div class="table-head">
+                        <table>
+                            <tr>
+                                <th class="w60">S.no.</th>
+                                <th class="w100">Date Created</th>
+                                <th class="w100">Employee Code</th>
+                                <th class="w150">Employee Name </th>
+                                <th class="w150">Reporting Manager </th>
+                                <!-- <th class="w180">Company Name</th> -->
+                                <!-- <th>Address</th> -->
+                                <th class="w100">Check in</th>
+                                <th class="w100">Check out</th>
+                                <th class="w100">Total Time Spend</th>
+                                <th>Remark</th>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="table-head border-top">
+                        <table>
+                            <tr>
+                                <th class="w60">&nbsp;</th>
+                                <th class="w100">
+                                    <div class="th-search-acmt">
+                                        <mat-form-field class="cs-input date-column infix-bodr">
+                                            <input matInput [matDatepicker]="picker" placeholder="Date"
+                                                name="date_created" [(ngModel)]="filter.date_created"
+                                                (dateChange)="date_format(tabType)" [max]="today_date" disabled>
+                                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                            <mat-datepicker #picker disabled="false"></mat-datepicker>
+                                        </mat-form-field>
+                                    </div>
+                                </th>
+                                <th class="w100">
+                                    <div class="th-search-acmt">
+                                        <mat-form-field class="example-full-width cs-input select-input">
+                                            <input matInput placeholder="Search..." type="text" name="emp_code"
+                                                [(ngModel)]="filter.emp_code"
+                                                (keyup.enter)="!filter.emp_code ? refresh(tabType) : getCheckin()">
+                                        </mat-form-field>
+                                    </div>
+                                </th>
+
+                                <th class="w150">
+                                    <div class="th-search-acmt">
+                                        <mat-form-field class="example-full-width cs-input select-input">
+                                            <input matInput placeholder="Search..." type="text" name="emp_name"
+                                                [(ngModel)]="filter.emp_name"
+                                                (keyup.enter)="!filter.emp_name ? refresh(tabType) : getCheckin()">
+                                        </mat-form-field>
+                                    </div>
+                                </th>
+
+                                <th class="w150">
+                                    <!-- <div class="th-search-acmt">
+                                                    <mat-form-field class="example-full-width cs-input select-input">
+                                                        <input matInput placeholder="Search..." type="text" name="reporting_manager"
+                                                        [(ngModel)]="filter.reporting_manager"
+                                                        (keyup.enter)="!filter.reporting_manager ? refresh(tabType) : getCheckin()">
+                                                    </mat-form-field>
+                                                </div> -->
+                                </th>
+                                <th class="w100">&nbsp;</th>
+                                <th class="w100">&nbsp;</th>
+                                <th class="w100">&nbsp;</th>
+                                <th>&nbsp;</th>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+
+                <div class="table-container" *ngIf="checkinData.length > 0">
+                    <div class="table-content">
+                        <table>
+                            <ng-container *ngIf="!checkinLoader">
+                                <tr *ngFor="let row of checkinData; let i =index">
+                                    <td class="w60">{{i+1+sr_no}}</td>
+                                    <td class="w100">{{row.date_created | date : 'd MMM y'}}</td>
+                                    <td class="w100">{{row.employee_id}}</td>
+                                    <td class="w150">{{row.exec_name | titlecase}}</td>
+                                    <td class="w150">{{row.reporting_manager_name | titlecase}}</td>
+                                    <td class="w100">
+                                        <ng-container
+                                            *ngIf="row.visit_start == '0000-00-00 00:00:00'">---</ng-container>
+                                        <ng-container
+                                            *ngIf="row.visit_start != '0000-00-00 00:00:00'">{{row.visit_start|
+                                            date:'h:mm a'}}</ng-container>
+                                    </td>
+                                    <td class="w100">
+                                        <ng-container *ngIf="row.visit_end == '0000-00-00 00:00:00'">---</ng-container>
+                                        <ng-container *ngIf="row.visit_end != '0000-00-00 00:00:00'">{{row.visit_end |
+                                            date:'h:mm a'}}</ng-container>
+                                    </td>
+                                    <td class="w100">{{row.total_time_spend}}</td>
+                                    <td>{{row.remark}}</td>
+                                </tr>
+                            </ng-container>
+
+                            <ng-container *ngIf="checkinLoader">
+                                <tr class="sk-loading" *ngFor="let row of [].constructor(10)">
+                                    <td class="w60">
+                                        <div>&nbsp;</div>
+                                    </td>
+                                    <td class="w100">
+                                        <div>&nbsp;</div>
+                                    </td>
+                                    <td class="w100">
+                                        <div>&nbsp;</div>
+                                    </td>
+                                    <td class="w150">
+                                        <div>&nbsp;</div>
+                                    </td>
+                                    <td class="w150">
+                                        <div>&nbsp;</div>
+                                    </td>
+                                    <td class="W100 text-right">
+                                        <div>&nbsp;</div>
+                                    </td>
+                                    <td class="W100 text-right">
+                                        <div>&nbsp;</div>
+                                    </td>
+                                    <td class="W100 text-right">
+                                        <div>&nbsp;</div>
+                                    </td>
+                                    <td>&nbsp;</td>
+                                </tr>
+                            </ng-container>
+                        </table>
+                    </div>
+                </div>
+                <ng-container *ngIf="checkinData.length == 0">
+                    <app-not-result-found></app-not-result-found>
+                </ng-container>
+            </div>
+        </div>
+
+
+        <div *ngIf="tabType== 'Segment'" style="margin: -10px -10px 0px -10px;">
+            <div class="cs-table">
+                <div class="left-auto df jfe flex-gap-10">
+                    <a mat-icon-button matTooltip="Refresh" (click)="refresh(tabType)">
+                        <i class="material-icons">refresh</i>
+                    </a>
+
+                    <div class="pagination" *ngIf="segment.length > 0">
+                        <div class="pagination-content">
+                            Pages
+                            <span>{{pagenumber}}</span>
+                            of
+                            <span>{{total_page}}</span>
+                        </div>
+                        <div class="page-nav">
+                            <button mat-icon-button matTooltip="Older" (click)="pervious('segment')"
+                                [disabled]="start == 0 || total_page == 0">
+                                <i class="material-icons">navigate_before</i>
+                            </button>
+                            <button mat-icon-button matTooltip="Newer" (click)="nextPage('segment')"
+                                [disabled]="pagenumber == total_page || total_page == 0 ">
+                                <i class="material-icons">navigate_next</i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="sticky-head" style="top: -10px;">
+                    <div class="table-head">
+                        <table>
+                            <tr>
+                                <th class="w50">S.No</th>
+                                <th>Segment</th>
+                                <th class="w200  text-center">Default Discount (%)</th>
+                                <th class="w200  text-center">Customize Discount (%)</th>
+                                <!-- <th class="w140  text-right">Total No. Of Products</th> -->
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="table-head border-top">
+                        <table>
+                            <tr>
+                                <th class="w50">&nbsp;</th>
+                                <th>
+                                    <div class="th-search-acmt">
+                                        <mat-form-field class="example-full-width cs-input select-input">
+                                            <input matInput placeholder="Search..." type="text" name="segment"
+                                                [(ngModel)]="filter.segment"
+                                                (keyup.enter)="!filter.segment ? refresh(tabType) : getSegment()">
+                                        </mat-form-field>
+                                    </div>
+                                </th>
+                                <th class="w200">&nbsp;</th>
+                                <th class="w200">&nbsp;</th>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="table-container" *ngIf="segment.length > 0">
+                    <div class="table-content">
+                        <table>
+                            <ng-container *ngIf="!segmentLoader">
+                                <tr *ngFor="let row of segment; let i = index">
+                                    <td class="w50">{{i+1+sr_no}}</td>
+                                    <td>{{row.category}}</td>
+                                    <td *ngIf="user_type == 1" class="w200 text-center">{{row.distributor_discount}}
+                                    </td>
+                                    <td *ngIf="user_type == 7" class="w200 text-center">{{row.direct_dealer_discount}}
+                                    </td>
+                                    <td class="w200  text-center">
+                                        <ng-container *ngIf="discountFlag == true">
+                                            <div class="th-search-acmt mr30">
+                                                <mat-form-field>
+                                                    <input type="text" matInput class="text-right"
+                                                        onkeypress="return event.charCode>=48 && event.charCode<=57"
+                                                        placeholder="Enter Mrp" name="discount{{i}}" #discount="ngModel"
+                                                        [(ngModel)]="row.discount">
+                                                </mat-form-field>
+                                            </div>
+                                            <div class="action-button text-right">
+                                                <a mat-icon-button matTooltip="Save"
+                                                    (click)="UpdateDiscount(row.id, row.discount)">
+                                                    <i class="material-icons edit">save</i>
+                                                </a>
+                                            </div>
+                                        </ng-container>
+
+                                        <ng-container *ngIf="discountFlag == false">
+                                            {{row.discount}}
+                                            <div class="action-button text-right"
+                                            *ngIf="(login_data.edit_customer_network=='1') ||  (user_type == '1' && login_data.edit_channel_partner=='1')|| (user_type == '3' && login_data.edit_dealer=='1') || (user_type == '7' && login_data.edit_direct_dealers=='1')">
+                                                <a mat-icon-button matTooltip="Discount Edit" (click)="discountEdit()">
+                                                    <i class="material-icons edit">edit</i>
+                                                </a>
+                                            </div>
+                                        </ng-container>
+                                    </td>
+                                    <!-- <td class="w140 text-right"><strong>{{row.total_products}}</strong></td> -->
+                                </tr>
+                            </ng-container>
+                            <ng-container *ngIf="segmentLoader">
+                                <tr class="sk-loading" *ngFor="let row of [].constructor(10)">
+                                    <td class="w50">
+                                        <div>&nbsp;</div>
+                                    </td>
+                                    <td>
+                                        <div>&nbsp;</div>
+                                    </td>
+                                    <td class="w200 ">
+                                        <div>&nbsp;</div>
+                                    </td>
+                                    <td class="w200 text-right">
+                                        <div>&nbsp;</div>
+                                    </td>
+                                </tr>
+                            </ng-container>
+                        </table>
+                    </div>
+                </div>
+
+
+                <ng-container *ngIf="segment.length == 0">
+                    <app-not-result-found></app-not-result-found>
+                </ng-container>
+            </div>
+        </div>
+
+        <div *ngIf="tabType== 'Primary Order'" style="margin: -10px -10px 0px -10px;">
+            <div class="tab-surface">
+                <button *ngFor="let row of calenderInfo; let i =index;" mat-button
+                    [ngClass]="OrderMonth == row.month && OrderYear == row.year ? 'active' : ''"
+                    (click)="getPrimaryOrder('',row.month,row.year, orderStatus);">{{row.month_name}} {{row.year}}
+                    <span class="order-value">&#x20B9; {{row.sale ? (row.sale | number:'1.1-2') : '0'}}</span>
+                </button>
+            </div>
+
+            <div class="tools-container no-sticky">
+                <h2>Primary Order : {{primary_order_list.length ? primary_order_list.length : '0'}}</h2>
+                <div class="left-auto df ac flex-gap-10">
+                    <a mat-icon-button matTooltip="Refresh" (click)="refresh(tabType)">
+                        <i class="material-icons">refresh</i>
+                    </a>
+
+                    <div class="pagination" *ngIf="primary_order_list.length > 0">
+                        <div class="pagination-content">
+                            Pages
+                            <span>{{pagenumber}}</span>
+                            of
+                            <span>{{total_page}}</span>
+                        </div>
+                        <div class="page-nav">
+                            <button mat-icon-button matTooltip="Older" (click)="pervious('primary')"
+                                [disabled]="start == 0 || total_page == 0">
+                                <i class="material-icons">navigate_before</i>
+                            </button>
+                            <button mat-icon-button matTooltip="Newer" (click)="nextPage('primary')"
+                                [disabled]="pagenumber == total_page || total_page == 0 ">
+                                <i class="material-icons">navigate_next</i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="mat-tabbar">
+                        <button mat-button [ngClass]="orderStatus == 'Pending' ? 'active' : ''"
+                            (click)="orderStatus = 'Pending';getPrimaryOrder('',OrderMonth,OrderYear,orderStatus);"><i
+                                class="material-icons">pending_actions</i>Pending ({{primary__count.Pending}})</button>
+                        <button mat-button [ngClass]="orderStatus == 'Approved' ? 'active' : ''"
+                            (click)="orderStatus = 'Approved';getPrimaryOrder('',OrderMonth,OrderYear,orderStatus);"><i
+                                class="material-icons">task_alt</i>Approved ({{primary__count.Approved}})</button>
+                        <button mat-button [ngClass]="orderStatus == 'Reject' ? 'active' : ''"
+                            (click)="orderStatus = 'Reject';getPrimaryOrder('',OrderMonth,OrderYear,orderStatus);"><i
+                                class="material-icons">unpublished</i>Reject ({{primary__count.Reject}})</button>
+                        <button mat-button [ngClass]="orderStatus == 'Draft' ? 'active' : ''"
+                            (click)="orderStatus = 'Draft';getPrimaryOrder('',OrderMonth,OrderYear,orderStatus);"><i
+                                class="material-icons">back_hand</i>Hold ({{primary__count.Draft}})</button>
+                        <button mat-button [ngClass]="orderStatus == 'Partial_Dispatch' ? 'active' : ''"
+                            (click)="orderStatus = 'Partial_Dispatch';getPrimaryOrder('',OrderMonth,OrderYear,orderStatus);"><i
+                                class="material-icons">local_shipping</i>Partially Dispatch
+                            ({{primary__count.Partial_Dispatch}})</button>
+                        <button mat-button [ngClass]="orderStatus == 'Dispatch' ? 'active' : ''"
+                            (click)="orderStatus = 'Dispatch';getPrimaryOrder('',OrderMonth,OrderYear,orderStatus);"><i
+                                class="material-icons">local_shipping</i>Dispatch
+                            ({{primary__count.Dispatch}})</button>
+                    </div>
+                </div>
+            </div>
+            <div class="cs-table">
+                <div class="sticky-head" style="top: -10px;">
+                    <div class="table-head">
+                        <table>
+                            <tr>
+                                <th class="w50">S NO</th>
+                                <th class="w110">Date</th>
+                                <th class="w110">Created By</th>
+                                <th class="w80">Order Id</th>
+                                <th class="w110" *ngIf="orderStatus == 'Approved' || orderStatus == 'Dispatch'">Order
+                                    Number</th>
+                                <th class="w80 text-center">Total Items</th>
+                                <th class="w90 text-right">Item QTY.</th>
+                                <th class="w90 text-right" *ngIf="orderStatus == 'Partial_Dispatch'">Dispatch QTY.</th>
+                                <th class="w90 text-right" *ngIf="orderStatus == 'Partial_Dispatch'">Pending QTY.</th>
+                                <th class="w90 text-right">Order Amount</th>
+                                <th class="w200">Remark</th>
+                                <th class="w200" *ngIf="orderStatus == 'Reject' || orderStatus == 'Draft'">Reason</th>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="table-head border-top">
+                        <table>
+                            <tr>
+                                <th class="w50">&nbsp;</th>
+                                <th class="w110">
+                                    <div class="th-search-acmt">
+                                        <mat-form-field class="cs-input date-column infix-bodr">
+                                            <input matInput [matDatepicker]="picker" placeholder="Date"
+                                                name="date_created" [(ngModel)]="filter.date_created"
+                                                (dateChange)="date_format(tabType)" [max]="today_date" disabled>
+                                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                            <mat-datepicker #picker disabled="false"></mat-datepicker>
+                                        </mat-form-field>
+                                    </div>
+                                </th>
+                                <th class="w110">
+                                    <div class="th-search-acmt">
+                                        <mat-form-field class="example-full-width cs-input select-input">
+                                            <input matInput placeholder="Search..." type="text" name="created_by_name"
+                                                [(ngModel)]="filter.created_by_name"
+                                                (keyup.enter)="!filter.created_by_name ?  refresh(tabType) : getPrimaryOrder('',currentMonth_no,currentYear,orderStatus)">
+                                        </mat-form-field>
+                                    </div>
+                                </th>
+                                <th class="w80">
+                                    <div class="th-search-acmt">
+                                        <mat-form-field class="example-full-width cs-input select-input">
+                                            <input matInput placeholder="Search..." type="text" name="order_no"
+                                                [(ngModel)]="filter.order_no"
+                                                (keyup.enter)="!filter.order_no ?  refresh(tabType) : getPrimaryOrder('',currentMonth_no,currentYear,orderStatus)">
+                                        </mat-form-field>
+                                    </div>
+                                </th>
+                                <th class="w110" *ngIf="orderStatus == 'Approved' || orderStatus == 'Dispatch'">
+                                    <div class="th-search-acmt">
+                                        <mat-form-field class="example-full-width cs-input select-input">
+                                            <input matInput placeholder="Search..." type="text" name="account_order_no"
+                                                [(ngModel)]="filter.account_order_no"
+                                                (keyup.enter)="!filter.account_order_no ?  refresh(tabType) : getPrimaryOrder('',currentMonth_no,currentYear,orderStatus)">
+                                        </mat-form-field>
+                                    </div>
+                                </th>
+                                <th class="w80">&nbsp;</th>
+                                <th class="w90 text-center">&nbsp;</th>
+                                <th class="w90 text-right">&nbsp;</th>
+                                <th class="w90 text-right" *ngIf="orderStatus == 'Partial_Dispatch'">&nbsp;</th>
+                                <th class="w90 text-right" *ngIf="orderStatus == 'Partial_Dispatch'">&nbsp;</th>
+                                <!-- <th class="w90 text-right">&nbsp;</th> -->
+                                <th class="w200">&nbsp;</th>
+                                <th class="w200" *ngIf="orderStatus == 'Reject' || orderStatus == 'Draft'">&nbsp;</th>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <div class="table-content">
+                        <table>
+                            <ng-container *ngIf="!primaryLoader">
+                                <tr *ngFor="let row of primary_order_list; let i =index;">
+                                    <td class="w50">{{i+1+sr_no}}</td>
+                                    <td class="w110">{{row.date_created | date : 'd MMM y , h:mm a' }}</td>
+                                    <td class="w110">{{row.created_by_name}}</td>
+                                    <td class="w80">
+                                        <a class="link-btn" [routerLink]="[ 'order-detail/', row.id ]"
+                                            [queryParams]="{'id':row.id, 'status':orderStatus}"
+                                            routerLinkActive="active">{{row.order_no}}</a>
+                                    </td>
+                                    <td class="w110" *ngIf="orderStatus == 'Approved' || orderStatus == 'Dispatch'">
+                                        {{row.account_order_no}}</td>
+                                    <td class="w80 text-center">{{row.order_item}}</td>
+                                    <td class="w90 text-right">{{row.total_order_qty}}</td>
+                                    <td class="w90 text-right" *ngIf="orderStatus == 'Partial_Dispatch'">
+                                        {{row.dispatch_qty}}</td>
+                                    <td class="w90 text-right" *ngIf="orderStatus == 'Partial_Dispatch'">
+                                        {{row.pending_qty}}</td>
+                                    <td class="w90 text-right"><strong>&#x20B9; {{row.order_grand_total}}</strong></td>
+                                    <td class="w200">{{row.remark}}</td>
+                                    <td class="w200" *ngIf="orderStatus == 'Reject' || orderStatus == 'Draft'">
+                                        {{row.remark}}</td>
+                                </tr>
+                            </ng-container>
+                            <ng-container *ngIf="primaryLoader">
+                                <tr class="sk-loading" *ngFor="let row of [].constructor(50)">
+                                    <td class="w50">
+                                        <div>&nbsp;</div>
+                                    </td>
+                                    <td class="w110">
+                                        <div>&nbsp;</div>
+                                    </td>
+                                    <td class="w110">
+                                        <div>&nbsp;</div>
+                                    </td>
+                                    <td class="w80">
+                                        <div>&nbsp;</div>
+                                    </td>
+                                    <td *ngIf="orderStatus == 'Approved' || orderStatus == 'Dispatch'" class="w110">
+                                        <div>&nbsp;</div>
+                                    </td>
+                                    <!-- <td class="w180"><div>&nbsp;</div></td> -->
+                                    <!-- <td><div>&nbsp;</div></td> -->
+                                    <td class="W80 text-right">
+                                        <div>&nbsp;</div>
+                                    </td>
+                                    <td class="W90 text-right">
+                                        <div>&nbsp;</div>
+                                    </td>
+                                    <td *ngIf="orderStatus == 'Partial_Dispatch'" class="W90 text-right">
+                                        <div>&nbsp;</div>
+                                    </td>
+                                    <td *ngIf="orderStatus == 'Partial_Dispatch'" class="W90 text-right">
+                                        <div>&nbsp;</div>
+                                    </td>
+                                    <td class="W200 text-right">
+                                        <div>&nbsp;</div>
+                                    </td>
+                                    <td *ngIf="orderStatus == 'Reject' || orderStatus == 'Draft'"
+                                        class="W200 text-right">
+                                        <div>&nbsp;</div>
+                                    </td>
+                                    <td>
+                                        <div>&nbsp;</div>
+                                    </td>
+                                </tr>
+                            </ng-container>
+                        </table>
+                    </div>
+                </div>
+                <ng-container *ngIf="primary_order_list.length <= 0">
+                    <app-not-result-found></app-not-result-found>
+                </ng-container>
+            </div>
+        </div>
+
+        <div *ngIf="tabType== 'Secondary Order'" style="margin: -10px -10px 0px -10px;">
+
+            <div class="tab-surface">
+                <button *ngFor="let row of Secondary_calenderInfo; let i =index;" mat-button
+                    [ngClass]="SecOrderMonth == row.month && SecOrderYear == row.year ? 'active' : ''"
+                    (click)="getSecondaryOrder('',row.month,row.year, orderStatus);">{{row.month_name}} {{row.year}}
+                    <span class="order-value">&#x20B9; {{row.sale ? (row.sale | number:'1.1-2') : '0'}}</span>
+                </button>
+            </div>
+
+            <div class="tools-container no-sticky">
+                <h2>Secondary Order : {{primary_order_list.length ? primary_order_list.length : '0'}}</h2>
+                <div class="left-auto df flex-gap-10">
+                    <a mat-icon-button matTooltip="Refresh" (click)="refresh(tabType)">
+                        <i class="material-icons">refresh</i>
+                    </a>
+
+                    <div class="pagination" *ngIf="secondary_order_list.length > 0">
+                        <div class="pagination-content">
+                            Pages
+                            <span>{{pagenumber}}</span>
+                            of
+                            <span>{{total_page}}</span>
+                        </div>
+                        <div class="page-nav">
+                            <button mat-icon-button matTooltip="Older" (click)="pervious('secondary')"
+                                [disabled]="start == 0 || total_page == 0">
+                                <i class="material-icons">navigate_before</i>
+                            </button>
+                            <button mat-icon-button matTooltip="Newer" (click)="nextPage('secondary')"
+                                [disabled]="pagenumber == total_page || total_page == 0 ">
+                                <i class="material-icons">navigate_next</i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="mat-tabbar">
+                        <button mat-button [ngClass]="orderStatus == 'Pending' ? 'active' : ''"
+                            (click)="orderStatus = 'Pending';getSecondaryOrder('',SecOrderMonth,SecOrderYear,orderStatus);">
+                            <i class="material-icons">pending_actions</i>
+                            Pending ({{secondary__count.Pending}})
+                        </button>
+                        <button mat-button [ngClass]="orderStatus == 'Approved' ? 'active' : ''"
+                            (click)="orderStatus = 'Approved';getSecondaryOrder('',SecOrderMonth,SecOrderYear,orderStatus);">
+                            <i class="material-icons">task_alt</i>
+                            Approved ({{secondary__count.Approved}})
+                        </button>
+                        <button mat-button [ngClass]="orderStatus == 'Reject' ? 'active' : ''"
+                            (click)="orderStatus = 'Reject';getSecondaryOrder('',SecOrderMonth,SecOrderYear,orderStatus);">
+                            <i class="material-icons">unpublished</i>
+                            Reject ({{secondary__count.Reject}})
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cs-table horizontal-scroll" style="width: 100%">
+                <div class="sticky-head">
+                    <div class="table-head">
+                        <table>
+                            <tr>
+                                <th class="w50">S NO</th>
+                                <th class="w110">Date</th>
+                                <th class="w110">Created By</th>
+                                <th class="w80">Order Id</th>
+                                <th class="w200">Retailer Details</th>
+                                <th class="w80 text-center">Total Items</th>
+                                <th class="w90 text-right">Item QTY.</th>
+                                <th class="w90 text-right">Order Amount</th>
+                                <th class="w200">Remark</th>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="table-head border-top">
+                        <table>
+                            <tr>
+                                <th class="w50">&nbsp;</th>
+                                <th class="w110">
+                                    <div class="th-search-acmt">
+                                        <mat-form-field class="cs-input date-column infix-bodr">
+                                            <input matInput [matDatepicker]="picker" placeholder="Date"
+                                                name="date_created" [(ngModel)]="filter.date_created"
+                                                (dateChange)="date_format(tabType)" [max]="today_date" disabled>
+                                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                            <mat-datepicker #picker disabled="false"></mat-datepicker>
+                                        </mat-form-field>
+                                    </div>
+                                </th>
+                                <th class="w110">
+                                    <div class="th-search-acmt">
+                                        <mat-form-field class="example-full-width cs-input select-input">
+                                            <input matInput placeholder="Search..." type="text" name="created_by"
+                                                [(ngModel)]="filter.created_by"
+                                                (keyup.enter)="!filter.created_by ?  refresh(tabType) : getSecondaryOrder('',currentMonth_no,currentYear, orderStatus)">
+                                        </mat-form-field>
+
+                                    </div>
+                                </th>
+                                <th class="w80">
+                                    <div class="th-search-acmt">
+                                        <mat-form-field class="example-full-width cs-input select-input">
+                                            <input matInput placeholder="Search..." type="text" name="order_no"
+                                                [(ngModel)]="filter.order_no"
+                                                (keyup.enter)="!filter.order_no ?  refresh(tabType) : getSecondaryOrder('',currentMonth_no,currentYear, orderStatus)">
+                                        </mat-form-field>
+                                    </div>
+                                </th>
+                                <th class="w200">
+                                    <div class="th-search-acmt">
+                                        <mat-form-field class="example-full-width cs-input select-input">
+                                            <input matInput placeholder="Search..." type="text" name="company_name"
+                                                [(ngModel)]="filter.company_name"
+                                                (keyup.enter)="!filter.company_name ?  refresh(tabType) : getSecondaryOrder('',currentMonth_no,currentYear, orderStatus)">
+                                        </mat-form-field>
+                                    </div>
+                                </th>
+
+
+                                <th class="w80 text-center">&nbsp;</th>
+                                <th class="w90 text-right">&nbsp;</th>
+                                <th class="w90 text-right">&nbsp;</th>
+                                <th class="w200">&nbsp;</th>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <div class="table-content">
+                        <table>
+                            <ng-container *ngIf="!secondaryLoader">
+                                <tr *ngFor="let row of secondary_order_list; let i =index;">
+                                    <td class="w50">{{i+1+sr_no}}</td>
+                                    <td class="w110">{{row.date_created | date : 'd MMM y , h:mm a' }}</td>
+                                    <td class="w110">{{row.created_by_name}}</td>
+                                    <td class="w80">
+                                        <a class="link-btn" [routerLink]="['secondary-order-detail/', row.id ]"
+                                            [queryParams]="{'id':row.id, 'status':orderStatus}"
+                                            routerLinkActive="active">{{row.order_no}}</a>
+                                    </td>
+                                    <td class="w200">{{row.company_name}} - ({{row.name}} {{row.mobile}})</td>
+                                    <td class="w80 text-center">{{row.order_item}}</td>
+                                    <td class="w90 text-right">{{row.total_order_qty}}</td>
+                                    <td class="w90 text-right"><strong>&#x20B9; {{row.order_grand_total}}</strong></td>
+                                    <td class="w200">{{row.remark}}</td>
+                                </tr>
+                            </ng-container>
+                            <ng-container *ngIf="secondaryLoader">
+                                <tr class="sk-loading" *ngFor="let row of [].constructor(50)">
+                                    <td class="w50">
+                                        <div>&nbsp;</div>
+                                    </td>
+                                    <td class="w110">
+                                        <div>&nbsp;</div>
+                                    </td>
+                                    <td class="w110">
+                                        <div>&nbsp;</div>
+                                    </td>
+                                    <td class="w80">
+                                        <div>&nbsp;</div>
+                                    </td>
+                                    <td class="w200">
+                                        <div>&nbsp;</div>
+                                    </td>
+                                    <td class="W80 text-right">
+                                        <div>&nbsp;</div>
+                                    </td>
+                                    <td class="W90 text-right">
+                                        <div>&nbsp;</div>
+                                    </td>
+                                    <td class="W90 text-right">
+                                        <div>&nbsp;</div>
+                                    </td>
+                                    <td class="W200 text-right">
+                                        <div>&nbsp;</div>
+                                    </td>
+
+                                </tr>
+                            </ng-container>
+                        </table>
+                    </div>
+                </div>
+                <ng-container *ngIf="secondary_order_list.length <= 0">
+                    <app-not-result-found></app-not-result-found>
+                </ng-container>
+            </div>
+
+        </div>
+
+        <div *ngIf="tabType== 'Retailer'" style="margin: -10px -10px 0px -10px;">
+            <div class="cs-table">
+                <div class="left-auto jfe df flex-gap-10">
+                    <a mat-icon-button matTooltip="Refresh" (click)="refresh(tabType)">
+                        <i class="material-icons">refresh</i>
+                    </a>
+
+                    <div class="pagination" *ngIf="retailer.length > 0">
+                        <div class="pagination-content">
+                            Pages
+                            <span>{{pagenumber}}</span>
+                            of
+                            <span>{{total_page}}</span>
+                        </div>
+                        <div class="page-nav">
+                            <button mat-icon-button matTooltip="Older" (click)="pervious('retailer')"
+                                [disabled]="start == 0 || total_page == 0">
+                                <i class="material-icons">navigate_before</i>
+                            </button>
+                            <button mat-icon-button matTooltip="Newer" (click)="nextPage('retailer')"
+                                [disabled]="pagenumber == total_page || total_page == 0 ">
+                                <i class="material-icons">navigate_next</i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="sticky-head" style="top: -10px;">
+                    <div class="table-head">
+                        <table>
+                            <tr>
+                                <th class="w40">S.No.</th>
+                                <th class="w120">Customer Category</th>
+                                <th class="w160">Company Name</th>
+                                <th class="w140">Contact Person</th>
+                                <th class="w80">Mobile</th>
+                                <th class="w180">Address</th>
+                                <th class="w80 text-right">Last Visit</th>
+                                <th class="w80 text-right">Last Order</th>
+                                <th class="w80 text-right">Order Frequency</th>
+                                <th class="w100 text-right">Current Year Sales</th>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="table-head border-top">
+                        <table>
+                            <tr>
+                                <th class="w40">&nbsp;</th>
+                                <th class="w120">
+                                    <div class="th-search-acmt">
+                                        <mat-form-field class="example-full-width cs-input select-input">
+                                            <input matInput placeholder="Search..." type="text" name="dr_sale_category"
+                                                [(ngModel)]="filter.dr_sale_category"
+                                                (keyup.enter)="!filter.dr_sale_category ?  refresh(tabType) : getRetailer()">
+                                        </mat-form-field>
+                                    </div>
+                                </th>
+                                <th class="w160">
+                                    <div class="th-search-acmt">
+                                        <mat-form-field class="example-full-width cs-input select-input">
+                                            <input matInput placeholder="Search..." type="text" name="company_name"
+                                                [(ngModel)]="filter.company_name"
+                                                (keyup.enter)="!filter.company_name ?  refresh(tabType) : getRetailer()">
+                                        </mat-form-field>
+                                    </div>
+                                </th>
+                                <th class="w140">
+                                    <div class="th-search-acmt">
+                                        <mat-form-field class="example-full-width cs-input select-input">
+                                            <input matInput placeholder="Search..." type="text" name="contact_person"
+                                                [(ngModel)]="filter.contact_person"
+                                                (keyup.enter)="!filter.contact_person ?  refresh(tabType) : getRetailer()">
+                                        </mat-form-field>
+                                    </div>
+                                </th>
+                                <th class="w80">
+                                    <div class="th-search-acmt">
+                                        <mat-form-field class="example-full-width cs-input select-input">
+                                            <input matInput placeholder="Search..." type="text" name="mobile"
+                                                [(ngModel)]="filter.mobile"
+                                                onkeypress="return event.charCode>=48 && event.charCode<=57"
+                                                (keyup.enter)="!filter.mobile ?  refresh(tabType) : getRetailer()">
+                                        </mat-form-field>
+                                    </div>
+                                </th>
+                                <th class="w180">&nbsp;</th>
+                                <th class="w80">&nbsp;</th>
+                                <th class="w80">&nbsp;</th>
+                                <th class="w80">&nbsp;</th>
+                                <th class="w100">&nbsp;</th>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+
+                <div class="table-container" *ngIf="retailer.length > 0">
+                    <div class="table-content">
+                        <table>
+
+                            <ng-container *ngIf="!retailerLoader">
+                                <tr *ngFor="let row of retailer; let i =index">
+                                    <td class="w40">{{i+1+sr_no}}</td>
+                                    <td class="w120"><strong>{{row.dr_sale_category ? row.dr_sale_category
+                                            :'---'}}</strong></td>
+                                    <td class="w160">{{row.company_name | titlecase}}</td>
+                                    <td class="w140">{{row.contact_person_name | titlecase}}</td>
+                                    <td class="w80">{{row.mobile}}</td>
+                                    <td class="w180">{{row.address}}</td>
+                                    <td class="w80 text-right">{{row.last_checkin == 0 ? '--' : row.last_checkin + " day's ago" }}</td>
+                                    <td class="w80 text-right">
+                                        <ng-container *ngIf="row.last_order_days">
+                                            {{row.last_order_days == 0 ? 'Today' : row.last_order_days + " day's ago" }}
+                                        </ng-container>
+                                    </td>
+                                    <td class="w80 text-right">
+                                        {{row.order_frequency == '0' ? '---' : row.order_frequency + " day"}}
+                                    </td>
+                                    <td class="w100 text-right"><strong>&#x20B9; {{row.current_year_sales}}</strong>
+                                    </td>
+                                </tr>
+                            </ng-container>
+                            <ng-container *ngIf="retailerLoader">
+                                <tr class="sk-loading" *ngFor="let row of [].constructor(10)">
+                                    <td class="w40">
+                                        <div>&nbsp;</div>
+                                    </td>
+                                    <td class="w60 text-center">
+                                        <div>&nbsp;</div>
+                                    </td>
+                                    <td class="w160">
+                                        <div>&nbsp;</div>
+                                    </td>
+                                    <td class="w140">
+                                        <div>&nbsp;</div>
+                                    </td>
+                                    <td class="w80">
+                                        <div>&nbsp;</div>
+                                    </td>
+                                    <td class="w180">
+                                        <div>&nbsp;</div>
+                                    </td>
+                                    <td class="w80 text-right">
+                                        <div>&nbsp;</div>
+                                    </td>
+                                    <td class="w80 text-right">
+                                        <div>&nbsp;</div>
+                                    </td>
+                                    <td class="w80 text-right">
+                                        <div>&nbsp;</div>
+                                    </td>
+                                    <td class="w100 text-right">
+                                        <div>&nbsp;</div>
+                                    </td>
+                                </tr>
+                            </ng-container>
+                        </table>
+                    </div>
+                </div>
+
+                <ng-container *ngIf="retailer.length <= 0">
+                    <app-not-result-found></app-not-result-found>
+                </ng-container>
+            </div>
+        </div>
+
+
+        <div *ngIf="tabType== 'Target'">
+            <div class="tab-surface" style="margin: -10px -10px 0px -10px;">
+                <button *ngFor="let row of target_calenderInfo; let i =index;" mat-button
+                    [ngClass]="targetMonth == row.month && targetYear == row.year ? 'active' : ''"
+                    (click)="getTarget(row.month,row.year);">{{row.month_name}} {{row.year}}</button>
+            </div>
+            <div class="row">
+                <div class="col s12 m5 l5">
+                    <div [hidden]="hide_target_chart" class="card mt10" *ngIf="!skLoading">
+                        <div class="card-head">
+                            <h2>Target V/S Achievement</h2>
+                        </div>
+                        <canvas #targetbarCanvas></canvas>
+                        <!-- <div style="display: block;" class="chart">
+                    <img src="assets/chart/2.jpeg" style="max-width: 100%;">
+                </div> -->
+                    </div>
+                </div>
+
+
+                <div class="col s12 m7 l7">
+                    <div class="card mt10" *ngIf="!skLoading">
+                        <div class="card-head">
+                            <h2>Target V/S Achievement</h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="cs-table left-right-10">
+                                <div class="sticky-head border-top">
+                                    <div class="table-head">
+                                        <table>
+                                            <tr>
+                                                <th class="w50">S.No.</th>
+                                                <th>Brand</th>
+                                                <th class="w120 text-right">Target (in Lakhs)</th>
+                                                <th class="w100 text-right">Achieved</th>
+                                                <th class="w85 text-center">Achieved %</th>
+                                                <th class="w100">Status</th>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+
+
+                                <div class="table-container pb0">
+                                    <div class="table-content">
+                                        <table>
+                                            <ng-container *ngIf="!targetLoader">
+                                                <tr *ngFor="let row of target_list; let i =index">
+                                                    <td class="w50">{{i+1}}</td>
+                                                    <td>{{row.brand_name+'-'+row.brand_code}}</td>
+                                                    <td class="w120 text-right"><strong>&#x20B9; {{row.value}}</strong>
+                                                    </td>
+                                                    <td class="w100 text-right Approve"><strong>&#x20B9; {{row.achieved
+                                                            | number:'1.0-1'}}</strong>
+                                                    </td>
+                                                    <td class="w85 text-center">{{row.target_percentage ?
+                                                        row.target_percentage : 0}}%</td>
+                                                    <td *ngIf="row.achieved >= row.value" class="w100 green-bg"
+                                                        style="color:white">Completed</td>
+                                                    <td *ngIf="row.achieved < row.value" class="w100 yellow-bgclr">In
+                                                        Progress</td>
+                                                </tr>
+                                            </ng-container>
+                                            <ng-container *ngIf="targetLoader">
+                                                <tr class="sk-loading" *ngFor="let row of [].constructor(10)">
+                                                    <td class="w50">
+                                                        <div>&nbsp;</div>
+                                                    </td>
+                                                    <td class="w100 text-center">
+                                                        <div>&nbsp;</div>
+                                                    </td>
+                                                    <td class="w100">
+                                                        <div>&nbsp;</div>
+                                                    </td>
+                                                    <td class="w85">
+                                                        <div>&nbsp;</div>
+                                                    </td>
+                                                    <td *ngIf="row.achieved >= row.value" class="w100">
+                                                        <div>&nbsp;</div>
+                                                    </td>
+                                                    <td *ngIf="row.achieved < row.value" class="w100">
+                                                        <div>&nbsp;</div>
+                                                    </td>
+                                                </tr>
+                                            </ng-container>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+
+        </div>
+
+
+
+        <div *ngIf="tabType== 'Ledger'" style="margin: -10px -10px 0px -10px;">
+            <div class="tools-container no-sticky">
+                <div class="mat-tabbar">
+                    <button mat-button [ngClass]="{'active' :ledgerType== 'ledger'}"
+                        (click)="clearFilter(); getLedger(); ledgerType= 'ledger'"><i
+                            class="material-icons">receipt_long</i>Ledger</button>
+                    <button mat-button [ngClass]="{'active' :ledgerType== 'billing'}"
+                        (click)="clearFilter(); invoice_data(currentMonth_no,currentYear); ledgerType= 'billing'"><i
+                            class="material-icons">receipt</i>Invoice</button>
+                    <!-- <button mat-button [ngClass]="{'active' :ledgerType== 'payment'}"
+                        (click)="clearFilter(); payment_data(currentMonth_no,currentYear); ledgerType = 'payment'"><i
+                            class="material-icons">receipt</i>Payment</button>
+                    <button mat-button [ngClass]="{'active' :ledgerType== 'credit_note'}"
+                        (click)="clearFilter(); cn_data(currentMonth_no,currentYear); ledgerType = 'credit_note'"><i
+                            class="material-icons">receipt</i>Credit Note</button> -->
+                </div>
+                <div class="left-auto df flex-gap-10">
+                    <a mat-icon-button matTooltip="Refresh" (click)="refresh(tabType)">
+                        <i class="material-icons">refresh</i>
+                    </a>
+
+                    <div class="pagination"
+                        *ngIf="(ledgerType== 'ledger' && ledger_data.length > 0) || (ledgerType== 'billing' && invoice_listing.length > 0) || (ledgerType== 'payment'&& payment_listing.length > 0) || (ledgerType== 'credit_note' && cn_listing.lenth > 0)">
+                        <div class="pagination-content">
+                            Pages
+                            <span>{{pagenumber}}</span>
+                            of
+                            <span>{{total_page}}</span>
+                        </div>
+                        <div class="page-nav">
+                            <button mat-icon-button matTooltip="Older" (click)="pervious('ledger')"
+                                [disabled]="start == 0 || total_page == 0">
+                                <i class="material-icons">navigate_before</i>
+                            </button>
+                            <button mat-icon-button matTooltip="Newer" (click)="nextPage('ledger')"
+                                [disabled]="pagenumber == total_page || total_page == 0 ">
+                                <i class="material-icons">navigate_next</i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="tab-surface" *ngIf="ledgerType == 'billing' ">
+                <button *ngFor="let row of invoice_calenderInfo; let i =index;" mat-button
+                    [ngClass]="invoiceMonth == row.month && invoiceYear == row.year ? 'active' : ''"
+                    (click)="invoice_data(row.month, row.year);">{{row.month_name}} {{row.year}}<span
+                        class="order-value">&#x20B9; {{row.total_billing_amount ? row.total_billing_amount:
+                        '0'}}</span></button>
+            </div>
+            <div class="tab-surface" *ngIf="ledgerType == 'payment' ">
+                <button *ngFor="let row of payment_calenderInfo; let i =index;" mat-button
+                    [ngClass]="paymentMonth == row.month && paymentYear == row.year ? 'active' : ''"
+                    (click)="payment_data(row.month,row.year);">{{row.month_name}} {{row.year}}<span
+                        class="order-value">&#x20B9; {{row.total_payment_amount ? row.total_payment_amount:
+                        '0'}}</span></button>
+            </div>
+            <div class="tab-surface" *ngIf="ledgerType == 'credit_note' ">
+                <button *ngFor="let row of cn_calenderInfo; let i =index;" mat-button
+                    [ngClass]="cnMonth == row.month && cnYear == row.year ? 'active' : ''"
+                    (click)="cn_data(row.month,row.year);">{{row.month_name}} {{row.year}}<span
+                        class="order-value">&#x20B9; {{row.total_payment_amount ? row.total_payment_amount:
+                        '0'}}</span></button>
+            </div>
+            <div class="cs-table" *ngIf="ledgerType== 'ledger'">
+                <div class="sticky-head" style="top: -10px;">
+                    <div class="table-head">
+                        <table>
+                            <tr>
+                                <th class="w60">S.no.</th>
+                                <th class="w150">Date</th>
+                                <th class="text-right">Payment</th>
+                                <th class="text-right">Billing</th>
+                                <th class="w160 text-right">Balance</th>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="table-head border-top">
+                        <table class="sno-border">
+                            <tr>
+                                <th class="w60">&nbsp;</th>
+                                <th class="w150">
+                                    <div class="th-search-acmt">
+                                        <mat-form-field class="cs-input date-column infix-bodr">
+                                            <input matInput [matDatepicker]="picker1" placeholder="Date" name="date"
+                                                [(ngModel)]="filter.date_created" (dateChange)="date_format(tabType)"
+                                                disabled>
+                                            <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                                            <mat-datepicker #picker1 disabled="false"></mat-datepicker>
+                                        </mat-form-field>
+                                    </div>
+                                </th>
+                                <th class="text-right">&nbsp;</th>
+                                <th class="text-right">&nbsp;</th>
+                                <th class="w160">&nbsp;</th>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+
+                <div class="table-container">
+                    <div class="table-content">
+                        <table>
+                            <tr *ngFor="let row of ledger_data; let i =index">
+                                <td class="w60">{{i+1+sr_no}}</td>
+                                <td class="w150">{{row.date_created | date : 'dd MMM yyy ,h:mm a'}}</td>
+                                <td class="text-right"><strong class="green-clr">&#x20B9;{{row.transaction_type ==
+                                        'Credit' ? row.transaction_amount : 0}}</strong>
+                                    <br>
+                                    {{row.transaction_type == 'Credit' ? row.remark : ' '}}
+                                </td>
+                                <td class="text-right"><strong class="red-clr">&#x20B9; {{row.transaction_type ==
+                                        'Debit' ? row.transaction_amount : 0}}</strong>
+                                    <br>
+                                    {{row.transaction_type == 'Debit' ? row.remark : ' '}}
+                                </td>
+                                <td class="w160 text-right"><strong>&#x20B9; {{row.balance_amount}}</strong></td>
+
+
+                            </tr>
+
+                            <ng-container *ngIf="ledger_loader">
+                                <tr class="sk-loading" *ngFor="let row of [].constructor(10)">
+                                    <td class="w60">
+                                        <div>&nbsp;</div>
+                                    </td>
+                                    <td class="w150">
+                                        <div>&nbsp;</div>
+                                    </td>
+                                    <td>
+                                        <div>&nbsp;</div>
+                                    </td>
+                                    <td>
+                                        <div>&nbsp;</div>
+                                    </td>
+                                    <td class="w160">
+                                        <div>&nbsp;</div>
+                                    </td>
+
+                                </tr>
+                            </ng-container>
+                        </table>
+                    </div>
+                </div>
+                <ng-container *ngIf="ledger_data.length == 0">
+                    <app-not-result-found></app-not-result-found>
+                </ng-container>
+            </div>
+            <div class="cs-table" *ngIf="ledgerType == 'billing'">
+                <div class="sticky-head" style="top: -10px;">
+                    <div class="table-head">
+                        <table>
+                            <tr>
+                                <th class="w30">S.no.</th>
+                                <th class="w100">Date Created</th>
+                                <th class="w100">Document Date</th>
+                                <th class="w100">Invoice Number</th>
+                                <th class="w100">ERP</th>
+                                <th class="w80 text-center">Total Item</th>
+                                <th class="w80 text-center">Total QTY.</th>
+                                <th class="w100 text-right">Invoice Amount</th>
+                                <th class="w100 text-right">Payment</th>
+                                <th class="w100 text-right">Balance Amount</th>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="table-head border-top">
+                        <table>
+                            <tr>
+                                <th class="w30">&nbsp;</th>
+                                <th class="w100">
+                                    <div class="th-search-acmt">
+                                        <mat-form-field class="example-full-width cs-input">
+                                            <input matInput [matDatepicker]="picker2" placeholder="Date" name="date"
+                                                [(ngModel)]="filter.date_created" (dateChange)="date_format(tabType)"
+                                                readonly>
+                                            <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                                            <mat-datepicker #picker2></mat-datepicker>
+                                        </mat-form-field>
+                                    </div>
+                                </th>
+                                <th class="w100">
+                                    <div class="th-search-acmt">
+                                        <mat-form-field class="example-full-width cs-input">
+                                            <input matInput [matDatepicker]="Invoicepicker" placeholder="Date"
+                                                name="billing_date" [(ngModel)]="filter.billing_date"
+                                                (dateChange)="date_format1(tabType)" readonly>
+                                            <mat-datepicker-toggle matSuffix
+                                                [for]="Invoicepicker"></mat-datepicker-toggle>
+                                            <mat-datepicker #Invoicepicker></mat-datepicker>
+                                        </mat-form-field>
+                                    </div>
+                                </th>
+                                <th class="w100">
+                                    <div class="th-search-acmt">
+                                        <mat-form-field class="example-full-width cs-input">
+                                            <input matInput placeholder="Search" name="bill_number"
+                                                [(ngModel)]="filter.bill_number"
+                                                (keyup.enter)="!filter.bill_number ? refresh(tabType): invoice_data(invoiceMonth,invoiceYear)">
+                                        </mat-form-field>
+                                    </div>
+                                </th>
+                                <th class="w100">&nbsp;</th>
+
+                                <th class="w80 text-center">&nbsp;</th>
+                                <th class="w80 text-center">&nbsp;</th>
+                                <th class="w100 text-right">&nbsp;</th>
+                                <th class="w100 text-right">&nbsp;</th>
+                                <th class="w100 text-right">&nbsp;</th>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+
+                <div class="table-container">
+                    <div class="table-content">
+                        <table>
+                            <tr *ngFor="let row of invoice_listing; let i =index">
+                                <td class="w30">{{i+1+sr_no}}</td>
+                                <td class="w100">{{row.date_created | date:'dd MMM yyyy , h:mm a'}}</td>
+                                <td class="w100">{{row.billing_date | date:'dd MMM yyyy'}}</td>
+                                <td class="w100"><a class="link-btn"
+                                        [routerLink]="[ 'order-detail/', i+1 ]">{{row.bill_number}}</a></td>
+                                <td class="w100">{{row.customer_code}}</td>
+                                <td class="w80 text-center">{{row.total_billing_item}}</td>
+                                <td class="w80 text-center">{{row.total_billing_item_qty}}</td>
+                                <td class="w100 text-right"><strong>&#x20B9; {{row.total_billing_amount}}</strong></td>
+                                <td class="w100 text-right"><strong>&#x20B9; {{row.billing_receive_amount}}</strong>
+                                </td>
+                                <td class="w100 text-right"><strong>&#x20B9; {{row.pending_balance}}</strong></td>
+                            </tr>
+
+                            <ng-container *ngIf="invoice_loader">
+                                <tr class="sk-loading" *ngFor="let row of [].constructor(10)">
+                                    <td class="w30">
+                                        <div>&nbsp;</div>
+                                    </td>
+                                    <td class="w100">
+                                        <div>&nbsp;</div>
+                                    </td>
+                                    <td class="w100">
+                                        <div>&nbsp;</div>
+                                    </td>
+                                    <td class="w100">
+                                        <div>&nbsp;</div>
+                                    </td>
+                                    <td class="w100">
+                                        <div>&nbsp;</div>
+                                    </td>
+                                    <td class="w80">
+                                        <div>&nbsp;</div>
+                                    </td>
+                                    <td class="w80">
+                                        <div>&nbsp;</div>
+                                    </td>
+                                    <td class="w100">
+                                        <div>&nbsp;</div>
+                                    </td>
+                                    <td class="W100 text-right">
+                                        <div>&nbsp;</div>
+                                    </td>
+                                    <td class="W100 text-right">
+                                        <div>&nbsp;</div>
+                                    </td>
+                                </tr>
+                            </ng-container>
+                        </table>
+                    </div>
+                </div>
+                <ng-container *ngIf="invoice_listing.length == 0">
+                    <app-not-result-found></app-not-result-found>
+                </ng-container>
+            </div>
+
+            <div class="cs-table" *ngIf="ledgerType == 'payment'">
+                <div class="sticky-head">
+                    <div class="table-head">
+                        <table>
+                            <tr>
+                                <th class="w30">S.no.</th>
+                                <th class="w100">Date Created</th>
+                                <th class="w100">Payment Date</th>
+                                <th class="w100">Receipt Number</th>
+                                <th class="w100">ERP</th>
+                                <th class="w100">Payment Mode</th>
+                                <th class="w100 text-right">Amount</th>
+                                <th class="w220">Transaction Details</th>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="table-head border-top">
+                        <table class="sno-border">
+                            <tr>
+                                <th class="w30">&nbsp;</th>
+                                <th class="w100">
+                                    <div class="th-search-acmt">
+                                        <mat-form-field class="cs-input date-column infix-bodr">
+                                            <input matInput [matDatepicker]="picker1" placeholder="Date" name="date"
+                                                [(ngModel)]="filter.date_created" (dateChange)="date_format(tabType)"
+                                                disabled>
+                                            <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                                            <mat-datepicker #picker1 disabled="false"></mat-datepicker>
+                                        </mat-form-field>
+                                    </div>
+                                </th>
+
+                                <th class="w100">
+                                    <div class="th-search-acmt">
+                                        <mat-form-field class="cs-input date-column infix-bodr">
+                                            <input matInput [matDatepicker]="paymentDate" placeholder="Payment Date"
+                                                name="payment_date" [(ngModel)]="filter.payment_date"
+                                                (dateChange)="date_format1(tabType)" disabled>
+                                            <mat-datepicker-toggle matSuffix
+                                                [for]="paymentDate"></mat-datepicker-toggle>
+                                            <mat-datepicker #paymentDate disabled="false"></mat-datepicker>
+                                        </mat-form-field>
+                                    </div>
+                                </th>
+                                <th class="w100">
+                                    <div class="th-search-acmt">
+                                        <mat-form-field class="example-full-width cs-input select-input">
+                                            <input matInput placeholder="Search ..." type="text" name="bill_number"
+                                                [(ngModel)]="filter.bill_number"
+                                                (keyup.enter)="!filter.bill_number ? refresh(tabType):payment_data(paymentMonth,paymentYear)">
+                                        </mat-form-field>
+                                    </div>
+                                </th>
+                                <th class="w100">&nbsp;</th>
+                                <th class="w100">
+                                    <div class="th-search-acmt">
+                                        <mat-form-field class="example-full-width cs-input select-input">
+                                            <input matInput placeholder="Search ..." type="text" name="payment_mode"
+                                                [(ngModel)]="filter.payment_mode"
+                                                (keyup.enter)="!filter.payment_mode ? refresh(tabType):payment_data(paymentMonth,paymentYear)">
+                                        </mat-form-field>
+                                    </div>
+                                </th>
+                                <th class="w100 text-right">&nbsp;</th>
+                                <th class="w220">&nbsp;</th>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+
+
+
+                <div class="table-container">
+                    <div class="table-content">
+                        <table>
+                            <tr *ngFor="let row of payment_listing; let i =index">
+                                <td class="w30">{{i+1+sr_no}}</td>
+                                <td class="w100">{{row.date_created | date:'dd MMM yyyy , h:mm a'}}</td>
+                                <td class="w100">{{row.payment_date | date:'dd MMM yyyy'}}</td>
+                                <td class="w100">{{row.payment_id ? row.payment_id :'N/A'}}</td>
+                                <td class="w100">{{row.customer_code}}</td>
+                                <td class="w100">{{row.payment_mode ? row.payment_mode :'N/A'}}</td>
+                                <td class="w100 text-right"><strong>&#x20B9; {{row.payment_amount}}</strong></td>
+                                <td class="w220">{{row.remarks ? row.remarks :'N/A'}}</td>
+                            </tr>
+                            <ng-container *ngIf="payment_loader">
+                                <tr class="sk-loading" *ngFor="let row of [].constructor(10)">
+                                    <td class="w30">
+                                        <div>&nbsp;</div>
+                                    </td>
+                                    <td class="w100">
+                                        <div>&nbsp;</div>
+                                    </td>
+                                    <td class="w100">
+                                        <div>&nbsp;</div>
+                                    </td>
+                                    <td class="w100">
+                                        <div>&nbsp;</div>
+                                    </td>
+                                    <td class="w100">
+                                        <div>&nbsp;</div>
+                                    </td>
+                                    <td class="w100">
+                                        <div>&nbsp;</div>
+                                    </td>
+                                    <td class="w100">
+                                        <div>&nbsp;</div>
+                                    </td>
+                                    <td class="w220">
+                                        <div>&nbsp;</div>
+                                    </td>
+
+
+                                </tr>
+                            </ng-container>
+                        </table>
+                    </div>
+                </div>
+                <ng-container *ngIf="payment_listing.length == 0">
+                    <app-not-result-found></app-not-result-found>
+                </ng-container>
+            </div>
+
+            <div class="cs-table" *ngIf="ledgerType == 'credit_note'">
+                <div class="sticky-head">
+                    <div class="table-head">
+                        <table>
+                            <tr>
+                                <th class="w30">S.no.</th>
+                                <th class="w100">Credit Note Date</th>
+                                <th class="w100">Receipt Number</th>
+                                <th class="w100">ERP</th>
+                                <th class="w100 text-right">Amount</th>
+                                <th class="w220">Remark</th>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="table-head border-top">
+                        <table class="sno-border">
+                            <tr>
+                                <th class="w30">&nbsp;</th>
+                                <th class="w100">
+                                    <div class="th-search-acmt">
+                                        <mat-form-field class="cs-input date-column infix-bodr">
+                                            <input matInput [matDatepicker]="picker1" placeholder="Date"
+                                                name="date_created" [(ngModel)]="filter.date_created"
+                                                (dateChange)="date_format(tabType)" disabled>
+                                            <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                                            <mat-datepicker #picker1 disabled="false"></mat-datepicker>
+                                        </mat-form-field>
+                                    </div>
+                                </th>
+                                <th class="w100">
+                                    <div class="th-search-acmt">
+                                        <mat-form-field class="example-full-width cs-input select-input">
+                                            <input matInput placeholder="Search ..." type="text" name="bill_number"
+                                                [(ngModel)]="filter.bill_number"
+                                                (keyup.enter)="!filter.bill_number ? refresh(tabType): cn_data(cnMonth,cnYear)">
+                                        </mat-form-field>
+                                    </div>
+                                </th>
+                                <th class="w100">&nbsp;</th>
+                                <th class="w100 text-right">{{cn_total_sum > 0 ? cn_total_sum : ''}}</th>
+                                <th class="w220">&nbsp;</th>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+
+                <div class="table-container">
+                    <div class="table-content">
+                        <table>
+                            <tr *ngFor="let row of cn_listing; let i =index">
+                                <td class="w30">{{i+1+sr_no}}</td>
+                                <td class="w100">{{row.payment_date | date:'dd MMM yyyy , h:mm a'}}</td>
+                                <td class="w100">{{row.bill_number}}</td>
+                                <td class="w100">{{row.customer_code}}</td>
+                                <td class="w100 text-right"><strong>&#x20B9; {{row.payment_amount}}</strong></td>
+                                <td class="w220">{{row.remarks}}</td>
+                            </tr>
+                            <ng-container *ngIf="cn_loader">
+                                <tr class="sk-loading" *ngFor="let row of [].constructor(10)">
+                                    <td class="w30">
+                                        <div>&nbsp;</div>
+                                    </td>
+                                    <td class="w100">
+                                        <div>&nbsp;</div>
+                                    </td>
+                                    <td class="w100">
+                                        <div>&nbsp;</div>
+                                    </td>
+                                    <td class="w100">
+                                        <div>&nbsp;</div>
+                                    </td>
+                                    <td class="w100">
+                                        <div>&nbsp;</div>
+                                    </td>
+                                    <td class="w220">
+                                        <div>&nbsp;</div>
+                                    </td>
+                                </tr>
+                            </ng-container>
+                        </table>
+                    </div>
+                </div>
+                <ng-container *ngIf="cn_listing.length == 0">
+                    <app-not-result-found></app-not-result-found>
+                </ng-container>
+            </div>
+        </div>
+
+
+
+        <div *ngIf="tabType== 'Point Ledger'" style="margin: -10px -10px 0px -10px;">
+            <div class="tools-container no-sticky">
+                <div class="left-auto df flex-gap-10">
+                    <a mat-icon-button matTooltip="Refresh" (click)="refresh(tabType)">
+                        <i class="material-icons">refresh</i>
+                    </a>
+
+                    <div class="pagination" *ngIf="point_ledger.length > 0">
+                        <div class="pagination-content">
+                            Pages
+                            <span>{{pagenumber}}</span>
+                            of
+                            <span>{{total_page}}</span>
+                        </div>
+                        <div class="page-nav">
+                            <button mat-icon-button matTooltip="Older" (click)="pervious('ledger')"
+                                [disabled]="start == 0 || total_page == 0">
+                                <i class="material-icons">navigate_before</i>
+                            </button>
+                            <button mat-icon-button matTooltip="Newer" (click)="nextPage('ledger')"
+                                [disabled]="pagenumber == total_page || total_page == 0 ">
+                                <i class="material-icons">navigate_next</i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="cs-table">
+                <div class="sticky-head" style="top: -10px;">
+                    <div class="table-head">
+                        <table>
+                            <tr>
+                                <th class="w60">S.no.</th>
+                                <th class="w150">Date</th>
+                                <th class="text-right">Point In</th>
+                                <th class="text-right">Point Out</th>
+                                <th class="w160 text-right">Balance</th>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="table-head border-top">
+                        <table class="sno-border">
+                            <tr>
+                                <th class="w60">&nbsp;</th>
+                                <th class="w150">
+                                    <div class="th-search-acmt">
+                                        <mat-form-field class="cs-input date-column infix-bodr">
+                                            <input matInput [matDatepicker]="picker1" placeholder="Date"
+                                                name="date_created" [(ngModel)]="filter.date_created"
+                                                (dateChange)="date_format(tabType)" disabled>
+                                            <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                                            <mat-datepicker #picker1 disabled="false"></mat-datepicker>
+                                        </mat-form-field>
+                                    </div>
+                                </th>
+                                <th class="text-right">&nbsp;</th>
+                                <th class="text-right">&nbsp;</th>
+                                <th class="w160">&nbsp;</th>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+
+                <div class="table-container">
+                    <div class="table-content">
+                        <table>
+                            <tr *ngFor="let row of point_ledger; let i =index">
+                                <td class="w60">{{i+1+sr_no}}</td>
+                                <td class="w150">{{row.date_created | date : 'dd MMM yyy ,h:mm a'}}</td>
+                                <td class="text-right">
+                                    <ng-container *ngIf="row.credit == 0">--</ng-container>
+                                    <ng-container *ngIf="row.credit > 0">
+                                        <strong class="green-clr">{{row.credit}} PT</strong>
+                                        <br>
+                                        {{row.transaction_remark}} ({{row.transaction_type}})
+                                    </ng-container>
+                                </td>
+                                <td class="text-right">
+                                    <ng-container *ngIf="row.debit == 0">--</ng-container>
+                                    <ng-container *ngIf="row.debit > 0">
+                                        <strong class="red-clr">{{row.debit}} PT</strong>
+                                        <br>
+                                        {{row.transaction_remark}} ({{row.transaction_type}})
+                                    </ng-container>
+                                </td>
+                                <td class="w160 text-right"><strong>{{row.balance}} PT</strong></td>
+                            </tr>
+
+                            <ng-container *ngIf="ledger_loader">
+                                <tr class="sk-loading" *ngFor="let row of [].constructor(10)">
+                                    <td class="w60">
+                                        <div>&nbsp;</div>
+                                    </td>
+                                    <td class="w150">
+                                        <div>&nbsp;</div>
+                                    </td>
+                                    <td>
+                                        <div>&nbsp;</div>
+                                    </td>
+                                    <td>
+                                        <div>&nbsp;</div>
+                                    </td>
+                                    <td class="w160">
+                                        <div>&nbsp;</div>
+                                    </td>
+
+                                </tr>
+                            </ng-container>
+                        </table>
+                    </div>
+                </div>
+                <ng-container *ngIf="point_ledger.length == 0">
+                    <app-not-result-found></app-not-result-found>
+                </ng-container>
+            </div>
+        </div>
+    </div>
+</div>

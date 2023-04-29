@@ -1,0 +1,184 @@
+<div class="edit-modal">
+  <div mat-dialog-content>
+    <p class="heading">Add Item</p>
+
+    <div class="cs-form">
+      <form name="detail" #f="ngForm" (ngSubmit)=" f.valid && save_order()">
+        <div class="row">
+          <div class="col s12">
+            <div class="card pb0">
+              <div class="card-body cs-form">
+                <div class="row">
+                  <div class="col s12 m3 l3">
+                    <mat-form-field appearance="outline" [ngClass]="{'has-error' : product_id.invalid } ">
+                      <mat-label>Item</mat-label>
+                      <mat-select name="product_id" #product_id="ngModel" [(ngModel)]="orderData.product_id"
+                        (selectionChange)="get_product_details(orderData.product_id);get_product_Size(filter.dr_id,orderData.product_id) ">
+                        <mat-option>
+                          <ngx-mat-select-search noEntriesFoundLabel="'no data found'" placeholderLabel="Search.."
+                            (keyup)="searchItems($event)"></ngx-mat-select-search>
+                        </mat-option>
+                        <mat-option *ngFor="let row of productlist" value="{{row.id}}"
+                          color="accent">{{row.product_name}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+
+                  </div>
+                  <div class="col s12 m3 l3" *ngIf="brandList.length > 0">
+                    <mat-form-field appearance="outline" [ngClass]="{'has-error' : brand.invalid } ">
+                      <mat-label>Brand</mat-label>
+                      <mat-select name="brand" #brand="ngModel" [(ngModel)]="orderData.brand">
+                        <mat-option *ngFor="let row of brandList" value="{{row}}" color="accent">{{row}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                    <div class="alert alert-danger" *ngIf="f.submitted && brand?.invalid ">
+                      This field is required
+                    </div>
+                  </div>
+                  <div class="col s12 m3 l3" *ngIf="colorList.length > 0">
+                    <mat-form-field appearance="outline" [ngClass]="{'has-error' : color.invalid } ">
+                      <mat-label>Color</mat-label>
+                      <mat-select name="color" #color="ngModel" [(ngModel)]="orderData.color">
+                        <mat-option *ngFor="let row of colorList" value="{{row}}" color="accent">{{row}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                    <div class="alert alert-danger" *ngIf="f.submitted && color?.invalid ">
+                      This field is required
+                    </div>
+                  </div>
+                  <ng-container *ngIf="product_list.length">
+                    <div class="col s12 m3 l3">
+                      <mat-form-field appearance="outline" [ngClass]="{'has-error' : qty.invalid } ">
+                        <mat-label>Qty</mat-label>
+                        <input matInput name="qty" #qty="ngModel" [(ngModel)]="orderData.qty" type="number"
+                          [ngClass]="{'has-error' : qty.invalid }"
+                          (input)="orderData.qty == '' || orderData.qty <1 || orderData.qty == null  ?addToListButton = true:addToListButton = false">
+                      </mat-form-field>
+                      <div class="alert alert-danger" *ngIf="f.submitted && qty?.invalid ">
+                        This field is required
+                      </div>
+                    </div>
+
+                    <div class="col s12 m3 l3">
+                      <mat-form-field appearance="outline" [ngClass]="{'has-error' : product_price.invalid } ">
+                        <mat-label>Price</mat-label>
+                        <input matInput name="product_price" #product_price="ngModel"
+                          [(ngModel)]="orderData.product_price" [ngClass]="{'has-error' : product_price.invalid } "
+                          readonly>
+                      </mat-form-field>
+                    </div>
+                    <div class="col s12 m3 l3">
+                      <mat-form-field appearance="outline" [ngClass]="{'has-error' : dr_disc.invalid } ">
+                        <mat-label>Discount (%)</mat-label>
+                        <input matInput name="dr_disc" #dr_disc="ngModel" [(ngModel)]="orderData.dr_disc"
+                          [ngClass]="{'has-error' : dr_disc.invalid }" readonly>
+                      </mat-form-field>
+                    </div>
+                  </ng-container>
+
+                </div>
+
+                <div class="row">
+                  <div class="col s12">
+                    <div class="text-right"
+                      *ngIf="product_list.length && colorList.length>0 && orderData.color  && orderData.brand">
+                      <a mat-raised-button type="button" [disabled]="addToListButton" (click)="addToList()"
+                        color="accent">Add To list</a>
+
+                    </div>
+                    <div class="text-right" *ngIf="product_list.length && colorList.length==0 && orderData.brand">
+                      <a mat-raised-button type="button" [disabled]="addToListButton" (click)="addToList()"
+                        color="accent">Add To list</a>
+
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="cs-table">
+                    <div class="sticky-head" style="top: -10px;">
+                      <div class="table-head">
+                        <table>
+                          <tr>
+                            <th class="w50">S.no.</th>
+                            <th class="w150">Item Details</th>
+                            <th class="w80 text-right">Rate</th>
+                            <th class="w100 text-right">Discount (%)</th>
+                            <th class="w80 text-right">Price</th>
+                            <th class="w80 text-center">QTY.</th>
+                            <th class="w80 text-right">Sub Total</th>
+                            <th class="w80 text-right">GST</th>
+                            <th class="w80 text-right">Net Amount</th>
+                            <th class="w80 text-right">Action</th>
+                          </tr>
+                        </table>
+                      </div>
+                    </div>
+
+
+                    <div class="table-container">
+                      <div class="table-content">
+                        <table>
+                          <tr *ngFor="let row of order_item; let i =index">
+                            <td class="w50">{{i+1}}</td>
+                            <td class="w150">{{row.product_name | titlecase}} <strong
+                                *ngIf="row.product_code != ''">({{row.product_code}})</strong> <strong
+                                *ngIf="row.brand != ''">({{row.brand}})</strong> <strong
+                                *ngIf="row.color != ''">({{row.color}})</strong></td>
+                            <td class="w80 text-right">&#x20B9; {{row.product_price ? row.product_price : row.price}}
+                            </td>
+                            <td class="w100 text-right"> &#x20B9; {{row.discount_amount | number:'1.2-2'}}
+                              ({{row.discount_percent + '%'}})</td>
+                            <td class="w80 text-right">&#x20B9; {{row.net_price | number:'1.2-2' }} </td>
+                            <td class="w80  text-center">
+                              {{row.qty}}
+                            </td>
+                            <td class="w80 text-right">&#x20B9; {{row.amount | number:'1.2-2'}}</td>
+                            <td class="w80 text-right">&#x20B9; {{row.gst_amount | number:'1.2-2'}}
+                              ({{row.gst_percent}}%)</td>
+                            <td class="w80 text-right"><strong>&#x20B9; {{row.total_amount | number:'1.2-2'}}</strong>
+                            <td class="w80 text-right">
+                              <div class="action-btns">
+                                <a mat-raised-button type="button" class="delete" (click)="deleteItem(i)"><i
+                                    class="material-icons red-clr">delete_sweep</i></a>
+                              </div>
+                            </td>
+                          </tr>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col s12">
+            <div class="text-right">
+              <button class="mr10" mat-stroked-button color="warn" [mat-dialog-close]="false">Cancel</button>
+              <button [ngClass]="{'loading': savingFlag == true}" mat-raised-button color="accent" type="submit"
+                [disabled]="savingFlag == true">
+                {{savingFlag == true ? 'Saving' : 'Update'}}
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <!-- <div mat-dialog-actions>
+    <button class="mr10" mat-stroked-button color="warn"  [mat-dialog-close]="false">Cancel</button>
+    <button [ngClass]="{'loading': savingFlag == true}" mat-raised-button color="accent" type="submit"
+    [disabled]="savingFlag == true">
+    {{savingFlag == true ? 'Saving' : 'Update'}}
+  </button> -->
+  <!-- </div> -->
+</div>

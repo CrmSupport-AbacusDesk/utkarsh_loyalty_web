@@ -1,0 +1,277 @@
+<div class="edit-modal" *ngIf="data.from=='primary_order'">
+  <form validate #update_basic="ngForm" name="update_basic"
+  (ngSubmit)="(update_basic.valid && update_basic.submitted)?primary_order_status_change(data.reason,data.order_status):''">
+  
+  <p class="heading">Update Status</p>
+  <div mat-dialog-content>
+    <div class="cs-form">
+      <div class="row">
+        <div class="col s12">
+          <mat-form-field class="cs-input" appearance="outline">
+            <mat-label>Order Status</mat-label>
+            <mat-select name="order_status" placeholder="Select Status" #order_status="ngModel"  [(ngModel)]="data.order_status">
+            <mat-option value="Pending">Pending</mat-option>
+            <mat-option  value="Approved">Approved </mat-option>
+            <mat-option  value="Reject">Reject </mat-option>
+            <mat-option  value="Hold">Hold</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      
+    </div>
+    
+    <div class="row">
+      <div class="col s12" *ngIf="data.order_status=='Reject' ||  data.order_status=='Hold'">
+        <mat-form-field class="cs-input" appearance="outline">
+          <mat-label>Reason</mat-label>
+          <textarea class="h100" matInput name="reason" placeholder="Reason" #reason="ngModel"
+          [(ngModel)]="data.reason" [ngClass]="{'has-error' : reason.invalid } " required="true"></textarea>
+        </mat-form-field>
+        <div class="alert alert-danger" *ngIf="!reason.valid && update_basic.submitted">
+          Reason is Required....
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div mat-dialog-actions>
+  <button mat-stroked-button color="warn" [mat-dialog-close]="false">Cancel</button>
+  <button mat-raised-button color="accent" type="submit" [disabled]="savingFlag == true" [ngClass]="{'loading': savingFlag == true}" >
+    {{savingFlag == true ? 'Saving' : 'Save'}}
+  </button>
+</div>
+</form>
+</div>
+
+<div class="edit-modal" *ngIf="data.from=='Secondary_order'">
+  <form validate #update_basic="ngForm" name="update_basic"
+  (ngSubmit)="(update_basic.valid && update_basic.submitted)?secondary_order_status_change(data.reason,data.order_status):''">
+  
+  <p class="heading">Update Status</p>
+  <div mat-dialog-content>
+    <div class="cs-form">
+      <div class="row">
+        <div class="col s12">
+          <mat-form-field class="cs-input" appearance="outline">
+            <mat-label>Order Status</mat-label>
+            <mat-select name="order_status" placeholder="Select Status" #order_status="ngModel"
+            [(ngModel)]="data.order_status">
+            <mat-option value="Pending">
+              Pending
+            </mat-option>
+            <mat-option  value="Approved">
+              Approved
+            </mat-option>
+            <mat-option  value="Reject">
+              Reject
+            </mat-option>
+            <!-- <mat-option  value="Hold">
+              Hold
+            </mat-option> -->
+           
+          </mat-select>
+        </mat-form-field>
+      </div>
+      
+    </div>
+    
+    <div class="row">
+      <div class="col s12" *ngIf="data.order_status=='Reject'">
+        <mat-form-field class="cs-input" appearance="outline">
+          <mat-label>Reason</mat-label>
+          <textarea class="h100" matInput name="reason" placeholder="Reason" #reason="ngModel"
+          [(ngModel)]="data.reason" [ngClass]="{'has-error' : reason.invalid } " required="true"></textarea>
+        </mat-form-field>
+        <div class="alert alert-danger" *ngIf="!reason.valid && update_basic.submitted">
+          Reason is Required....
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div mat-dialog-actions>
+  <button mat-stroked-button color="warn" [mat-dialog-close]="false">Cancel</button>
+  <button mat-button color="accent" [disabled]="savingFlag" type="submit">Save</button>
+</div>
+</form>
+</div>
+
+<!-- Add Segment Modal Start Here -->
+
+<div class="edit-modal" *ngIf="data.from=='segment_list_page'">
+  <form validate #update_basic="ngForm" name="update_basic"
+  (ngSubmit)="(update_basic.valid && update_basic.submitted)?add_segment():''">
+  
+  <p class="heading">{{data.type}} Category</p>
+  <div mat-dialog-content>
+    <div class="cs-form">
+      <div class="row">
+        <div class="col s12 l6 m6">
+          <mat-form-field  appearance="outline">
+            <mat-label>Category</mat-label>
+            <input matInput placeholder="Type Here ..." name="category" #category="ngModel" [(ngModel)]="data.category"  required>
+          </mat-form-field>
+          <div class="alert alert-danger" *ngIf="category.touched || update_basic.submitted">
+            <p *ngIf="category.errors?.required">This field is required</p>
+          </div>
+        </div>
+        <div class="col s12 l6 m6">
+          <div class="col s12">
+            <mat-form-field  appearance="outline">
+              <mat-label>GST (%)</mat-label>
+              <input matInput placeholder="Type Here ..." onkeypress="return event.charCode>=48 && event.charCode<=57" name="gst" #gst="ngModel" [(ngModel)]="data.gst" >
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col s12 l6 m6">
+          <mat-form-field  appearance="outline">
+            <mat-label>Distributor Discount (%)</mat-label>
+            <input matInput placeholder="Type Here ..." onkeypress="return event.charCode>=48 && event.charCode<=57" name="sub_category_name" #distributor_discount="ngModel" [(ngModel)]="data.distributor_discount" required>
+          </mat-form-field>
+          <div class="alert alert-danger" *ngIf="distributor_discount.touched || update_basic.submitted">
+            <p *ngIf="distributor_discount.errors?.required">This field is required</p>
+          </div>
+        </div>
+        
+        <div class="col s12 l6 m6">
+          <mat-form-field  appearance="outline">
+            <mat-label>Direct Dealer Discount (%)</mat-label>
+            <input matInput placeholder="Type Here ..." onkeypress="return event.charCode>=48 && event.charCode<=57" name="direct_dealer_discount" #direct_dealer_discount="ngModel" [(ngModel)]="data.direct_dealer_discount" required>
+          </mat-form-field>
+
+          <div class="alert alert-danger" *ngIf="direct_dealer_discount.touched || update_basic.submitted">
+            <p *ngIf="direct_dealer_discount.errors?.required">This field is required</p>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col s12 l6 m6">
+          <mat-form-field  appearance="outline">
+            <mat-label>Retailer Discount (%)</mat-label>
+            <input matInput placeholder="Type Here ..." onkeypress="return event.charCode>=48 && event.charCode<=57" name="retailer_discount" #retailer_discount="ngModel" [(ngModel)]="data.retailer_discount" required>
+          </mat-form-field>
+          <div class="alert alert-danger" *ngIf="retailer_discount.touched || update_basic.submitted">
+            <p *ngIf="retailer_discount.errors?.required">This field is required</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div mat-dialog-actions>
+    <button mat-stroked-button  color="warn" [mat-dialog-close]="false">Cancel</button>
+    <button [ngClass]="{'loading': savingFlag == true}" mat-raised-button color="accent" type="submit" [disabled]="savingFlag == true">
+      {{savingFlag == true ? 'Saving' : (data.type == 'edit' ? 'Update':'Save')}}
+    </button>
+  </div>
+</form>
+</div>
+
+
+
+<div class="edit-modal" *ngIf="data.delivery_from=='subcategory-list'">
+  <form validate #update_basic="ngForm" name="update_basic"
+  (ngSubmit)="(update_basic.valid && update_basic.submitted)?add_subCategory():''">
+  
+  <p class="heading">{{data.type}} Sub Category</p>
+  <div mat-dialog-content>
+    <div class="cs-form">
+      <div class="row">
+        <div class="col s12 l6 m6">
+          <mat-form-field appearance="outline" [ngClass]="{'has-error' : segment_id.invalid } ">
+            <mat-label>Category</mat-label>
+            <mat-select name="segment_id" #segment_id="ngModel" [(ngModel)]="data.segment_id" required>
+              <mat-option *ngFor="let row of segmentList" value="{{row.id}}" color="accent">{{row.category}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <div class="alert alert-danger" *ngIf="update_basic.submitted && segment_id?.invalid ">
+            This field is required
+          </div>
+        </div>
+        <div class="col s12 l6 m6">
+          <mat-form-field  appearance="outline">
+            <mat-label>Sub Category</mat-label>
+            <input matInput placeholder="Type Here ..." name="sub_category_name" #sub_category_name="ngModel" [(ngModel)]="data.sub_category_name" required>
+          </mat-form-field>
+          <div class="alert alert-danger" *ngIf="sub_category_name.touched || update_basic.submitted">
+            <p *ngIf="sub_category_name.errors?.required">This field is required</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div mat-dialog-actions>
+    <button mat-stroked-button  color="warn" [mat-dialog-close]="false">Cancel</button>
+    <button [ngClass]="{'loading': savingFlag == true}" mat-raised-button color="accent" type="submit" [disabled]="savingFlag == true">
+      {{savingFlag == true ? 'Saving' : (data.type == 'edit' ? 'Update':'Save')}}
+    </button>
+  </div>
+</form>
+</div>
+
+
+<div class="edit-modal" *ngIf="delivery_from=='assignSales'">
+  <form validate #update_basic="ngForm" name="update_basic"
+  (ngSubmit)="(update_basic.valid && update_basic.submitted)?UpdateSalesUser():''">
+  
+  <p class="heading">Update Sales User</p>
+  <div mat-dialog-content>
+    <div class="cs-form">
+      <div class="row">
+        <div class="col s12 l12 m12">
+          <mat-form-field appearance="outline">
+              <mat-label>Sales User</mat-label>
+              <mat-select name="assigned_sales_user_name" [(ngModel)]="data.assigned_sales_user_name" #assigned_sales_user_name="ngModel" multiple  required>
+                  <mat-option >
+                      <ngx-mat-select-search noEntriesFoundLabel="'no data found'" placeholderLabel="Search.." (keyup)="getSalesUser($event.target.value)"></ngx-mat-select-search>
+                  </mat-option>
+                  <mat-option *ngFor="let row of salesUser" value="{{row.id}}">{{row.name}} {{row.role_name}}</mat-option>
+              </mat-select>
+          </mat-form-field>
+      </div>
+      
+    </div>
+  </div>
+</div>
+<div mat-dialog-actions>
+  <button mat-stroked-button color="warn" [mat-dialog-close]="false">Cancel</button>
+  <button [ngClass]="{'loading': savingFlag == true}" mat-raised-button color="accent" type="submit" [disabled]="savingFlag == true">{{savingFlag == true ? 'Updating' : 'Update'}}</button>
+</div>
+</form>
+</div>
+<div class="edit-modal" *ngIf="delivery_from=='assignDist'">
+  <form validate #update_basic="ngForm" name="update_basic"
+  (ngSubmit)="(update_basic.valid && update_basic.submitted)?UpdateDistributor():''">
+  
+  <p class="heading">Update Distributor User</p>
+  <div mat-dialog-content>
+    <div class="cs-form">
+      <div class="row">
+        <div class="col s12 l12 m12">
+          <mat-form-field appearance="outline">
+            <mat-label>Distributor</mat-label>
+            <!-- (selectionChange)="distArray(data.distributor_id)" -->
+            <mat-select name="distributor_id"  [(ngModel)]="data.distributor_id" #distributor_id="ngModel" multiple required>
+                <mat-option >
+                    <ngx-mat-select-search noEntriesFoundLabel="'no data found'" placeholderLabel="Search.." (keyup)="distributorList($event.target.value, '')"></ngx-mat-select-search>
+                </mat-option>
+                <mat-option *ngFor="let row of drlist" value="{{row.id}}">{{row.company_name | titlecase}} {{row.dr_code}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <div class="alert alert-danger" *ngIf="distributor_id.touched || update_basic.submitted">
+          <p *ngIf="distributor_id.errors?.required">This field is required</p>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+</div>
+<div mat-dialog-actions>
+  <button mat-stroked-button color="warn" [mat-dialog-close]="false">Cancel</button>
+  <button [ngClass]="{'loading': savingFlag == true}" mat-raised-button color="accent" type="submit" [disabled]="savingFlag == true">{{savingFlag == true ? 'Updating' : 'Update'}}</button>
+</div>
+</form>
+</div>
+
+<!-- Add Segment Modal End Here -->

@@ -1,0 +1,26 @@
+<header>
+    <div class="logo">
+        <img src="assets/img/{{colorMode == false ? 'logo' : 'darklogo'}}.png" class="lightmode">
+        <img src="assets/img/darklogo.png" class="darkMode">
+    </div>
+
+    <button class="ml12" mat-icon-button (click)="toggleNav()"
+        matTooltip="{{toggle == false ? 'Close Menu' : 'Open Menu'}}">
+        <i class="material-icons">{{toggle == false ? 'menu' : 'menu_open'}}</i>
+    </button>
+
+    <button class="ds-none" mat-icon-button (click)="nightMode()"
+        matTooltip="{{colorMode == false ? 'Dark Mode' : 'Light Mode'}}">
+        <i class="material-icons">{{colorMode == false ? 'dark_mode' : 'light_mode'}}</i>
+    </button>
+   
+    <div class="left-auto">
+        <div class="logout-block">
+            <p><strong>Welcome:- </strong> &nbsp; {{login_data.name | titlecase}}</p>
+            <button mat-icon-button (click)="logout()" matTooltip="Logout">
+                <i class="material-icons">power_settings_new</i>
+            </button>
+        </div>
+
+    </div>
+</header>

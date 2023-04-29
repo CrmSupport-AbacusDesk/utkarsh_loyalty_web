@@ -1,0 +1,156 @@
+<div class="edit-modal" *ngIf="!from && !data.from_Item">
+  <form validate #update_basic="ngForm" name="update_basic" (ngSubmit)="update_basic.valid && changeStatus()">
+
+    <p class="heading">Update Status</p>
+    <div mat-dialog-content>
+      <div class="cs-form">
+        <div class="row">
+          <div class="col s12">
+            <mat-form-field class="cs-input" appearance="outline">
+              <mat-label>Status</mat-label>
+              <mat-select  name="status" placeholder=""  #status="ngModel" [(ngModel)]="data.status" required>
+                <mat-option value="Approved" >Approved</mat-option>
+                <mat-option  value="Reject">Reject</mat-option>
+              </mat-select>
+            </mat-form-field>
+            <div class="alert alert-danger" *ngIf="data.status || update_basic.submitted">
+              <p *ngIf="status.errors?.required">This field is required</p>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="row"  *ngIf="data.status=='Reject'">
+          <div class="col s12">
+            <mat-form-field class="cs-input" appearance="outline">
+              <mat-label>Reason Reject</mat-label>
+              <textarea matInput  name="reason" class="h100" placeholder="Add reason"  #reason="ngModel" [(ngModel)]="data.reason" required ></textarea>
+
+            </mat-form-field>
+            <div class="alert alert-danger" *ngIf="data.reason || update_basic.submitted">
+              <p *ngIf="reason.errors?.required">This field is required</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div mat-dialog-actions>
+      <button color="warn" class="mr10"	 mat-stroked-button [mat-dialog-close]="false">Cancel</button>
+      <button mat-raised-button	 color="accent" type="submit"   [disabled]="savingFlag == true" [ngClass]="{'loading': savingFlag == true}" > {{savingFlag == true ? 'Saving' : 'Update'}}</button>
+    </div>
+  </form>
+</div>
+
+<div class="edit-modal"  *ngIf="from && !data.from_Item">
+  <form validate #update_basic="ngForm" name="update_basic" (ngSubmit)="update_basic.valid && changePurchaseStatus()">
+
+    <p class="heading">Update Status</p>
+    <div mat-dialog-content>
+      <div class="cs-form">
+        <div class="row">
+          <div class="col s12">
+            <mat-form-field class="cs-input" appearance="outline">
+              <mat-label>Status</mat-label>
+              <mat-select  name="status" placeholder=""  #status="ngModel" [(ngModel)]="data.status" required>
+                <mat-option value="Approved" >Approved</mat-option>
+                <mat-option  value="Reject">Reject</mat-option>
+              </mat-select>
+            </mat-form-field>
+            <div class="alert alert-danger" *ngIf="data.status || update_basic.submitted">
+              <p *ngIf="status.errors?.required">This field is required</p>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="row"  *ngIf="data.status=='Approved'">
+          <div class="col s12">
+            <mat-form-field class="cs-input" appearance="outline">
+              <mat-label>Point</mat-label>
+              <input matInput  name="point" placeholder="Point"  #point="ngModel" [(ngModel)]="data.point" required >
+
+            </mat-form-field>
+            <div class="alert alert-danger" *ngIf="data.point || update_basic.submitted">
+              <p *ngIf="point.errors?.required">This field is required</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="row"  *ngIf="data.status=='Reject'">
+          <div class="col s12">
+            <mat-form-field class="cs-input" appearance="outline">
+              <mat-label>Reason Reject</mat-label>
+              <textarea matInput  name="reason" class="h100" placeholder="Add reason"  #reason="ngModel" [(ngModel)]="data.reason" required ></textarea>
+
+            </mat-form-field>
+            <div class="alert alert-danger" *ngIf="data.reason || update_basic.submitted">
+              <p *ngIf="reason.errors?.required">This field is required</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div mat-dialog-actions>
+      <button color="warn" class="mr10"	 mat-stroked-button [mat-dialog-close]="false">Cancel</button>
+      <button mat-raised-button	 color="accent" type="submit"   [disabled]="savingFlag == true" [ngClass]="{'loading': savingFlag == true}" > {{savingFlag == true ? 'Saving' : 'Update'}}</button>
+    </div>
+  </form>
+</div>
+
+
+<div mat-dialog-title *ngIf="data.from_Item">Bill Image
+  <a mat-icon-button class="fix-btn" (click)="close()">
+    <i class="material-icons edit">clear</i>
+  </a>
+</div>
+
+  <div mat-dialog-content *ngIf="data.from_Item">
+    <!-- <div class="cs-table horizontal-scroll">
+      <div class="sticky-head">
+        <div class="table-head">
+          <table>
+            <tr>
+              <th class="w20">Sno.</th>
+              <th class="w150">Product Detail</th>
+              <th class="w60">Qty</th>
+
+            </tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="table-container">
+        <div class="table-content">
+          <table>
+            <ng-container>
+              <tr *ngFor="let row of ItemData.total_details; let i = index;">
+                <td class="w20">{{i + 1}}</td>
+                <td class="w150"><strong>{{row.product_detail |titlecase}}</strong></td>
+                <td class="w60"><strong>{{row.qty ? row.qty : '---'}}</strong></td>
+              </ng-container>
+              <ng-container *ngIf="ItemData.total_details.length == 0">
+                <app-not-result-found></app-not-result-found>
+              </ng-container>
+            </table>
+
+
+          </div>
+        </div>
+      </div> -->
+
+      <div class="col s8">
+      <!-- <p mat-dialog-title>Bill Image </p> -->
+
+        <div class="uploade-image mt15">
+          <ul>
+            <li class="df" *ngFor=" let item of ItemData.image" >
+              <img [src]="imgUrl+item.image" (click)="goToImage(imgUrl + item.image)">
+
+            </li>
+
+          </ul>
+        </div>
+      </div>
+
+  </div>
+

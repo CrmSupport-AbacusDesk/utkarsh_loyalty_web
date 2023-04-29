@@ -1,0 +1,145 @@
+
+
+<div mat-dialog-title>Checkin Details  
+  <a  mat-icon-button class="fix-btn" (click)="close()">
+    <i class="material-icons edit" >clear</i>
+  </a>
+</div>
+<div mat-dialog-content>
+  <div class="dialog-content">
+    <div class="row" *ngIf="skLoading">
+      <div class="col s12">
+        <div class="card" >
+          <div class="sk-head">
+            <h2>&nbsp;</h2>
+          </div>
+          <div class="card-body">
+            <div class="grid-box">
+              <div class="sk-box" *ngFor="let row of [].constructor(10)">
+                &nbsp;
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row" *ngIf="!skLoading">
+      <div class="col s12 m18 l8">
+        <div class="card">
+          <div class="card-head">
+            <h2>Basic Detais</h2>
+          </div>
+          <div class="card-body">
+            <div class="grid-box">
+              <div class="block-feilds">
+                <span>Date</span>
+                <p>{{attedence_data.attend_date | date : 'd MMM y'}}</p>
+              </div>
+              
+              <div class="block-feilds">
+                <span>Employee Name</span>
+                <p>{{user_details.name | titlecase}}</p>
+              </div>
+              
+              <div class="block-feilds">
+                <span>Employee Code</span>
+                <p>{{user_details.employee_id}}</p>
+              </div>
+              
+              
+              <div class="block-feilds">
+                <span>Reporting Manager</span>
+                <p>{{user_details.reporting_manager_name | titlecase}}</p>
+              </div>
+              <div class="block-feilds">
+                <span>Primary Sales Count</span>
+                <p>{{attedence_data.today_primary_sales_count}}</p>
+              </div>
+              
+              
+              <div class="block-feilds">
+                <span>Secondary Sales Count</span>
+                <p>{{attedence_data.today_secondary_sales_count}}</p>
+                
+              </div>
+            </div>
+            
+          </div>
+        </div>
+      </div>
+      
+      
+      <div class="col s12 m4 l4">
+        <div class="travel" >
+          <ul>
+            <li>
+              <span class="vistit-count">
+                <i class="material-icons">location_on</i>
+              </span>
+              <p>
+                <strong>Day Start </strong>
+                <ng-container *ngIf="attedence_data.start_time == '0000-00-00 00:00:00'">---</ng-container>
+                <ng-container  *ngIf="attedence_data.start_time != '0000-00-00 00:00:00'">{{attedence_data.start_time | date:'h:mm a'}}  <br><br><strong>GPS Address :</strong> {{attedence_data.start_address}}</ng-container>
+              </p>
+            </li>
+            
+            <li *ngFor="let row of check_in_data; let i = index">
+              <span class="vistit-count">{{i+1}}</span>
+              <span class="km">{{row.km}} KM</span>
+              <div class="counter">
+                <div >
+                  <h2>{{row.display_name}}
+                    <br>
+                    <span>({{row.dr_type_name}})</span>
+                  </h2>
+                  <div class="visit-time">
+                    <div class="visit-hours">
+                      <span class="green-clr">Check-in</span>
+                      <p *ngIf="row.visit_start != '0000-00-00 00:00:00' ">{{row.visit_start | date:'h:mm a'}}</p>
+                      <p *ngIf="row.visit_start == '0000-00-00 00:00:00' ">---</p>
+                    </div>
+                    <div class="visit-hours">
+                      <span class="red-clr">Check-out</span>
+                      <p *ngIf="row.visit_end != '0000-00-00 00:00:00' ">{{row.visit_end | date:'h:mm a'}}</p>
+                      <p *ngIf="row.visit_end == '0000-00-00 00:00:00' ">---</p>
+                    </div>
+                    <div class="visit-hours">
+                      <span>Total time spend</span>
+                      <p>{{row.TOTAL_TIME_TAKE}}</p>
+                    </div>
+                  </div>
+                  <p *ngIf="row.start_address"><strong>GPS Address :</strong> {{row.start_address}}</p>
+                </div>
+                <div class="type-visit">
+                  <div class="types" [ngClass]="{'active': row.order_flag > 0}">
+                    <span>&nbsp;</span>
+                    Order
+                  </div>
+                  <div class="types" [ngClass]="{'active': row.followup_flag > 0}">
+                    <span>&nbsp;</span>
+                    Followup
+                  </div>
+                  <div class="types" [ngClass]="{'active': row.document_flag > 0}"> 
+                    <span>&nbsp;</span>
+                    Photo upload
+                  </div>
+                </div>
+              </div>
+            </li>
+            <li>
+              <span class="vistit-count">
+                <i class="material-icons">location_on</i>
+              </span>
+              <p *ngIf="attedence_data.stop_address && attedence_data.stop_time != '0000-00-00 00:00:00' "><strong>Day Stop </strong>
+                <ng-container *ngIf="attedence_data.stop_time == '0000-00-00 00:00:00'">---</ng-container>
+                <ng-container  *ngIf="attedence_data.stop_time != '0000-00-00 00:00:00'">{{attedence_data.stop_time | date:'h:mm a'}}  <br><br><strong>GPS Address :</strong> {{attedence_data.end_address}}</ng-container>
+              </p>
+            </li>
+          </ul>
+        </div>
+        
+      </div>
+      
+    </div>
+  </div>
+</div>

@@ -1,0 +1,238 @@
+<div class="main-container">
+    <div class="tools-container">
+        <h2>Event Plan</h2>
+        <ng-container *ngIf="(data.date_from || data.created_by)  || (data.companyType || data.company_name) || (data.mobile_number || data.company_name || data.dom_from)">
+            <a  mat-raised-button color="primary" (click)="getContractorMeetList('refresh')"> <i class="material-icons mr10">filter_alt</i>Clear Filter</a>
+        </ng-container>
+        
+        <div class="left-auto df ac flex-gap-10">
+            <button mat-icon-button  matTooltip="Refresh" (click)="getContractorMeetList('refresh')">
+                <i class="material-icons">refresh</i>
+            </button>
+            
+            <div class="pagination" *ngIf="total_page">
+                <div class="pagination-content">
+                    Pages
+                    <span>{{pagenumber}}</span>
+                    of
+                    <span>{{total_page}}</span>
+                </div>
+                <div class="page-nav">
+                    <button mat-icon-button  matTooltip="Older" (click)="pervious(active_tab)"  [disabled]="start == 0">
+                        <i class="material-icons">navigate_before</i>
+                    </button>
+                    <button mat-icon-button  matTooltip="Newer" (click)="nextPage(active_tab)" [disabled]="pagenumber == total_page">
+                        <i class="material-icons">navigate_next</i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="mat-tabbar">
+                <!-- <button mat-button [ngClass]="active_tab == 'All' ? 'active' : ''" (click)="active_tab = ''; getContractorMeetList();"><i class="material-icons">all_inbox</i>All ({{allCount.All}})</button> -->
+                <button mat-button [ngClass]="active_tab == 'Pending' ? 'active' : ''" (click)="active_tab = 'Pending'; start=0; refresh();"><i class="material-icons">pending_actions</i>Pending ({{allCount.Pending}})</button>
+                <button mat-button [ngClass]="active_tab == 'Approved' ? 'active' : ''" (click)="active_tab = 'Approved'; start=0; refresh();"><i class="material-icons">task_alt</i>Approved ({{allCount.Approved}})</button>
+                <button mat-button [ngClass]="active_tab == 'Completed' ? 'active' : ''" (click)="active_tab = 'Completed'; start=0; refresh();"><i class="material-icons">verified</i>Completed ({{allCount.Completed}})</button>
+                <button mat-button [ngClass]="active_tab == 'Cancel' ? 'active' : ''" (click)="active_tab = 'Cancel'; start=0; refresh();"><i class="material-icons">unpublished</i>Cancel ({{allCount.Cancel}})</button>
+                <button mat-button [ngClass]="active_tab == 'Reject' ? 'active' : ''" (click)="active_tab = 'Reject'; start=0; refresh();"><i class="material-icons">unpublished</i>Reject ({{allCount.Reject}})</button>
+            </div>
+        </div>
+    </div>
+    
+    
+    <div class="container container-scroll">
+        
+        
+        
+        <!-- *** All tab table start *** -->
+        <div class="cs-table horizontal-scroll">
+            <div class="sticky-head">
+                <div class="table-head">
+                    <table>
+                        <tr>
+                            <th class="w50">Sr. No.</th>
+                            <th class="w90">Date Created</th>
+                            <th class="w130">Created By</th>
+                            <th class="w90">Event Id</th>
+                            <th class="w180">Company Name</th>
+                            <th class="w180">Contact Person</th>
+                            <th class="w90">Meeting Date</th>
+                            <th class="w90">Last Meeting</th>
+                            <th class="w90 text-center">Total Member</th>
+                            <th class="w90 text-right">Total Budget</th>
+                            <th class="w140">Description</th>
+                            <th class="w80">Status</th>
+                            <th class="w50" *ngIf="active_tab == 'Pending' && assign_login_data2.edit_event_plan=='1'">Action</th>
+                            
+                        </tr>
+                    </table>
+                </div>
+                <!-- *** filters *** -->
+                <div class="table-head border-top">
+                    <table class="sno-border">
+                        <tr>
+                            <th class="w50">&nbsp;</th>
+                            <th class="w90">
+                                <div class="th-search-acmt">
+                                    <mat-form-field class="cs-input date-column infix-bodr">
+                                        <input matInput [matDatepicker]="picker" placeholder="Date" name="date_from"
+                                        [(ngModel)]="data.date_from" (dateChange)="onDate($event)" readonly>
+                                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                        <mat-datepicker #picker></mat-datepicker>
+                                    </mat-form-field>
+                                </div>
+                            </th>
+                            
+                            <th class="w130">
+                                <div class="th-search-acmt">
+                                    <mat-form-field class="example-full-width cs-input select-input">
+                                        <input matInput placeholder="Search..." type="text" name="created_by"
+                                        [(ngModel)]="data.created_by" (keyup.enter)="getContractorMeetList()">
+                                    </mat-form-field>
+                                </div>
+                            </th>
+                            <th class="w90">&nbsp;</th>
+                            
+                            
+                            <th class="w180">
+                                <div class="th-search-acmt">
+                                    <mat-form-field class="example-full-width cs-input select-input">
+                                        <!-- getItemsList('created_by',value.search) -->
+                                        <input matInput placeholder="Search..." type="text" name="company_name"
+                                        [(ngModel)]="data.company_name" (keyup.enter)="getContractorMeetList()">
+                                    </mat-form-field>
+                                </div>
+                            </th>
+                            <th class="w180">
+                                <div class="th-search-acmt">
+                                    <mat-form-field class="example-full-width cs-input select-input">
+                                        <input matInput placeholder="Search..." type="text" name="Mobile No"
+                                        [(ngModel)]="data.mobile_number" (keyup.enter)="getContractorMeetList()">
+                                    </mat-form-field>
+                                </div>
+                            </th>
+                            <!-- <th class="w100">
+                                <div class="th-search-acmt">
+                                    <mat-form-field class="example-full-width cs-input select-input">
+                                        <input matInput placeholder="E-Mail. . ." type="text" name="email" [(ngModel)]="data.email"
+                                        (keyup.enter)="getContractorMeetList()">
+                                    </mat-form-field>
+                                </div>
+                            </th> -->
+                            <th class="w90">
+                                <div class="th-search-acmt">
+                                    <mat-form-field class="cs-input date-column infix-bodr">
+                                        <input matInput [matDatepicker]="picker2" placeholder="Date" name="dom_from"
+                                        [(ngModel)]="data.dom_from" (dateChange)="DateOfMeeting($event)" readonly>
+                                        <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                                        <mat-datepicker #picker2></mat-datepicker>
+                                    </mat-form-field>
+                                </div>
+                            </th>
+                            <th class="w90">&nbsp;</th>
+                            <th class="w90 text-right">&nbsp;</th>
+                            <th class="w90">&nbsp;</th>
+                            <th class="w140">&nbsp;</th>
+                            <th class="w80"></th>
+                            <th class="w50" *ngIf="active_tab == 'Pending' && assign_login_data2.edit_event_plan=='1'"></th>
+                            
+                        </tr>
+                    </table>
+                </div>
+                <!-- *** Filters End ***  -->
+            </div>
+            
+            <div class="table-container">
+                
+                <div class="table-content">
+                    <table>
+                        <ng-container *ngIf="!loader">
+                            <tr *ngFor="let detail of contractorMeetListDetail ; let i = index"  [ngClass]="{'Current': serve.currentUserID == detail.id}" >
+                                <td class="w50">{{i +1}}</td>
+                                <td class="w90">{{detail.date_created | date:'dd-MMM-yyyy'}}</td>
+                                <td class="w130">{{detail.created_by_user |titlecase }}
+                                </td>
+                                <td class="w90" matTooltip="Click here to View Detail " matTooltipPosition="above" *ngIf="detail.status == 'Completed'" >
+                                    <a class="link-btn" mat-button (click)="serve.setData(data)" routerLink="contractor-detail/{{detail.id}}" routerLinkActive="active">{{detail.event_id ? (detail.event_id | titlecase) : 'N/A' }}</a>
+                                </td  >
+                                <td class="w90" *ngIf="detail.status != 'Completed'">{{detail.event_id ? detail.event_id : 'N/A' }}
+                                </td>
+                                <td class="w180">
+                                    {{detail.company_name | titlecase}}
+                                </td>
+                                <td class="w180">{{detail.name}}, {{detail.mobile}}</td>
+                                <td class="w90">{{detail.date_of_meeting | date:'dd-MMM-yyyy'}}</td>
+                                <td class="w90">
+                                    {{detail.last_meeting == null? "First Meeting" :detail.last_meeting | date:'dd-MMM-yyyy'}}
+                                </td>
+                                <td class="w90 text-center"><strong>{{detail.total_member}}</strong></td>
+                                <td class="w90 text-right">&#x20B9; {{detail.total_budget}}</td>
+                                <td class="w140" matTooltip="{{detail.description}}" matTooltipPosition="above">
+                                    <p class="one-line">{{detail.description}}</p>
+                                </td>
+                                <td class="w80">
+                                    <strong [ngClass]="{'yellow-clr':detail.status=='Pending','red-clr':detail.status=='Reject','blue-clr':detail.status=='Completed','green-clr':detail.status=='Approved'}">{{detail.status | titlecase}}</strong>
+                                </td>
+                                <td class="w50 text-center" *ngIf="active_tab == 'Pending' && assign_login_data2.edit_event_plan=='1'">
+                                    <div class="action-button" *ngIf="(( detail.status!='completed') )">
+                                        <button  mat-icon-button  matTooltip="Change Status" (click)="statusModal(detail.id,detail.status)">
+                                            <i class="material-icons edit">edit</i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </ng-container>
+                        
+                        <ng-container *ngIf="loader">
+                            <tr class="sk-loading" *ngFor="let lead of contractorMeetListDetail">
+                                <td class="w90">
+                                    <div>&nbsp;</div>
+                                </td>
+                                <td class="w130">
+                                    <div>&nbsp;</div>
+                                </td>
+                                <td class="w90">
+                                    <div>&nbsp;</div>
+                                </td>
+                                <td class="w150">
+                                    <div>&nbsp;</div>
+                                </td>
+                                <td class="w140">
+                                    <div>&nbsp;</div>
+                                </td>
+                                <td class="w90">
+                                    <div>&nbsp;</div>
+                                </td>
+                                <td class="w90">
+                                    <div>&nbsp;</div>
+                                </td>  
+                                <td class="w90">
+                                    <div>&nbsp;</div>
+                                </td> 
+                                <td class="w90">
+                                    <div>&nbsp;</div>
+                                </td>
+                                
+                                <td class="w140">
+                                    <div>&nbsp;</div>
+                                </td>
+                                <td class="w90">
+                                    <div>&nbsp;</div>
+                                </td>
+                            </tr>
+                        </ng-container>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <!-- *** All tab table end *** -->
+        
+        
+        
+        <div class="no-data" *ngIf="!contractorMeetListDetail.length && datanotfound == true">
+            <img src="assets/img/no-data.gif" alt="">
+            <p>Data not <span>available !</span></p>
+        </div>
+    </div>
+    
+</div>

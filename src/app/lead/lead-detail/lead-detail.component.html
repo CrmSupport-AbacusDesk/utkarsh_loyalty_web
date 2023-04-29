@@ -1,0 +1,332 @@
+f
+<div class="main-container">
+  <div class="tools-container">
+    <a mat-icon-button matTooltip="Back" routerLink="/lead-list">
+      <i class="material-icons">arrow_back</i>
+    </a>
+    <h2>Enquiry Detail</h2>
+    <div class="left-auto left-auto df ac flex-gap-10">
+
+      <ng-container *ngIf="tabType == 'Followup' ">
+        <button mat-icon-button matTooltip="Refresh" (click)="refresh() ">
+          <i class="material-icons">refresh</i>
+        </button>
+        <div class="pagination" *ngIf="followup_list.length > 0">
+          <div class="pagination-content">
+            Pages
+            <span>{{pagenumber}}</span>
+            of
+            <span>{{total_page}}</span>
+          </div>
+          <div class="page-nav">
+            <button mat-icon-button matTooltip="Older" (click)="pervious()" [disabled]="start == 0">
+              <i class="material-icons">navigate_before</i>
+            </button>
+            <button mat-icon-button matTooltip="Newer" (click)="nextPage()" [disabled]="pagenumber == total_page ">
+              <i class="material-icons">navigate_next</i>
+            </button>
+          </div>
+        </div>
+      </ng-container>
+      <div class="mat-tabbar">
+        <button mat-button [ngClass]="{'active' :tabType== 'Profile'}" (click)="tabType= 'Profile'; leadDetail()"><i
+            class="material-icons">person</i>Basic Detail</button>
+        <button mat-button [ngClass]="{'active' :tabType== 'Followup'}"
+          (click)="tabType = 'Followup'; followupList()"><i class="material-icons">calendar_month</i>Followup</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="container pt10 pl10 pr10 pb50">
+    <ng-container *ngIf="tabType== 'Profile'">
+      <div class="row">
+        <div class="col s12 m8 l8">
+          <div class="card" *ngIf="!loader">
+            <div class="card-head">
+              <h2>Basic Details</h2>
+            </div>
+            <div class="card-body">
+              <div class="grid-box">
+                <div class="block-feilds">
+                  <span>Date</span>
+                  <p>{{lead_detail.date_created | date:'dd MMM yyyy'}}</p>
+                </div>
+
+
+                <div class="block-feilds">
+                  <span>Created By</span>
+                  <p>{{lead_detail.created_by_name}}</p>
+                </div>
+
+                <div class="block-feilds">
+                  <span>Enquiry Type</span>
+                  <p>{{lead_detail.influencer_type ? lead_detail.influencer_type : '---'}}</p>
+                </div>
+
+
+                <div class="block-feilds">
+                  <span>Source</span>
+                  <p>{{lead_detail.source ? lead_detail.source : '---'}}</p>
+                </div>
+
+                <div class="block-feilds">
+                  <span>Name</span>
+                  <p>{{lead_detail.name ? lead_detail.name :'---'}}</p>
+                </div>
+
+                <div class="block-feilds">
+                  <span>Mobile Number</span>
+                  <p>{{lead_detail.mobile ? lead_detail.mobile :'---'}}</p>
+                </div>
+
+                <div class="block-feilds">
+                  <span>Alternative Number</span>
+                  <p>{{lead_detail.altNumber ? lead_detail.altNumber :'---'}}</p>
+                </div>
+
+
+                <div class="block-feilds">
+                  <span>Email Id</span>
+                  <p>{{lead_detail.email ? lead_detail.email :'---'}}</p>
+                </div>
+
+                <div class="block-feilds">
+                  <span>Status</span>
+                  <p>{{lead_detail.stage_level ? lead_detail.stage_level :'---'}}</p>
+                </div>
+
+
+                <div class="block-feilds">
+                  <span>Assign Sales User</span>
+                  <p>{{lead_detail.user_name}} {{lead_detail.user_employee_code?(lead_detail.user_employee_code):'---'}}
+                  </p>
+                </div>
+              </div>
+
+              <div class="grid-box single mt16" *ngIf="lead_detail.description">
+                <div class="block-feilds">
+                  <span>Remark</span>
+                  <p>{{lead_detail.description}}</p>
+                </div>
+              </div>
+
+              <div class="grid-box single mt16" *ngIf="lead_detail.reason">
+                <div class="block-feilds">
+                  <span>Reason</span>
+                  <p>{{lead_detail.reason}}</p>
+                </div>
+              </div>
+
+              <div class="grid-box single mt16">
+                <div class="block-feilds">
+                  <span>Address</span>
+                  <p>{{lead_detail.address?lead_detail.address+',':''}}
+                    {{lead_detail.city?lead_detail.city+',':''}}
+                    {{lead_detail.district?lead_detail.district+',':''}}
+                    {{lead_detail.state?lead_detail.state+',':''}}
+                    {{lead_detail.pincode?lead_detail.pincode+',':''}} 
+                    {{lead_detail.country?lead_detail.country+',':''}} 
+                  
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card" *ngIf="loader">
+            <div class="sk-head">
+              <h2>&nbsp;</h2>
+            </div>
+            <div class="card-body">
+              <div class="grid-box">
+                <div class="sk-box" *ngFor="let row of [].constructor(10)">
+                  &nbsp;
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col s12 m4 l4">
+
+          <div class="card" *ngIf="!loader">
+            <div class="card-head">
+              <h2>Logs</h2>
+            </div>
+
+            <div class="logs-box">
+              <ng-container *ngFor="let row of lead_logs">
+                <div class="logshead ">{{row.changes_by_name}} :- {{row.date_created | date:'dd MMM yyyy'}}</div>
+                <div class="logscontent ">
+                  <span>Remark : </span> {{row.msg ? row.msg : row.remark}}
+                </div>
+              </ng-container>
+            </div>
+
+          </div>
+
+          <div class="card" *ngIf="loader">
+            <div class="sk-head">
+              <h2>&nbsp;</h2>
+            </div>
+            <div class="card-body">
+              <div class="grid-box single mt10" *ngFor="let row of [].constructor(5)">
+                <div class="sk-box">
+                  &nbsp;
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </ng-container>
+
+    <div *ngIf="tabType== 'Followup'" style="margin: -10px -10px 0px -10px;">
+      <div class="cs-table">
+        <div class="sticky-head" style="top: -10px;">
+          <div class="table-head">
+            <table>
+              <tr>
+                <th class="w50">S.No</th>
+                <th class="w90">Date Create</th>
+                <th class="w100">Created By</th>
+                <th class="w100">Followup Date</th>
+                <th class="w100">Followup Time</th>
+                <th class="w200">Assign To</th>
+                <th>Remark</th>
+              </tr>
+            </table>
+          </div>
+
+          <div class="table-head border-top">
+            <table>
+              <tr>
+                <th class="w50">&nbsp;</th>
+                <th class="w90">
+                  <div class="th-search-acmt">
+                    <mat-form-field class="example-full-width cs-input">
+                      <input matInput [matDatepicker]="picker2" placeholder="Date" name="date_created"
+                        [(ngModel)]="filter.date_created" [max]="minDate" (dateChange)="followupList()" readonly>
+                      <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                      <mat-datepicker #picker2></mat-datepicker>
+                    </mat-form-field>
+                  </div>
+                </th>
+                <th class="w100">
+                  <div class="th-search-acmt">
+                    <mat-form-field class="example-full-width cs-input select-input">
+                      <input matInput placeholder="Search..." name="created_by_name"
+                        [(ngModel)]="filter.created_by_name" (keyup.enter)="followupList()">
+                    </mat-form-field>
+                  </div>
+                </th>
+                <th class="w100">
+                  <div class="th-search-acmt">
+                    <mat-form-field class="example-full-width cs-input">
+                      <input matInput [matDatepicker]="next_follow_date" placeholder="Date" name="next_follow_date"
+                        [(ngModel)]="filter.next_follow_date" (dateChange)="followupList()" readonly>
+                      <mat-datepicker-toggle matSuffix [for]="next_follow_date"></mat-datepicker-toggle>
+                      <mat-datepicker #next_follow_date></mat-datepicker>
+                    </mat-form-field>
+                  </div>
+                </th>
+                <th class="w100">&nbsp;</th>
+                <th class="w200">
+                  <div class="th-search-acmt">
+                    <mat-form-field class="example-full-width cs-input select-input">
+                      <input matInput placeholder="Search..." name="assign_to_name" [(ngModel)]="filter.assign_to_name"
+                        (keyup.enter)="followupList()">
+                    </mat-form-field>
+                  </div>
+                </th>
+                <th>&nbsp;</th>
+              </tr>
+            </table>
+          </div>
+        </div>
+
+        <div class="table-container">
+          <div class="table-content">
+            <table>
+
+              <ng-container *ngIf="!loader">
+                <tr *ngFor="let row of followup_list; let i=index">
+                  <td class="w50">{{ i + 1 + sr_no }}</td>
+                  <td class="w90">{{row.date_created | date:'dd MMM yyyy'}}</td>
+                  <td class="w100">{{row.created_by_name}}</td>
+                  <td class="w100">{{row.next_follow_date | date:'dd MMM yyyy'}}</td>
+                  <td class="w100">
+                    <ng-container *ngIf="row.next_follwup_time != '00:00:00'">{{row.next_follwup_time}}</ng-container>
+                  </td>
+                  <td class="w200">{{row.assign_to_name}} ({{row.emp_code}})</td>
+                  <td>{{row.description}}</td>
+                </tr>
+              </ng-container>
+              <ng-container *ngIf="loader">
+
+                <tr class="sk-loading" *ngFor="let row of [].constructor(10)">
+                  <td class="w50">
+                    <div>&nbsp;</div>
+                  </td>
+                  <td class="w90">
+                    <div>&nbsp;</div>
+                  </td>
+                  <td class="w100">
+                    <div>&nbsp;</div>
+                  </td>
+                  <td class="w100">
+                    <div>&nbsp;</div>
+                  </td>
+                  <td class="w200">
+                    <div>&nbsp;</div>
+                  </td>
+                  <!-- <td class="w100">
+                    <div>&nbsp;</div>
+                  </td> -->
+                  <td>
+                    <div>&nbsp;</div>
+                  </td>
+                </tr>
+              </ng-container>
+
+            </table>
+          </div>
+        </div>
+
+        <div *ngIf="data_not_found">
+          <app-not-result-found></app-not-result-found>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+
+
+  <div class="fab-btns">
+
+    <button
+      (click)="lastBtnValue('activity'); openDialog(lead_detail.type, lead_detail.id,lead_detail.company_name, lead_detail.name,'remark')"
+      mat-fab color="primary" [ngClass]="{'pulse': fabBtnValue=='activity'}">
+      <i class="material-icons">add</i>
+      Add Remark
+    </button>
+
+    <ng-container *ngIf="lead_detail.stage_level == 'Qualified'">
+      <button
+        (click)="lastBtnValue('follow_up'); openDialog(lead_detail.type, lead_detail.state,lead_detail.company_name, lead_detail.name,'followup')"
+        mat-fab color="primary" [ngClass]="{'pulse': fabBtnValue=='follow_up'}">
+        <i class="material-icons">add</i>
+        Add Followup
+      </button>
+    </ng-container>
+    <!--  -->
+    <button (click)="lastBtnValue('status'); changeStatus();" mat-fab *ngIf="lead_detail.stage_level=='Pending'"
+      color="primary" [ngClass]="{'pulse': fabBtnValue=='status'}">
+      <i class="material-icons">update</i>
+      Change Status
+    </button>
+  </div>
+</div>

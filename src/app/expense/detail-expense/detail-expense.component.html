@@ -1,0 +1,691 @@
+<div class="main-container ">
+  <div class="tools-container">
+    <a mat-icon-button matTooltip="Back" routerLink="/expense-list">
+      <i class="material-icons">arrow_back</i>
+    </a>
+    <h2>Expense Detail</h2>
+  </div>
+  <div class="container pt10 pl10 pr10 pb50">
+    <div class="row">
+      <div class="col s12 m12 l12">
+        <!-- product data start -->
+        <div class="card" *ngIf="!skLoading">
+          <div class="card-head">
+            <h2>Basic Details</h2>
+          </div>
+          <div class="card-body">
+            <div class="grid-box">
+              <div class="block-feilds">
+                <span>Date & Created By</span>
+                <p>{{expenseDetail.dateCreated | date:'d MMM y'}} & {{expenseDetail.createdByName}}</p>
+              </div>
+
+              <div class="block-feilds">
+                <span>Expense</span>
+                <p><strong>&#x20B9; {{expenseDetail.claimAmt}}</strong></p>
+              </div>
+
+              <div class="block-feilds">
+                <span>Expense ID</span>
+                <p>#CLM-{{expenseDetail.id != '' ? expenseDetail.id : '--' }}</p>
+              </div>
+
+              <div class="block-feilds">
+                <span>Employee Code</span>
+                <p>{{expenseDetail.emp_code ? expenseDetail.emp_code : 'N/A'}}</p>
+              </div>
+
+              <div class="block-feilds">
+                <span>Employee Name</span>
+                <p>{{expenseDetail.userName != '' ? expenseDetail.userName : '--'}}</p>
+              </div>
+
+              <div class="block-feilds">
+                <span>Reporting Manager</span>
+                <p>{{expenseDetail.reporting_name}}-{{expenseDetail.reporting_code}}</p>
+              </div>
+
+              <div class="block-feilds">
+                <span>Designation</span>
+                <p>{{expenseDetail.userType != '' ? expenseDetail.userType : '--' }}</p>
+              </div>
+
+              <div class="block-feilds">
+                <span>Senior Status</span>
+                <p class="yellow-clr" *ngIf="expenseDetail.seniorStatus=='Pending'">{{expenseDetail.seniorStatus}}
+                </p>
+                <p class="green-clr" *ngIf="expenseDetail.seniorStatus=='Approved'">{{expenseDetail.seniorStatus}}
+                </p>
+                <p class="red-clr" *ngIf="expenseDetail.seniorStatus=='Reject'">{{expenseDetail.seniorStatus}}</p>
+                <div class="action-button right-action-btn text-right"
+                  *ngIf="expenseDetail.seniorStatus=='Pending' && assign_login_data2.edit_expense=='1'">
+                  <button mat-icon-button matTooltip="Change Status"
+                    (click)="expModal('seniorStatus',expenseDetail.id)">
+                    <i class="material-icons edit">edit</i>
+                  </button>
+                </div>
+              </div>
+
+              <div class="block-feilds" *ngIf="expenseDetail.seniorUpdateDate != '0000-00-00'">
+                <span>Senior Status Updated On</span>
+                <p>{{expenseDetail.seniorUpdateDate | date : 'd MMM y'}}</p>
+              </div>
+
+              <div class="block-feilds">
+                <span>A/C Status</span>
+                <p class="yellow-clr" *ngIf="expenseDetail.acStatus=='Pending'">{{expenseDetail.acStatus}}</p>
+                <p class="green-clr" *ngIf="expenseDetail.acStatus=='Approved'">{{expenseDetail.acStatus}}</p>
+                <p class="red-clr" *ngIf="expenseDetail.acStatus=='Reject'">{{expenseDetail.acStatus}}</p>
+                <!-- <div class="action-button right-action-btn text-right" *ngIf="expenseDetail.seniorStatus=='Approved' && expenseDetail.acStatus == 'Pending' && assign_login_data2.edit_expense=='1'"> -->
+                <div class="action-button right-action-btn text-right"
+                  *ngIf="assign_login_data2.id=='1'">
+                  <button mat-icon-button matTooltip="Change Status"
+                    (click)="expModal('acStatus',expenseDetail.id,expenseDetail.totalAmt)">
+                    <i class="material-icons edit">edit</i>
+                  </button>
+                </div>
+                <div class="action-button right-action-btn text-right"
+                *ngIf="expenseDetail.seniorStatus=='Approved' && expenseDetail.acStatus == 'Pending' && assign_login_data2.edit_expense=='1'">
+                <button mat-icon-button matTooltip="Change Status"
+                  (click)="expModal('acStatus',expenseDetail.id,expenseDetail.totalAmt)">
+                  <i class="material-icons edit">edit</i>
+                </button>
+              </div>
+              </div>
+
+              <div class="block-feilds" *ngIf="expenseDetail.acUpdateDate != '0000-00-00'">
+                <span>A/C Status Updated On</span>
+                <p>{{expenseDetail.acUpdateDate | date : 'd MMM y'}}</p>
+              </div>
+            </div>
+
+            <!-- <div class="grid-box single mt16" *ngIf="expenseDetail.acStatus=='Reject'"> -->
+            <div class="grid-box single mt16">
+              <div class="block-feilds">
+                <span>Reason </span>
+                <p>{{expenseDetail.acRemark != '' ? expenseDetail.acRemark : '--' }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- product data end -->
+
+
+        <!-- Skeleton start -->
+        <div class="card" *ngIf="skLoading">
+          <div class="sk-head">
+            <h2>&nbsp;</h2>
+          </div>
+          <div class="card-body">
+            <div class="grid-box">
+              <div class="sk-box" *ngFor="let row of [].constructor(10)">
+                &nbsp;
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Skeleton end -->
+
+      </div>
+    </div>
+    <div class="cs-form mt10">
+      <div class="row ">
+        <div class="col s12">
+          <div class="cs-collapse">
+            <mat-accordion class="example-headers-align">
+
+              <!-- Travelentitlement mat-expansion-\ -->
+              <mat-expansion-panel [expanded]="step === 0" (opened)="setStep(0)" hideToggle
+                *ngIf="expenseDetail.travelEntitlementAmt > 0">
+                <mat-expansion-panel-header>
+                  <mat-panel-title>
+                    Travel entitlement
+                  </mat-panel-title>
+                </mat-expansion-panel-header>
+
+                <div class="collapse-body pt0">
+                  <div class="cs-form">
+                    <div class="cs-table left-right-10">
+                      <div class="table-head">
+                        <table>
+                          <tr>
+                            <th class="w485 text-center">Departure</th>
+                            <th class="w485 text-center">Arrival</th>
+                            <th>Mode Of Travel</th>
+                          </tr>
+                        </table>
+                      </div>
+                      <div class="table-head border-top border-bottom">
+                        <table>
+                          <tr>
+                            <th class="w485 padding0">
+                              <table>
+                                <tr>
+                                  <th class="w85">Date</th>
+                                  <th class="w100">Station</th>
+                                  <!-- <th class="w70">Time</th> -->
+                                  <!-- <th class="w100">Ticket No</th> -->
+                                  <!-- <th class="w50">K.M</th> -->
+                                  <th class="w80 text-right">Amount</th>
+                                </tr>
+                              </table>
+                            </th>
+                            <th class="w485 padding0">
+                              <table>
+                                <tr>
+                                  <th class="w85">Date</th>
+                                  <th class="w100">Station</th>
+                                  <!-- <th class="w70">Time</th> -->
+                                  <!-- <th class="w100">Ticket No</th> -->
+                                  <!-- <th class="w50">K.M</th> -->
+                                  <!-- <th class="w80 text-right">Amount</th> -->
+                                </tr>
+                              </table>
+                            </th>
+                            <th>Mode Of Travel</th>
+
+                          </tr>
+                        </table>
+                      </div>
+
+                      <div class="table-container">
+                        <div class="table-content">
+                          <table>
+                            <tr *ngFor="let row of expenseDetail.travel">
+                              <td class="w485 padding0">
+                                <table>
+                                  <tr>
+                                    <td class="w85">{{row.depatureDate | date:'d MMM y'}}</td>
+                                    <td class="w100">{{row.depatureStation}}</td>
+                                    <!-- <td class="w70">{{row.depatureTime}}</td> -->
+                                    <!-- <td class="w100">{{row.depatureTicketNo ? row.depatureTicketNo : '--'}}</td> -->
+                                    <!-- <td class="w50">{{row.depatureTravelDis}}</td> -->
+                                    <td class="w80 text-right">&#8377; {{row.depatureAmount}}</td>
+                                  </tr>
+                                </table>
+                              </td>
+                              <td class="w485 padding0">
+                                <table>
+                                  <tr>
+                                    <td class="w85">{{row.arrivalDate | date:'d MMM y'}}</td>
+                                    <td class="w100">{{row.arrivalStation}}</td>
+                                    <!-- <td class="w70">{{row.arrivalTime}}</td> -->
+                                    <!-- <td class="w100">{{row.arrivalTicketNo}}</td> -->
+                                    <!-- <td class="w50">{{row.arrivalTravelDis}}</td> -->
+                                    <!-- <td class="w80 text-right">&#8377; {{row.arrivalAmount}}</td> -->
+                                  </tr>
+                                </table>
+                              </td>
+                              <td *ngIf="row.travelClass != ''">{{row.travelClass}} & {{row.modeOfTravel}}
+                              <td *ngIf="row.travelClass == ''">{{row.modeOfTravel}}
+                                <!-- <div class="action-btns">
+                                <button mat-button class="delete"><i class="material-icons">delete_sweep</i> Delete</button>
+                              </div> -->
+                                <!-- <div class="action-btns" *ngIf="expenseDetail.seniorStatus=='Pending' && assign_login_data2.edit_expense=='1'"> -->
+                                <div class="action-btns"
+                                  *ngIf="expenseDetail.seniorStatus=='Pending' && assign_login_data2.id=='1'">
+                                  <a mat-button class="edit" (click)="edit_details('Travelentitlement')"><i
+                                      class="material-icons">edit</i> Edit</a>
+                                </div>
+                              </td>
+                            </tr>
+                          </table>
+                        </div>
+                      </div>
+
+                    </div>
+
+                    <div class="row">
+                      <div class="col s12 m4 offset-m8">
+                        <div class="summary">
+                          <table>
+                            <tr>
+                              <td>Total</td>
+                              <td class="text-center"><strong>:</strong></td>
+
+                              <td class="text-right">&#x20B9; {{expenseDetail.travelEntitlementAmt}} /-</td>
+                            </tr>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </mat-expansion-panel>
+              <!-- Travelentitlement mat-expansion--->
+
+
+              <!-- Hotel mat-expansion--->
+              <mat-expansion-panel [expanded]="step === 1" (opened)="setStep(1)" hideToggle
+                *ngIf="expenseDetail.hotelAmt > 0">
+                <mat-expansion-panel-header>
+                  <mat-panel-title>
+                    D/A Allowance
+                  </mat-panel-title>
+                </mat-expansion-panel-header>
+                <div class="collapse-body pt0">
+                  <div class="cs-form">
+                    <div class="cs-table left-right-10">
+                      <div class="table-head border-bottom">
+                        <table>
+                          <tr>
+                            <th class="w100">Check In Date</th>
+                            <th class="w100">Check Out Date</th>
+                            <th class="w130">City</th>
+                            <th class="w160 text-center">Hotel Name</th>
+                            <th class="w80 text-right">Amount</th>
+                            <!-- <th class="w80 text-center">Tax</th> -->
+                            <!-- <th class="w100">Status</th> -->
+                            <th>Remark</th>
+                          </tr>
+                        </table>
+                      </div>
+
+                      <div class="table-container">
+                        <div class="table-content">
+                          <table>
+                            <tr *ngFor="let row2 of expenseDetail.hotel">
+                              <td class="w100">{{row2.checkInDate | date:'d MMM y'}}</td>
+                              <td class="w100">{{row2.checkOutDate | date:'d MMM y'}}</td>
+                              <td class="w130">{{row2.city}}</td>
+                              <td class="w160 text-center">{{row2.hotelName}}</td>
+                              <td class="w80 text-right">&#x20B9; {{row2.amount}}</td>
+                              <td>{{row2.remark != '' ? row2.remark : '--' }}
+                                <!-- <div class="action-btns" *ngIf="expenseDetail.seniorStatus=='Pending' && assign_login_data2.edit_expense=='1'"> -->
+                                <div class="action-btns"
+                                  *ngIf="expenseDetail.seniorStatus=='Pending' && assign_login_data2.id=='1'">
+                                  <a mat-button class="edit" (click)="edit_details('hotel')"><i
+                                      class="material-icons">edit</i> Edit</a>
+                                </div>
+                              </td>
+                            </tr>
+                          </table>
+                        </div>
+                      </div>
+
+                    </div>
+
+                    <div class="row">
+                      <div class="col s12 m4 offset-m8">
+                        <div class="summary">
+                          <table>
+                            <tr>
+                              <td>Total</td>
+                              <td class="text-center"><strong>:</strong></td>
+
+                              <td class="text-right">&#x20B9; {{expenseDetail.hotelAmt}} /-</td>
+                            </tr>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </mat-expansion-panel>
+              <!-- Hotel mat-expansion--->
+
+              <!-- Food mat-expansion--->
+              <mat-expansion-panel [expanded]="step === 2" (opened)="setStep(2)" hideToggle
+                *ngIf="expenseDetail.foodAmt > 0">
+                <mat-expansion-panel-header>
+                  <mat-panel-title>
+                    D/A Allowance
+                  </mat-panel-title>
+                </mat-expansion-panel-header>
+
+                <div class="collapse-body pt0">
+                  <div class="cs-form">
+                    <div class="cs-table left-right-10">
+                      <div class="table-head border-bottom">
+                        <table>
+                          <tr>
+                            <th class="w100">Date</th>
+                            <!-- <th class="w130">City</th> -->
+                            <th class="w80 text-right">Amount</th>
+                            <th>Remark</th>
+                          </tr>
+                        </table>
+                      </div>
+
+                      <div class="table-container">
+                        <div class="table-content">
+                          <table>
+                            <tr *ngFor="let row3 of expenseDetail.food">
+                              <td class="w100">{{row3.date | date:'d MMM y'}}</td>
+                              <!-- <td class="w130">{{row3.city}}</td> -->
+                              <td class="w80 text-right">&#x20B9; {{row3.amount}}</td>
+                              <td>{{row3.remark != '' ? row3.remark : '--' }}
+                                <!-- <div class="action-btns" *ngIf="expenseDetail.seniorStatus=='Pending' && assign_login_data2.edit_expense=='1'"> -->
+                                <div class="action-btns"
+                                  *ngIf="expenseDetail.seniorStatus=='Pending' && assign_login_data2.id=='1'">
+                                  <a mat-button class="edit" (click)="edit_details('food')"><i
+                                      class="material-icons">edit</i> Edit</a>
+                                </div>
+                              </td>
+                            </tr>
+                          </table>
+                        </div>
+                      </div>
+
+                    </div>
+
+                    <div class="row">
+                      <div class="col s12 m4 offset-m8">
+                        <div class="summary">
+                          <table>
+                            <tr>
+                              <td>Total</td>
+                              <td class="text-center"><strong>:</strong></td>
+
+                              <td class="text-right">&#x20B9; {{expenseDetail.foodAmt}} /-</td>
+                            </tr>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </mat-expansion-panel>
+              <!-- Food mat-expansion--->
+
+              <!-- out-Local Conveyance mat-expansion--->
+              <mat-expansion-panel [expanded]="step === 3" (opened)="setStep(3)" hideToggle
+                *ngIf="expenseDetail.localConveyanceAmt > 0&&expenseDetail.expenseType!= 'Local Conveyance'">
+                <mat-expansion-panel-header>
+                  <mat-panel-title>
+                    local conveyance
+                  </mat-panel-title>
+                </mat-expansion-panel-header>
+                <div class="collapse-body pt0">
+                  <div class="cs-form">
+                    <div class="cs-table left-right-10">
+                      <div class="table-head border-bottom">
+                        <table>
+                          <tr>
+                            <th class="w120">Date Created</th>
+                            <th class="w100">Type</th>
+                            <th class="w100">Mode Of Travel</th>
+                            <th class="w100">Google Km</th>
+
+                            <th class="w100 text-right">Distance</th>
+                            <th class="w100 text-right">Amount</th>
+                            <th>Remark</th>
+                          </tr>
+                        </table>
+                      </div>
+
+                      <div class="table-container">
+                        <div class="table-content">
+                          <table>
+                            <tr *ngFor="let row1 of expenseDetail.localConv">
+                              <td class="w120">
+                                {{row1.date | date:'d MMM y'}}
+                              </td>
+
+                              <td class="w100">
+                                {{row1.modeOfTravel}}
+                              </td>
+                              <td class="w100">
+                                {{row1.travelClass}}
+                              </td>
+                              <td class="w100">
+                                {{row1.google_distance+ 'Km'}}
+                              </td>
+                              <td class="w100">
+                                {{row1.distance + 'Km'}}
+                              </td>
+                              <td class="w100 text-right">&#x20B9;{{row1.amount}}
+
+                              </td>
+                              <td>{{row1.remark != '' ? row1.remark : '--' }}
+                                <!-- <div class="action-btns" *ngIf="expenseDetail.seniorStatus=='Pending' && assign_login_data2.edit_expense=='1'"> -->
+                                <div class="action-btns"
+                                  *ngIf="expenseDetail.seniorStatus=='Pending' && assign_login_data2.id=='1'">
+                                  <a mat-button class="edit" (click)="edit_details('local conveyance')"><i
+                                      class="material-icons">edit</i> Edit</a>
+                                </div>
+                              </td>
+                            </tr>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col s12 m4 offset-m8">
+                        <div class="summary">
+                          <table>
+                            <tr>
+                              <td>Total</td>
+                              <td class="text-center"><strong>:</strong></td>
+                              <td class="text-right">&#x20B9; {{expenseDetail.localConveyanceAmt}} /-</td>
+                            </tr>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </mat-expansion-panel>
+              <!-- out-Local Conveyance mat-expansion--->
+              <!-- Local Conveyance mat-expansion--->
+              <!-- <mat-expansion-panel [expanded]="step === 3" (opened)="setStep(3)" hideToggle >
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  ocal conveyance
+                </mat-panel-title>
+              </mat-expansion-panel-header> -->
+              <div class="collapse-body pt0"
+                *ngIf="expenseDetail.localConveyanceAmt > 0 && expenseDetail.expenseType== 'Local Conveyance'">
+                <div class="cs-form">
+                  <div class="cs-table left-right-10">
+                    <div class="table-head border-bottom">
+                      <table>
+                        <tr>
+                          <th class="w120">Date</th>
+                          <th class="w120 text-right">Distance Travel</th>
+                          <th class="w120">Amount</th>
+                          <th class="w120">Food Expense</th>
+                          <th class="w150">Mode Of Travel</th>
+                          <th>Remark</th>
+                        </tr>
+                      </table>
+                    </div>
+
+                    <div class="table-container">
+                      <div class="table-content">
+                        <table>
+                          <tr *ngFor="let row1 of expenseDetail.localConv">
+                            <td class="w120">{{row1.date | date:'d MMM y'}} </td>
+                            <td class="w120 text-right"> {{row1.distance + 'Km'}} </td>
+                            <td class="w120">&#8377; {{row1.amount}}</td>
+                            <td class="w120"> &#8377; {{row1.food_expense_amount || '--'}}</td>
+                            <td class="w150"> {{row1.modeOfTravel}}- ({{row1.travelClass}})</td>
+                            <td>{{row1.remark != '' ? row1.remark : '--' }} </td>
+                          </tr>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- </mat-expansion-panel> -->
+              <!-- Local Conveyance mat-expansion--->
+              <!-- Misc Expense mat-expansion--->
+              <mat-expansion-panel [expanded]="step === 4" (opened)="setStep(4)" hideToggle
+                *ngIf="expenseDetail.miscExpenseAmt > 0">
+                <mat-expansion-panel-header>
+                  <mat-panel-title>
+                    misc expense information
+                  </mat-panel-title>
+                </mat-expansion-panel-header>
+
+                <div class="collapse-body pt0">
+                  <div class="cs-form">
+                    <div class="cs-table left-right-10">
+                      <div class="table-head border-bottom">
+                        <table>
+                          <tr>
+                            <th class="w100">Date</th>
+                            <th class="w130">Nature Of Exp.</th>
+                            <!-- <th class="w130">Beneficiaries Name</th> -->
+                            <th class="w130">Place Of Expense</th>
+                            <th class="w80 text-right">Amount</th>
+                            <!-- <th class="w80 text-right">Tax</th> -->
+                            <th>Remark</th>
+                          </tr>
+                        </table>
+                      </div>
+
+                      <div class="table-container">
+                        <div class="table-content">
+                          <table>
+                            <tr *ngFor="let row4 of expenseDetail.miscExp">
+                              <td class="w100">{{row4.date | date:'d MMM y'}}</td>
+                              <td class="w130">{{row4.expName}}</td>
+                              <!-- <td class="w130">Sumit Kumar</td> -->
+                              <td class="w130">{{row4.placeOfExp}}</td>
+                              <td class="w80 text-right"> &#x20B9; {{row4.amount}}</td>
+                              <!-- <td class="w80 text-right"> &#x20B9; 300</td> -->
+                              <td>{{row4.remark != '' ? row4.remark : '--' }}
+                                <!-- <div class="action-btns" *ngIf="expenseDetail.seniorStatus=='Pending' && assign_login_data2.edit_expense=='1'"> -->
+                                <div class="action-btns"
+                                  *ngIf="expenseDetail.seniorStatus=='Pending' && assign_login_data2.id=='1'">
+                                  <a mat-button class="edit" (click)="edit_details('misc expense information')"><i
+                                      class="material-icons">edit</i> Edit</a>
+                                </div>
+                              </td>
+                            </tr>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+
+
+                    <div class="row">
+                      <div class="col s12 m4 offset-m8">
+                        <div class="summary">
+                          <table>
+                            <tr>
+                              <td>Total</td>
+                              <td class="text-center"><strong>:</strong></td>
+
+                              <td class="text-right">&#x20B9; {{expenseDetail.miscExpenseAmt}} /-</td>
+                            </tr>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </mat-expansion-panel>
+              <mat-expansion-panel [expanded]="step === 5" (opened)="setStep(5)" hideToggle
+                *ngIf="expenseDetail.eventExpenseAmt > 0">
+                <mat-expansion-panel-header>
+                  <mat-panel-title>
+                    Event Expense
+                  </mat-panel-title>
+                </mat-expansion-panel-header>
+
+                <div class="collapse-body pt0">
+                  <div class="cs-form">
+                    <div class="cs-table left-right-10">
+                      <div class="table-head">
+                        <table>
+                          <tr>
+                            <th class="w485 text-center">Date Of Meeting</th>
+                            <th class="w485 text-center">Total budget</th>
+                            <th class="w485 text-center">Expense</th>
+                          </tr>
+                        </table>
+                      </div>
+
+
+                      <div class="table-container">
+                        <div class="table-content">
+                          <table>
+                            <tr>
+                              <td class="w485 padding0">
+                                <table>
+                                  <tr>
+                                    <td class="w485 text-center">{{expenseDetail.event_expense.date_of_meeting | date:'d
+                                      MMM y'}}</td>
+
+                                    <td class="w485 text-center">&#x20B9;{{expenseDetail.event_expense.total_budget}}
+                                    </td>
+                                    <td class="w485 text-center">&#x20B9;{{expenseDetail.event_expense.expense}}</td>
+
+                                  </tr>
+                                </table>
+                              </td>
+
+
+                            </tr>
+                          </table>
+                        </div>
+                      </div>
+
+                    </div>
+
+
+                  </div>
+                </div>
+              </mat-expansion-panel>
+              <!-- Misc Expense mat-expansion--->
+            </mat-accordion>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col s8">
+          <div class="cs-file" *ngIf="expenseDetail.expBills && expenseDetail.expBills.length > 0">
+            <p>Upload File</p>
+            <ul class="product-images">
+              <li class="multi-images">
+                <label class="cs-file-img" *ngFor="let val of expenseDetail.expBills">
+                  <img *ngIf="val.image!=null &&val.image!=''" src="{{val.image}}" (click)="imageModel(val.image)">
+                </label>
+              </li>
+            </ul>
+
+          </div>
+        </div>
+        <div class="col s4">
+          <div class="summary">
+            <table>
+              <tr *ngIf="expenseDetail.acStatus == 'Approved'">
+                <td>Approved Amount</td>
+                <td class="text-center"><strong>:</strong></td>
+
+                <td class="text-right">&#x20B9; {{expenseDetail.totalApprovedAmount ? expenseDetail.totalApprovedAmount
+                  :
+                  '0'}} /-</td>
+              </tr>
+
+              <tr>
+                <td>Bill Amount</td>
+                <td class="text-center"><strong>:</strong></td>
+
+                <td class="text-right">&#x20B9; {{expenseDetail.totalAmt}} /-</td>
+              </tr>
+
+              <!-- <tr>
+                <td>Advance</td>
+                <td class="text-right">&#x20B9; 12,000 /-</td>
+              </tr>
+              <tr>
+                <td>Claim</td>
+                <td class="text-right">&#x20B9; 12,000 /-</td>
+              </tr> -->
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- </div> -->

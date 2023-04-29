@@ -1,0 +1,361 @@
+<div class="main-container" >
+  
+  <div class="tools-container">
+    <h2>Coupon Code</h2>
+    
+    <div class="left-auto left-auto df ac flex-gap-10">
+      <button mat-icon-button  matTooltip="Refresh" (click)="refresh(active_tab) ">
+        <i class="material-icons">refresh</i>
+      </button>
+      <!-- <div class="pagination" *ngIf="couponData.length > 0">
+        
+        <div class="pagination-content">
+          Pages
+          <span>{{pagenumber}}</span>
+          of
+          <span>{{total_page}}</span>
+        </div>
+        <div class="page-nav">
+          
+          <button mat-icon-button  matTooltip="Older" (click)="pervious(active_tab)"  [disabled]="start == 0">
+            <i class="material-icons">navigate_before</i>
+          </button>
+          <button mat-icon-button  matTooltip="Newer" (click)="nextPage(active_tab)" [disabled]="pagenumber == total_page ">
+            <i class="material-icons">navigate_next</i>
+          </button>
+        </div>
+      </div> -->
+      <div class="mat-tabbar">
+        <button mat-button [ngClass]="active_tab == 'master_box' ? 'active' : ''" (click)="active_tab = 'master_box'; couponCodeList()"><i class="material-icons">all_inbox</i>Box Coupon</button>
+        <button mat-button [ngClass]="active_tab == 'item_box' ? 'active' : ''" (click)="active_tab = 'item_box'; couponCodeList()"><i class="material-icons">category</i>Product Coupon</button>
+        <button mat-button [ngClass]="active_tab == 'scan_item' ? 'active' : ''" (click)="active_tab = 'scan_item'; scanCouponList()"><i class="material-icons">qr_code_scanner</i>Scanned Coupon</button>
+      </div>
+    </div>
+  </div>
+  
+  <div class="container container-scroll">  
+    <div class="cs-table horizontal-scroll" *ngIf="active_tab != 'scan_item'">
+      <div class="sticky-head">
+        <div class="table-head">
+          <table>
+            <tr>
+              <th class="w60">Sr.No</th>
+              <th class="w90">Date</th>
+              <th class="w120">Created by</th>
+              <ng-container  *ngIf="active_tab != 'master_box'">
+                <th class="w140">Box Coupon Code</th>
+              </ng-container>
+              <th class="w140">{{active_tab == 'master_box' ? 'Box' : 'Product'}} Coupon Code</th>
+              <th class="w250">Product Detail</th>
+              <th class="w100">Dispatch Date</th>
+              <th class="w100">Dispatch Type</th>
+              <th class="w250">Dealer Detail</th>
+              <th class="w130">Invoice No.</th>
+            </tr>
+          </table>
+        </div>
+        
+        <div class="table-head border-top">
+          <table>
+            <tr>
+              <th class="w60">&nbsp;</th>
+              <th class="w90">
+                <div class="th-search-acmt">
+                  <mat-form-field class="cs-input date-column infix-bodr">
+                    <input matInput [matDatepicker]="picker" placeholder="Date" name="date_created" [(ngModel)]="filter.date_created" (dateChange)="couponCodeList()" [max]="today_date" disabled>
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker disabled="false"></mat-datepicker>
+                  </mat-form-field>
+                </div>
+             
+              </th>
+              <th class="w120">&nbsp;</th>
+              <ng-container  *ngIf="active_tab != 'master_box'">
+                <th class="w140">
+                  <div class="th-search-acmt">
+                    <mat-form-field class="example-full-width cs-input select-input">
+                      <input matInput placeholder="Search..." type="text" name="master_coupon_code" [(ngModel)]="filter.master_coupon_code" (keyup.enter)="couponCodeList()">
+                    </mat-form-field>
+                  </div>
+                </th>
+              </ng-container>
+              <th class="w140">
+                <div class="th-search-acmt">
+                  <mat-form-field class="example-full-width cs-input select-input">
+                    <input matInput placeholder="Search..." type="text" name="coupon_code" [(ngModel)]="filter.coupon_code" (keyup.enter)="couponCodeList()">
+                  </mat-form-field>
+                </div>
+              </th>
+              <th class="w250">&nbsp;</th>
+              
+              <th class="w100">
+                <div class="th-search-acmt">
+                  <mat-form-field class="cs-input date-column infix-bodr">
+                    <input matInput [matDatepicker]="dispatch_date" placeholder="Date" name="dispatch_date" [(ngModel)]="filter.dispatch_date" (dateChange)="couponCodeList()" [max]="today_date" disabled>
+                    <mat-datepicker-toggle matSuffix [for]="dispatch_date"></mat-datepicker-toggle>
+                    <mat-datepicker #dispatch_date disabled="false"></mat-datepicker>
+                  </mat-form-field>
+                </div>
+              </th>
+              <th class="w100">&nbsp;</th>
+              <th class="w250">&nbsp; </th>
+              
+              <th class="w130">
+                <div class="th-search-acmt">
+                  <mat-form-field class="example-full-width cs-input select-input">
+                    <input matInput placeholder="Search..." type="text" name="invoice_number" [(ngModel)]="filter.invoice_number" (keyup.enter)="couponCodeList()">
+                  </mat-form-field>
+                </div>
+              </th>
+            </tr>
+          </table>
+        </div>
+      </div>
+      
+      <div class="table-container">
+        <div class="table-content" >
+          <table>
+            <ng-container *ngIf="!loader">
+              <tr *ngFor="let row of couponData let i = index;">
+                <td class="w60">{{i+1+sr_no}}</td>
+                <td class="w90">{{(row.date_created?row.date_created:'---') | date:'d MMM y'}}</td>
+                <td class="w120">{{row.created_by_name?row.created_by_name:'---'}}</td>
+                <ng-container  *ngIf="active_tab != 'master_box'">
+                  <td class="w140">{{row.master_coupon_code?row.master_coupon_code:'---'}}</td>
+                </ng-container>
+                <td class="w140">{{row.coupon_code?row.coupon_code:'---'}}</td>
+                <td class="w250">{{row.product_detail?row.product_detail:'---'}}</td>
+                <td class="w100">
+                  {{row.dispatch_date != "0000-00-00 00:00:00" ? (row.dispatch_date | date:'d MMM y') : '---'}}
+                </td>
+                <td class="w100">{{row.dispatch_type}}</td>
+                <td class="w250">{{row.dr_detail}}</td>
+                <td class="w130">{{row.invoice_number}}</td>
+              </tr>
+            </ng-container>
+            
+            
+            <ng-container *ngIf="loader">
+              <tr class="sk-loading" *ngFor="let row of [].constructor(10)">
+                <td class="w60"><div>&nbsp;</div></td>
+                <td class="w90"><div>&nbsp;</div></td>
+                <td class="w120"><div>&nbsp;</div></td>
+                <ng-container  *ngIf="active_tab != 'master_box'">
+                  <td class="w140"><div>&nbsp;</div></td>
+                </ng-container>
+                <td class="w140"><div>&nbsp;</div></td>
+                <td class="w250"><div>&nbsp;</div></td>
+                <td class="w100"><div>&nbsp;</div></td>
+                <td class="w100"><div>&nbsp;</div></td>
+                <td class="w250"><div>&nbsp;</div></td>
+                <td class="w130"><div>&nbsp;</div></td>
+                <ng-container  *ngIf="active_tab == 'scan_item'">
+                  <td class="w110"><div>&nbsp;</div></td>
+                  <td class="w150"><div>&nbsp;</div></td>
+                  <td class="w100"><div>&nbsp;</div></td>
+                  <td class="w100"><div>&nbsp;</div></td>
+                  <td class="w100"><div>&nbsp;</div></td>
+                  <td class="w200"><div>&nbsp;</div></td>
+                  <td class="w200"><div>&nbsp;</div></td>
+                  <td class="w70"><div>&nbsp;</div></td>
+                </ng-container>
+              </tr>
+            </ng-container>
+            
+          </table>
+        </div>
+        
+        
+        <ng-container *ngIf="couponData.length == 0 && noResult">
+          <app-not-result-found></app-not-result-found>
+        </ng-container>
+      </div>
+    </div>
+    
+    <div class="cs-table horizontal-scroll" *ngIf="active_tab == 'scan_item'">
+      <div class="sticky-head">
+        <div class="table-head">
+          <table>
+            <tr>
+              <th class="w60">Sr.No</th>
+              <th class="w140">Coupon Code</th>
+              <th class="w250">Product Detail</th>
+              <th class="w100">Dispatch Date</th>
+              <th class="w100">Dispatch Type</th>
+              <th class="w250">Dealer Detail</th>
+              <th class="w130">Invoice No.</th>
+              <th class="w110 text-right">Coupon value</th>
+              <th class="w150">Scan By</th>
+              <th class="w110">Mobile No.</th>
+              <th class="w100">Scan Date</th>
+              <th class="w180">Bonus Name</th>
+              <th class="w110 text-right">Bonus Point</th>
+              <th class="w70">Action</th>
+            </tr>
+          </table>
+        </div>
+        
+        <div class="table-head border-top">
+          <table>
+            <tr>
+              <th class="w60">&nbsp;</th>
+              <th class="w140">
+                <div class="th-search-acmt">
+                  <mat-form-field class="example-full-width cs-input select-input">
+                    <input matInput placeholder="Search..." type="text" name="coupon_code" [(ngModel)]="filter.coupon_code" (keyup.enter)="scanCouponList()">
+                  </mat-form-field>
+                </div>
+              </th>
+              <th class="w250">&nbsp;</th>
+              
+              <th class="w100">
+                <div class="th-search-acmt">
+                  <mat-form-field class="cs-input date-column infix-bodr">
+                    <input matInput [matDatepicker]="dispatch_date" placeholder="Date" name="dispatch_date" [(ngModel)]="filter.dispatch_date" (dateChange)="scanCouponList()" [max]="today_date" disabled>
+                    <mat-datepicker-toggle matSuffix [for]="dispatch_date"></mat-datepicker-toggle>
+                    <mat-datepicker #dispatch_date disabled="false"></mat-datepicker>
+                  </mat-form-field>
+                </div>
+              </th>
+              <th class="w100">&nbsp;</th>
+              <th class="w250">&nbsp;</th>
+              
+              <th class="w130">
+                <div class="th-search-acmt">
+                  <mat-form-field class="example-full-width cs-input select-input">
+                    <input matInput placeholder="Search..." type="text" name="invoice_number" [(ngModel)]="filter.invoice_number" (keyup.enter)="scanCouponList()">
+                  </mat-form-field>
+                </div>
+              </th>
+              
+              <th class="w110">&nbsp;</th>
+              <th class="w150">
+                <div class="th-search-acmt">
+                  <mat-form-field class="example-full-width cs-input select-input">
+                    <input matInput placeholder="Search..." type="text" name="scanned_by_name" [(ngModel)]="filter.scanned_by_name" (keyup.enter)="scanCouponList()">
+                  </mat-form-field>
+                </div>
+              </th>
+
+              <th class="w110">
+                <div class="th-search-acmt">
+                  <mat-form-field class="example-full-width cs-input select-input">
+                    <input matInput placeholder="Search..." type="text" name="scanned_by_mobile" [(ngModel)]="filter.scanned_by_mobile" (keyup.enter)="scanCouponList()">
+                  </mat-form-field>
+                </div>
+              </th>
+              
+              <th class="w100">
+                <div class="th-search-acmt">
+                  <mat-form-field class="cs-input date-column infix-bodr">
+                    <input matInput [matDatepicker]="picker1" placeholder="Date" name="scanned_on" [(ngModel)]="filter.scanned_on" (dateChange)="scanCouponList()" [max]="today_date" disabled>
+                    <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                    <mat-datepicker #picker1 disabled="false"></mat-datepicker>
+                  </mat-form-field>
+                </div>
+              </th>
+              <th class="w180">&nbsp;</th>
+              <th class="w110">&nbsp;</th>
+              <th class="w70">&nbsp;</th>
+            </tr>
+          </table>
+        </div>
+      </div>
+      
+      <div class="table-container">
+        <div class="table-content">
+          <table>
+            <ng-container *ngIf="!loader">
+              <tr *ngFor="let row of scanData let i = index;">
+                <td class="w60">{{i+1+sr_no}}</td>
+                <td class="w140">{{row.coupon_code?row.coupon_code:'---'}}</td>
+                <td class="w250">{{row.product_detail?row.product_detail:'---'}}</td>
+                <td class="w100">
+                  {{row.dispatch_date != "0000-00-00 00:00:00" ? (row.dispatch_date | date:'d MMM y') : '---'}}
+                </td>
+                <td class="w100">{{row.dispatch_type}}</td>
+                <td class="w250">{{row.dr_detail}}</td>
+                <td class="w130">{{row.invoice_number}}</td>
+                <td class="w110 text-right">
+                  <strong>{{row.total_point?row.total_point + ' PT':'---'}}</strong>
+                </td>
+                <td class="w150">{{row.scanned_by_name?row.scanned_by_name:'---'}}</td>
+                <td class="w110">{{row.scanned_by_mobile?row.scanned_by_mobile:'---'}}</td>
+                <td class="w100">{{row.scanned_date | date:'d MMM y, h:mm a'}}</td>
+                <td class="w180">{{row.bonus_scheme_name}}</td>
+                <td class="w110 text-right"><strong>{{row.bonus_point?row.bonus_point + ' PT':'---'}}</strong></td>
+                <td class="w70"><a class="link-btn" (click)="reopenCoupon(row.coupon_code)">Reopen</a></td>
+              </tr>
+            </ng-container>
+            
+            
+            <ng-container *ngIf="loader">
+              <tr class="sk-loading" *ngFor="let row of [].constructor(10)">
+                <td class="w60"><div>&nbsp;</div></td>
+                <td class="w140"><div>&nbsp;</div></td>
+                <td class="w250"><div>&nbsp;</div></td>
+                <td class="w100"><div>&nbsp;</div></td>
+                <td class="w100"><div>&nbsp;</div></td>
+                <td class="w250"><div>&nbsp;</div></td>
+                <td class="w130"><div>&nbsp;</div></td>
+                <td class="w110"><div>&nbsp;</div></td>
+                <td class="w150"><div>&nbsp;</div></td>
+                <td class="w110"><div>&nbsp;</div></td>
+                <td class="w180"><div>&nbsp;</div></td>
+                <td class="w110"><div>&nbsp;</div></td>
+                <td class="w100"><div>&nbsp;</div></td>
+                <td class="w70"><div>&nbsp;</div></td>
+              </tr>
+            </ng-container>
+            
+          </table>
+        </div>
+        
+        
+        <ng-container *ngIf="scanData.length == 0 && noResult">
+          <app-not-result-found></app-not-result-found>
+        </ng-container>
+      </div>
+    </div>
+    
+    
+  </div>
+  
+  
+  
+  <div class="fab-btns">
+    <button class="pulse excel" mat-fab color="primary" [matMenuTriggerFor]="menu">
+      <i class="material-icons">apps</i>
+      Action
+    </button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item *ngIf="couponData.length > 0 && assign_login_data2.export_coupon_code=='1'" (click)="exportAsXLSX(active_tab);">
+        <mat-icon>download</mat-icon>
+        <span>Download excel</span>
+      </button>
+      <a mat-menu-item *ngIf="assign_login_data2.add_coupon_code=='1'" [ngClass]="{'pulse': fabBtnValue=='add'}"  color="primary"  routerLink="coupon-add" routerLinkActive="active">
+        <mat-icon>qr_code</mat-icon>
+        <span>Generate Coupon</span>
+      </a>
+      
+      
+      <!-- <button mat-menu-item  routerLink="replacement"  routerLinkActive="active">
+        <mat-icon>update</mat-icon>
+        <span>MRP Replacement</span>
+      </button>
+      
+      
+      <button mat-menu-item  routerLink="manual-dispatch"  routerLinkActive="active">
+        <mat-icon>update</mat-icon>
+        <span>Manual Dispatch</span>
+      </button>
+      
+      <button mat-menu-item  routerLink="sales-return"  routerLinkActive="active">
+        <mat-icon>update</mat-icon>
+        <span>Sales Return</span>
+      </button> -->
+    </mat-menu>
+  </div>
+  
+</div>
+
