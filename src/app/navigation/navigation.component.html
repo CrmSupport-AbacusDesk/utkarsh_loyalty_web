@@ -280,7 +280,7 @@
     <li class="dropdown" *ngIf="login_data.view_master=='1'">
         <a mat-button (click)=toggleDropdown(3) [ngClass]="{'active':masteractive}"><i  class="material-icons ">star_rate</i>Masters </a>
         <ul>
-            <li *ngIf="login_data.view_category=='1'">
+            <!-- <li *ngIf="login_data.view_category=='1'">
                 <a mat-button routerLink="/segment-list" routerLinkActive="active" (click)="clearFilter()">
                     Category
                     <span class="nav-counter" *ngIf="serve.counterArray.segment > 0">{{serve.counterArray.segment}}</span>
@@ -290,19 +290,19 @@
                 <a mat-button routerLink="/subcategory" routerLinkActive="active" (click)="clearFilter()">
                     Sub Category
                 </a>
-            </li>
+            </li> -->
             <!-- <li *ngIf="login_data.view_leave_master=='1'">
                 <a mat-button routerLink="/leave-master-list" routerLinkActive="active" (click)="clearFilter()">
                     Leave Master
                 </a>
             </li> -->
-            <li *ngIf="login_data.view_products=='1' ">
+            <!-- <li *ngIf="login_data.view_products=='1' ">
                 <a mat-button routerLink="/product-list" routerLinkActive="active" (click)="clearFilter()">
                     Products
                     <span class="nav-counter"
                     *ngIf="serve.counterArray.product > 0">{{serve.counterArray.product}}</span>
                 </a>
-            </li>
+            </li> -->
             <li *ngIf="login_data.view_pdf=='1' ">
                 <a mat-button routerLink="/catalogue" routerLinkActive="active" (click)="clearFilter()">
                     PDF Catalogue
@@ -321,11 +321,11 @@
             </li> -->
 
 
-        <li *ngIf="login_data.view_customer_category=='1' ">
+        <!-- <li *ngIf="login_data.view_customer_category=='1' ">
             <a mat-button routerLink="/customer-category" routerLinkActive="active" (click)="clearFilter()">
                 Customer Category
             </a>
-        </li>
+        </li> -->
         <!-- <li *ngIf="login_data.view_infulencer_category=='1' ">
             <a mat-button routerLink="/influencer-user-list" routerLinkActive="active"
             (click)="clearFilter()">
