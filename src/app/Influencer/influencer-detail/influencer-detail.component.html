@@ -305,12 +305,12 @@
           <td class="w100" *ngIf="((Tab_type!= 'self_purchase' ) && ( Influencer_Detail.influencer_type=='Distributor' || Influencer_Detail.influencer_type=='Plumber' || Influencer_Detail.influencer_type=='Dealer')) ">{{row.influencer_type && row.influencer_type!=''? row.influencer_type:'--'}}</td>
           <td class="w100" *ngIf="(Tab_type== 'self_purchase' ) && ( Influencer_Detail.influencer_type=='Plumber') ">{{row.against_influencer_type && row.against_influencer_type!=''? row.against_influencer_type:'--'}}</td>
 
-          <td class="w200" *ngIf="Tab_type!= 'self_purchase' && row.influencer_company_name !=''"><a class="link-btn" routerLink="influencer-detail/{{row.distributor_id}}/{{Influencer_Detail.influencer_type}}">{{row.influencer_company_name |titlecase}}-{{row.influencer_mobile?row.influencer_mobile:'---'}}</a></td>
-          <td class="w200" *ngIf="Tab_type!= 'self_purchase' && row.influencer_company_name ==''"><a class="link-btn" routerLink="influencer-detail/{{row.distributor_id}}/{{Influencer_Detail.influencer_type}}">{{row.influencer_name |titlecase}}-{{row.influencer_mobile?row.influencer_mobile:'---'}}</a></td>
+          <td class="w200" *ngIf="Tab_type!= 'self_purchase' && row.influencer_company_name !=''"><a class="link-btn" routerLink="influencer-detail/{{row.influencer_id}}/{{Influencer_Detail.influencer_type}}">{{row.influencer_company_name |titlecase}}-{{row.influencer_mobile?row.influencer_mobile:'---'}}</a></td>
+          <td class="w200" *ngIf="Tab_type!= 'self_purchase' && row.influencer_company_name ==''"><a class="link-btn" routerLink="influencer-detail/{{row.influencer_id}}/{{Influencer_Detail.influencer_type}}">{{row.influencer_name |titlecase}}-{{row.influencer_mobile?row.influencer_mobile:'---'}}</a></td>
 
 
-          <td class="w200" *ngIf="Tab_type== 'self_purchase' && row.against_influencer_company_name !=''"><a class="link-btn" routerLink="influencer-detail/{{row.distributor_id}}/{{Influencer_Detail.against_influencer_type}}">{{row.against_influencer_company_name |titlecase}}-{{row.against_influencer_mobile?row.against_influencer_mobile:'---'}}</a></td>
-          <td class="w200" *ngIf="Tab_type== 'self_purchase' && row.against_influencer_company_name ==''"><a class="link-btn" routerLink="influencer-detail/{{row.distributor_id}}/{{Influencer_Detail.against_influencer_type}}">{{row.against_influencer_name |titlecase}}-{{row.against_influencer_mobile?row.against_influencer_mobile:'---'}}</a></td>
+          <td class="w200" *ngIf="Tab_type== 'self_purchase' && row.against_influencer_company_name !=''"><a class="link-btn" routerLink="influencer-detail/{{row.against_influencer_id}}/{{Influencer_Detail.against_influencer_type}}">{{row.against_influencer_company_name |titlecase}}-{{row.against_influencer_mobile?row.against_influencer_mobile:'---'}}</a></td>
+          <td class="w200" *ngIf="Tab_type== 'self_purchase' && row.against_influencer_company_name ==''"><a class="link-btn" routerLink="influencer-detail/{{row.against_influencer_id}}/{{Influencer_Detail.against_influencer_type}}">{{row.against_influencer_name |titlecase}}-{{row.against_influencer_mobile?row.against_influencer_mobile:'---'}}</a></td>
 
 
 
@@ -890,7 +890,7 @@ Redeem Request
                     </div>
                   </div>
                   <div class="block-feilds">
-                    <span>Document Number</span>
+                    <span>Aadhar Number</span>
                     <p>{{Influencer_Detail.adhar_no ? Influencer_Detail.adhar_no : '---'}}</p>
                   </div>
                 </div>
@@ -1713,7 +1713,7 @@ Redeem Request
     </button>
   </div>
 
-  <div class="fab-btns" *ngIf="tabType== 'transaction' &&  Influencer_Detail.type=='3'">
+  <div class="fab-btns" *ngIf="tabType== 'transaction' && (Influencer_Detail.type=='3' || Influencer_Detail.type=='4') ">
     <button class="excel pulse" mat-fab color="primary" (click)="openDialog('point_transfer')">
       <i class="material-icons">swap_horiz</i>
       Point Transfer

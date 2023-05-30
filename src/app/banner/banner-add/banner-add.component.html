@@ -6,7 +6,7 @@
 		</a>
 		<h2>Add New Banner</h2>
 	</div>
-	
+
 	<div class="container pt10 pl10 pr10 pb50" >
 		<form #f="ngForm" (ngSubmit)=" f.valid && submitDetail()">
 			<div class="row">
@@ -22,13 +22,17 @@
 										<mat-label>User Type</mat-label>
 										<mat-select multiple name="user_type" [(ngModel)]="data.user_type" #user_type="ngModel" required>
 											<mat-option  value="Distributor">Distributor</mat-option>
-											<mat-option  value="Direct Dealer">Direct Dealer</mat-option>
+											<mat-option  value="Dealer">Dealer</mat-option>
+
+											<!-- <mat-option  value="Direct Dealer">Direct Dealer</mat-option> -->
 											<mat-option  value="Retailer">Retailer</mat-option>
-											<mat-option  value="Sales User">Sales User</mat-option>
-											<mat-option  value="Influencer">Influencer</mat-option>
+											<mat-option  value="Plumber">Plumber</mat-option>
+
+											<!-- <mat-option  value="Sales User">Sales User</mat-option>
+											<mat-option  value="Influencer">Influencer</mat-option> -->
 										</mat-select>
 									</mat-form-field>
-									
+
 									<div class="alert alert-danger" *ngIf="user_type.touched || f.submitted">
 										<p *ngIf="user_type.errors?.required">This field is required</p>
 									</div>
@@ -62,7 +66,7 @@
 					</div>
 				</div>
 			</div>
-			
+
 			<div class="row">
 				<div class="col s12">
 					<div class="text-right">
@@ -72,7 +76,7 @@
 					</div>
 				</div>
 			</div>
-			
+
 		</form>
 	</div>
 </div>

@@ -182,13 +182,7 @@
                 </a>
             </li> -->
 
-            <!-- <li *ngIf="login_data.view_survey=='1'">
-                <a mat-button routerLink="/survey-list" routerLinkActive="active" (click)="clearFilter()">
-                    <i class="material-icons ">article</i>
-                    Survey
-                    <span class="nav-counter" *ngIf="serve.counterArray.survey > 0">{{serve.counterArray.survey > 0 ? serve.counterArray.survey : ''}}</span>
-                </a>
-            </li> -->
+
             <li *ngIf="login_data.view_gift=='1'">
                 <a mat-button routerLink="/gift-list" routerLinkActive="active" (click)="clearFilter()">
                     <i class="material-icons ">card_giftcard</i>
@@ -260,6 +254,14 @@
             Support
         </a>
     </li>
+
+     <li *ngIf="login_data.view_survey=='1'">
+                <a mat-button routerLink="/survey-list" routerLinkActive="active" (click)="clearFilter()">
+                    <i class="material-icons ">article</i>
+                    Survey
+                    <span class="nav-counter" *ngIf="serve.counterArray.survey > 0">{{serve.counterArray.survey > 0 ? serve.counterArray.survey : ''}}</span>
+                </a>
+            </li>
 
     <!-- <li class="dropdown" *ngIf="login_data.view_target=='1' ">
         <a mat-button (click)=toggleDropdown(9) [ngClass]="{'active':targetactive}"><i class="material-icons ">trending_up</i> Target </a>

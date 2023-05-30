@@ -130,26 +130,26 @@
               </div>
             </th>
 
-              <th class="w250">
-                <div class="th-search-acmt">
-                  <mat-form-field>
-                    <input type="text" matInput placeholder="Search ..." name="influencer_company_name"
-                    (keyup.enter)="getPurchaseList('')" #influencer_company_name="ngModel" [(ngModel)]="filter_data.influencer_company_name">
-                  </mat-form-field>
-                </div>
-              </th>
+            <th class="w250">
+              <div class="th-search-acmt">
+                <mat-form-field>
+                  <input type="text" matInput placeholder="Search ..." name="influencer_company_name"
+                  (keyup.enter)="getPurchaseList('')" #influencer_company_name="ngModel" [(ngModel)]="filter_data.influencer_company_name">
+                </mat-form-field>
+              </div>
+            </th>
 
 
 
 
-              <th class="w250">
-                <div class="th-search-acmt">
-                  <mat-form-field>
-                    <input type="text" matInput placeholder="Search ..." name="against_influencer_company_name"
-                    (keyup.enter)="getPurchaseList('')" #against_influencer_company_name="ngModel" [(ngModel)]="filter_data.against_influencer_company_name">
-                  </mat-form-field>
-                </div>
-              </th>
+            <th class="w250">
+              <div class="th-search-acmt">
+                <mat-form-field>
+                  <input type="text" matInput placeholder="Search ..." name="against_influencer_company_name"
+                  (keyup.enter)="getPurchaseList('')" #against_influencer_company_name="ngModel" [(ngModel)]="filter_data.against_influencer_company_name">
+                </mat-form-field>
+              </div>
+            </th>
 
 
 
@@ -240,118 +240,118 @@
           <td class="w100" *ngIf="influencer_type == 'Plumber'">{{row.against_influencer_type && row.against_influencer_type!=''? row.against_influencer_type:'--'}}</td>
 
           <td class="w250"  *ngIf="influencer_type != 'Plumber'"> <a class="link-btn" mat-button (click)="service.setData(filter_data)"
-            routerLink="influencer-detail/{{(row.retailer_id)}}/{{'Distributor'}}" routerLinkActive="active"> {{row.influencer_company_name|titlecase}}-{{row.influencer_mobile}}</a></td>
+            routerLink="influencer-detail/{{(row.influencer_id)}}/{{row.influencer_type}}" routerLinkActive="active"> {{row.influencer_company_name|titlecase}}-{{row.influencer_mobile}}</a></td>
             <td class="w250" *ngIf="influencer_type == 'Plumber'"> <a class="link-btn" mat-button (click)="service.setData(filter_data)"
-              routerLink="influencer-detail/{{(row.retailer_id)}}/{{'Distributor'}}" routerLinkActive="active"> {{row.influencer_name|titlecase}}-{{row.influencer_mobile}}</a></td>
+              routerLink="influencer-detail/{{(row.influencer_id)}}/{{row.influencer_type}}" routerLinkActive="active"> {{row.influencer_name|titlecase}}-{{row.influencer_mobile}}</a></td>
 
-                <td class="w250"><a class="link-btn" mat-button (click)="service.setData(filter_data)"
-                  routerLink="influencer-detail/{{(row.distributor_id)}}/{{'Distributor'}}" routerLinkActive="active"> {{row.against_influencer_company_name|titlecase}}-{{row.against_influencer_mobile
-                  }}</a></td>
+              <td class="w250"><a class="link-btn" mat-button (click)="service.setData(filter_data)"
+                routerLink="influencer-detail/{{(row.against_influencer_id)}}/{{row.against_influencer_type}}" routerLinkActive="active"> {{row.against_influencer_company_name|titlecase}}-{{row.against_influencer_mobile
+                }}</a></td>
 
-                  <td class="w100">{{row.bill_date && row.bill_date!='0000-00-00'? row.bill_date:'--'}}</td>
-                  <td class="w150">{{row.bill_no && row.bill_no!=''? row.bill_no:'--'}}</td>
-                  <td class="w100 text-center" matTooltip={{row.bill_amount}}>{{row.bill_amount && row.bill_amount!=''? row.bill_amount:'--'}}</td>
+                <td class="w100">{{row.bill_date && row.bill_date!='0000-00-00'? row.bill_date:'--'}}</td>
+                <td class="w150">{{row.bill_no && row.bill_no!=''? row.bill_no:'--'}}</td>
+                <td class="w100 text-center" matTooltip={{row.bill_amount}}>{{row.bill_amount && row.bill_amount!=''? row.bill_amount:'--'}}</td>
 
-                  <td class="w80">
-                    <div class="flex-group">
-                      <a class="link-btn" mat-button (click)="showItems(row)">{{row.image.length}}</a>
-                    </div>
-                  </td>
-                  <td class="w100 text-center" *ngIf="active_tab == 'Approved'">{{row.points && row.points!=''? row.points:'--'}}</td>
+                <td class="w80">
+                  <div class="flex-group">
+                    <a class="link-btn" mat-button (click)="showItems(row)">{{row.image.length}}</a>
+                  </div>
+                </td>
+                <td class="w100 text-center" *ngIf="active_tab == 'Approved'">{{row.points && row.points!=''? row.points:'--'}}</td>
 
-                  <!-- <td class="w100 text-center" matTooltip={{row.total_qty}}>{{row.total_qty && row.total_qty!=''? row.total_qty:'--'}}</td> -->
+                <!-- <td class="w100 text-center" matTooltip={{row.total_qty}}>{{row.total_qty && row.total_qty!=''? row.total_qty:'--'}}</td> -->
 
-                  <!-- <td class="w100 text-center">
-                    <strong class="yellow-clr" *ngIf="row.status=='Pending'">{{row.status}}</strong>
-                    <strong class="green-clr" *ngIf="row.status=='Approved'">{{row.status}}</strong>
-                    <strong class="red-clr" *ngIf="row.status=='Reject'">{{row.status}}</strong>
-                    <div class="action-button text-right">
-                      <a mat-icon-button matTooltip="Change Status" (click)="changeStatus(row.id)">
-                        <i class="material-icons edit">edit</i>
-                      </a>
-                    </div>
+                <!-- <td class="w100 text-center">
+                  <strong class="yellow-clr" *ngIf="row.status=='Pending'">{{row.status}}</strong>
+                  <strong class="green-clr" *ngIf="row.status=='Approved'">{{row.status}}</strong>
+                  <strong class="red-clr" *ngIf="row.status=='Reject'">{{row.status}}</strong>
+                  <div class="action-button text-right">
+                    <a mat-icon-button matTooltip="Change Status" (click)="changeStatus(row.id)">
+                      <i class="material-icons edit">edit</i>
+                    </a>
+                  </div>
 
-                  </td> -->
-                  <td class="w150 text-center" *ngIf="active_tab == 'Reject'">{{row.status_reason |titlecase}}</td>
+                </td> -->
+                <td class="w150 text-center" *ngIf="active_tab == 'Reject'">{{row.status_reason |titlecase}}</td>
 
-                  <td class="w150 text-center">{{row.status_updated_by_name |titlecase}}-{{row.status_updated_by_mobile && row.status_updated_by_mobile!=''? row.status_updated_by_mobile:'--'}}</td>
+                <td class="w150 text-center">{{row.status_updated_by_name |titlecase}}-{{row.status_updated_by_mobile && row.status_updated_by_mobile!=''? row.status_updated_by_mobile:'--'}}</td>
 
 
-                </tr>
-              </ng-container>
-              <ng-container *ngIf="loader">
-                <tr class="sk-loading" *ngFor="let row of [].constructor(10)">
-                  <td class="w60">
-                    <div>&nbsp;</div>
-                  </td>
-                  <td class="w100">
-                    <div>&nbsp;</div>
-                  </td>
-                  <td class="w100">
-                    <div>&nbsp;</div>
-                  </td>
-                  <td class="w100" *ngIf="influencer_type == 'Plumber'">
-                    <div>&nbsp;</div>
-                  </td>
-                  <td class="w250">
-                    <div>&nbsp;</div>
-                  </td>
+              </tr>
+            </ng-container>
+            <ng-container *ngIf="loader">
+              <tr class="sk-loading" *ngFor="let row of [].constructor(10)">
+                <td class="w60">
+                  <div>&nbsp;</div>
+                </td>
+                <td class="w100">
+                  <div>&nbsp;</div>
+                </td>
+                <td class="w100">
+                  <div>&nbsp;</div>
+                </td>
+                <td class="w100" *ngIf="influencer_type == 'Plumber'">
+                  <div>&nbsp;</div>
+                </td>
+                <td class="w250">
+                  <div>&nbsp;</div>
+                </td>
 
-                  <td class="w250">
-                    <div>&nbsp;</div>
-                  </td>
-                  <!-- <td class="w100">
-                    <div>&nbsp;</div>
-                  </td> -->
-                  <td class="w100">
-                    <div>&nbsp;</div>
-                  </td>
-                  <td class="w150">
-                    <div>&nbsp;</div>
-                  </td>
-                  <td class="w100">
-                    <div>&nbsp;</div>
-                  </td>
-                  <td class="w80">
-                    <div>&nbsp;</div>
-                  </td>
-                  <td class="w100" *ngIf="active_tab == 'Approved'">
-                    <div>&nbsp;</div>
-                  </td>
+                <td class="w250">
+                  <div>&nbsp;</div>
+                </td>
+                <!-- <td class="w100">
+                  <div>&nbsp;</div>
+                </td> -->
+                <td class="w100">
+                  <div>&nbsp;</div>
+                </td>
+                <td class="w150">
+                  <div>&nbsp;</div>
+                </td>
+                <td class="w100">
+                  <div>&nbsp;</div>
+                </td>
+                <td class="w80">
+                  <div>&nbsp;</div>
+                </td>
+                <td class="w100" *ngIf="active_tab == 'Approved'">
+                  <div>&nbsp;</div>
+                </td>
 
-                  <!-- <td class="w100">
-                    <div>&nbsp;</div>
-                  </td> -->
-                  <!-- <td class="w100 text-center" *ngIf="logined_user_data.edit_master=='1'">
-                    <div>&nbsp;</div>
-                  </td> Status -->
-                  <td class="w150" *ngIf="active_tab == 'Reject'">
-                    <div>&nbsp;</div>
-                  </td>
+                <!-- <td class="w100">
+                  <div>&nbsp;</div>
+                </td> -->
+                <!-- <td class="w100 text-center" *ngIf="logined_user_data.edit_master=='1'">
+                  <div>&nbsp;</div>
+                </td> Status -->
+                <td class="w150" *ngIf="active_tab == 'Reject'">
+                  <div>&nbsp;</div>
+                </td>
 
-                  <td class="w150">
-                    <div>&nbsp;</div>
-                  </td>
-                </tr>
-              </ng-container>
-            </table>
-          </div>
+                <td class="w150">
+                  <div>&nbsp;</div>
+                </td>
+              </tr>
+            </ng-container>
+          </table>
         </div>
       </div>
-      <ng-container *ngIf="datanotofound==true && purchaselist.length == 0;">
-        <app-not-result-found></app-not-result-found>
-      </ng-container>
     </div>
-    <div>
-    </div>
+    <ng-container *ngIf="datanotofound==true && purchaselist.length == 0;">
+      <app-not-result-found></app-not-result-found>
+    </ng-container>
+  </div>
+  <div>
+  </div>
 
-    <div class="fab-btns"
-    *ngIf="logined_user_data.export_master=='1' || logined_user_data.export_products_master=='1' || logined_user_data.add_products_master=='1' || logined_user_data.import_products_master=='1' || logined_user_data.import_master=='1' || logined_user_data.add_master=='1'">
-    <button class="pulse excel" mat-fab color="primary" [ngClass]="{'pulse': fabBtnValue=='add'}"
-    [matMenuTriggerFor]="menu">
-    <i class="material-icons">apps</i>
-    Action
-  </button>
+  <div class="fab-btns"
+  *ngIf="logined_user_data.export_master=='1' || logined_user_data.export_products_master=='1' || logined_user_data.add_products_master=='1' || logined_user_data.import_products_master=='1' || logined_user_data.import_master=='1' || logined_user_data.add_master=='1'">
+  <button class="pulse excel" mat-fab color="primary" [ngClass]="{'pulse': fabBtnValue=='add'}"
+  [matMenuTriggerFor]="menu">
+  <i class="material-icons">apps</i>
+  Action
+</button>
 </div>
 <mat-menu #menu="matMenu">
 

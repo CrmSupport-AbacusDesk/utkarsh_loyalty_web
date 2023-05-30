@@ -436,6 +436,18 @@ export class AddInfluencerComponent implements OnInit {
         submitDetail()
         {
 
+          if( (this.data.type==2 || this.data.type==4) && (!this.data.document_image || !this.data.document_image_back)){
+            this.toast.warningToastr('Upload Aadhar Image is Required!')
+          return;
+
+          }
+
+          if( (this.data.type==2 || this.data.type==4) && !this.data.pan_img){
+            this.toast.warningToastr('Upload PAN Image is Required!')
+          return;
+
+          }
+
             if(this.data.dob){
                 this.data.dob = moment(this.data.dob).format('YYYY-MM-DD');
                 this.data.dob=this.data.dob;
