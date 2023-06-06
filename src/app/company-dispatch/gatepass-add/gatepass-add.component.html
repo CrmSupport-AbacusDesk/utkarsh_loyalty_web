@@ -1,0 +1,322 @@
+<div class="edit-modal" *ngIf="modalData.model_type == 'add' || modalData.model_type == 'update'">
+  <div mat-dialog-content>
+    <p class="heading"> {{data.id ? 'Update' : 'Generate'}}  Gate Pass</p>
+    <form name="detail" #f="ngForm" (ngSubmit)=" f.valid && submitDetail()">
+      <div class="cs-form">
+        <div class="row">
+          <!-- <div class="col s12 m3 l3" *ngIf="logined_user_data.id == '1'">
+            <mat-form-field appearance="outline">
+              <mat-label>Branch</mat-label>
+              <mat-select name="branch_code"  [(ngModel)]="data.branch_code" #branch_code="ngModel"  required (ngModelChange)="driverInfo(data.branch_code)">
+                <mat-option *ngFor="let row of branchData" value="{{row.branch_code}}">{{row.branch_name}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+            <div class="alert alert-danger" *ngIf="branch_code.touched || f.submitted">
+              <p *ngIf="branch_code.errors?.required">This field is required</p>
+            </div>
+          </div> -->
+          
+          <div class="col s12 m3 l3">
+            <mat-form-field  appearance="outline">
+              <mat-label>Driver Boy Name</mat-label>
+              <input matInput placeholder="Type Here ..."  name="delivery_boy_name" #delivery_boy_name="ngModel" [(ngModel)]="data.delivery_boy_name" required>
+            </mat-form-field>
+
+            <!-- <mat-form-field appearance="outline">
+              <mat-label>Delivery Boy</mat-label>
+              <mat-select name="delivery_boy_name"  [(ngModel)]="data.delivery_boy_name" #delivery_boy_name="ngModel"  required (ngModelChange)="findInfo(data.delivery_boy_name)">
+                <mat-option *ngFor="let row of driver" value="{{row.id}}">{{row.delivery_boy_name}}</mat-option>
+              </mat-select>
+            </mat-form-field> -->
+            <div class="alert alert-danger" *ngIf="delivery_boy_name.touched || f.submitted">
+              <p *ngIf="delivery_boy_name.errors?.required">This field is required</p>
+            </div>
+          </div>
+          <div class="col s12 m3 l3">
+            <mat-form-field  appearance="outline">
+              <mat-label>Driver Mobile</mat-label>
+              <input matInput placeholder="Type Here ..."  name="mobile_number" #mobile_number="ngModel" [(ngModel)]="data.mobile_number" minlength="10" maxlength="10" min="0" onkeypress="return event.charCode>=48 && event.charCode<=57"  [ngClass]="{'has-error' : mobile_number.invalid } " required>
+            </mat-form-field>
+            
+            <div class="alert alert-danger" *ngIf="mobile_number.touched || f.submitted">
+              <p *ngIf="mobile_number.errors?.required">This field is required</p>
+              <p *ngIf="mobile_number.errors?.maxlength || mobile_number.errors?.minlength">Mobile No should be of 10 digits..</p>
+            </div>
+          </div>
+          <div class="col s12 m3 l3">
+            <mat-form-field  appearance="outline">
+              <mat-label>Vehicle No</mat-label>
+              <input matInput placeholder="Type Here ..."  name="vehicle_number" #vehicle_number="ngModel" [(ngModel)]="data.vehicle_number" required>
+            </mat-form-field>
+            
+            <div class="alert alert-danger" *ngIf="vehicle_number.touched || f.submitted">
+              <p *ngIf="vehicle_number.errors?.required">This field is required</p>
+            </div>
+          </div>
+          
+        </div>
+        <div class="row">
+          <div class="col s12 m3 l3">
+            <mat-form-field  appearance="outline">
+              <mat-label>Transportation Mode</mat-label>
+              <input matInput placeholder="Type Here ..."  name="transportation_mode" #transportation_mode="ngModel" [(ngModel)]="data.transportation_mode" required>
+            </mat-form-field>
+            
+            <div class="alert alert-danger" *ngIf="transportation_mode.touched || f.submitted">
+              <p *ngIf="transportation_mode.errors?.required">This field is required</p>
+            </div>
+          </div>
+          
+          <div class="col s12 m3 l3">
+            <mat-form-field appearance="outline">
+              <mat-label>POD Received</mat-label>
+              <mat-select name="pod_received"  placeholder="Role" [(ngModel)]="data.pod_received" #pod_received="ngModel" [ngClass]="{'has-error' : pod_received.invalid } " required>
+                <mat-option value="Yes">Yes</mat-option>
+                <mat-option value="No">No</mat-option>
+              </mat-select>
+            </mat-form-field>
+            <div class="alert alert-danger" *ngIf="pod_received.touched || f.submitted">
+              <p *ngIf="pod_received.errors?.required">This field is required</p>
+            </div>
+          </div>
+          <div class="col s12 m3 l3">
+            <mat-form-field  appearance="outline">
+              <mat-label>Reference No</mat-label>
+              <input matInput placeholder="Type Here ..."  name="reference_no" #reference_no="ngModel" [(ngModel)]="data.reference_no">
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="cs-table left-right-10" *ngIf="gatePassAssign.length > 0">
+          <div class="sticky-head">
+            <div class="table-head border-top">
+              <table>
+                <tr>
+                  <th class="w60  text-center">Sr. No</th>
+                  <th class="w100">Date Created</th>
+                  <th>Company Name</th>
+                  <th class="w120">Dispatch Type</th>
+                  <th class="w120">Bill Number</th>
+                </tr>
+              </table>
+            </div>
+          </div>
+          
+          <div class="table-container">
+            <div class="table-content">
+              <table>
+                <tr *ngFor="let row of gatePassAssign; let i=index;">
+                  <td class="w60 text-center">{{i+1}}</td>
+                  <td class="w100">{{row.billing_date | date:'dd MMM yyyy'}}</td>
+                  <td>{{row.customer_name}}</td>
+                  <td class="w120">{{row.bill_dispatch_type}}</td>
+                  <td class="w120">{{row.bill_number}}</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div mat-dialog-actions>
+        <div class="text-right wp100">
+          <button type="text" class="mr10" mat-stroked-button color="warn"  [mat-dialog-close]="false">Cancel</button>
+          <button [ngClass]="{'loading': savingFlag == true}" mat-raised-button color="accent" type="submit" [disabled]="savingFlag == true">
+            {{savingFlag == true ? 'Saving' : data.id ? 'Update': 'Save'}}
+          </button>
+        </div>
+      </div>
+    </form>
+    
+  </div>
+</div>
+
+
+
+
+<div class="edit-modal" *ngIf="modalData.model_type == 'detail' ">
+  <div mat-dialog-content>
+    <p class="heading">Gate Pass Detail</p>
+    <div class="cs-form">
+      <div class="card flat" *ngIf="!skLoading">
+        <div class="card-body">
+          <div class="grid-box">
+            <div class="block-feilds">
+              <span>Date Created</span>
+              <p>{{gatePassDetail.date_created | date}}</p>
+            </div>
+            <div class="block-feilds">
+              <span>Gatepass Number</span>
+              <p>{{gatePassDetail.gate_pass_no}}</p>
+            </div>
+            <div class="block-feilds">
+              <span>Delivery Person</span>
+              <p>{{gatePassDetail.delivery_boy_name}}</p>
+            </div>
+            <div class="block-feilds">
+              <span>Mobile No.</span>
+              <p>{{gatePassDetail.mobile_number}}</p>
+            </div>
+            <div class="block-feilds">
+              <span>Vehicle Number</span>
+              <p>{{gatePassDetail.vehicle_number}}</p>
+            </div>
+            <div class="block-feilds">
+              <span>Transportation Mode</span>
+              <p>{{gatePassDetail.transportation_mode}}</p>
+            </div>
+            <div class="block-feilds">
+              <span>POD Received</span>
+              <p>{{gatePassDetail.pod_received ? gatePassDetail.pod_received :'---'}}</p>
+            </div>
+            <div class="block-feilds">
+              <span>Reference Number</span>
+              <p>{{gatePassDetail.reference_number ? gatePassDetail.reference_number :'---'}}</p>
+            </div>
+          </div>
+          
+        </div>
+        
+      </div>
+      <!-- Skeleton start -->
+      <div class="card flat" *ngIf="skLoading">
+        <div class="sk-head">
+          <h2>&nbsp;</h2>
+        </div>
+        <div class="card-body">
+          <div class="grid-box">
+            <div class="sk-box" *ngFor="let row of [].constructor(10)">
+              &nbsp;
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Skeleton end -->
+      <div class="cs-table left-right-10" *ngIf="!skLoading">
+        <div class="sticky-head">
+          <div class="table-head border-top">
+            <table>
+              <tr>
+                <th class="w60  text-center">Sr. No</th>
+                <th class="w100">Date Created</th>
+                <th>Company Name</th>
+                <th class="w120">Dispatch Type</th>
+                <th class="w120">Bill Number</th>
+                <th class="w120 text-center">Total Quantity</th>
+              </tr>
+            </table>
+          </div>
+        </div>
+        
+        <div class="table-container">
+          <div class="table-content">
+            <table>
+              <tr *ngFor="let row of gatePassDetail.invoice; let i=index;">
+                <td class="w60 text-center">{{i+1}}</td>
+                <td class="w100">{{row.billing_date | date:'dd MMM yyyy'}}</td>
+                <td>{{row.customer_name}}</td>
+                <td class="w120">{{row.bill_dispatch_type}}</td>
+                <td class="w120">{{row.bill_number}}</td>
+                <td class="w120 text-center">{{row.total_billing_item_qty}}</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div  id="print_card" hidden>
+    <h2 style="font-size: 20px;  text-align: center; margin: 16px 0px;">PEARL PRECISION PRODUCTS PVT. LTD.</h2>
+    <p style="font-size: 12px; text-align: center; margin: 10px 0px;" *ngIf="logined_user_data.address">{{logined_user_data.address}}</p>
+    <p style="font-size: 13px; margin: 7px 0px; padding-left:16px;"><strong style="font-size: 13px;">Generate Date</strong> : {{gatePassDetail.date_created | date}}</p>
+    <p style="font-size: 13px; margin: 7px 0px; padding-left:16px;"><strong style="font-size: 13px;">Gatepass Number</strong> : {{gatePassDetail.gate_pass_no}}</p>
+    <p style="font-size: 13px; margin: 7px 0px; padding-left:16px;"><strong style="font-size: 13px;">Delivery Person</strong> : {{gatePassDetail.delivery_boy_name}}</p>
+    <p style="font-size: 13px; margin: 7px 0px; padding-left:16px;"><strong style="font-size: 13px;">Mobile No.</strong> : {{gatePassDetail.mobile_number}}</p>
+    <p style="font-size: 13px; margin: 7px 0px; padding-left:16px;"><strong style="font-size: 13px;">Vehicle Number</strong> : {{gatePassDetail.vehicle_number}}</p>
+    <p style="font-size: 13px; margin: 7px 0px; padding-left:16px;"><strong style="font-size: 13px;">Transportation Mode</strong> : {{gatePassDetail.transportation_mode}}</p>
+    <p style="font-size: 13px; margin: 7px 0px; padding-left:16px;"><strong style="font-size: 13px;">POD Received</strong> : {{gatePassDetail.pod_received ? gatePassDetail.pod_received :'---'}}</p>
+    <p style="font-size: 13px; margin: 7px 0px; padding-left:16px;"><strong style="font-size: 13px;">Reference Number</strong> : {{gatePassDetail.reference_number ? gatePassDetail.reference_number :'---'}}</p>
+    <table style=" width: 100%; table-layout: fixed; border-collapse: collapse;">
+      <tr>
+        <td style="font-size: 13px; padding: 10px 16px; font-weight: 600; border-bottom: 1px solid #000; width: 120px;">Date Created</td>
+        <td style="font-size: 13px; padding: 10px 16px; font-weight: 600; border-bottom: 1px solid #000;">Company Name</td>
+        <td style="font-size: 13px; padding: 10px 16px; font-weight: 600; border-bottom: 1px solid #000; width: 120px;">Bill Number</td>
+        <td style="font-size: 13px; padding: 10px 16px; font-weight: 600; border-bottom: 1px solid #000; width: 120px; text-align:center">Total Quantity</td>
+      </tr>
+      <tr *ngFor="let row of gatePassDetail.invoice;">
+        <td style="font-size: 13px; padding: 10px 16px;">{{row.billing_date | date:'dd MMM yyyy'}}</td>
+        <td style="font-size: 13px; padding: 10px 16px;">{{row.customer_name}}</td>
+        <td style="font-size: 13px; padding: 10px 16px;">{{row.bill_number}}</td>
+        <td style="font-size: 13px; padding: 10px 16px; text-align:center">{{row.total_billing_item_qty}}</td>
+      </tr>
+    </table>
+  </div>
+  
+  
+  <div mat-dialog-actions>
+    <div class="text-right wp100">
+      <button type="text" class="mr10" mat-stroked-button color="warn"  [mat-dialog-close]="false">Cancel</button>
+      <button  mat-raised-button color="accent"  (click)="printData();">Print Now</button>
+    </div>
+  </div>
+</div>
+
+
+
+<div class="edit-modal" *ngIf="modalData.model_type == 'sales_return' ">
+  <div mat-dialog-content>
+    <p class="heading mb0">Sales Return Items</p>
+    <div class="cs-form">
+      <div class="cs-table left-right-10">
+        <div class="sticky-head">
+          <div class="table-head border-top">
+            <table>
+              <tr>
+                <th class="w60  text-center">Sr. No</th>
+                <th class="w140">Coupon Code</th>
+                <th class="w140">Coupon Type</th>
+                <th>Product Detail</th>
+              </tr>
+            </table>
+          </div>
+        </div>
+        
+        <div class="table-container">
+          <div class="table-content">
+            <table>
+              <ng-container *ngIf="!skLoading">
+                <tr *ngFor="let row of itemData; let i=index;">
+                  <td class="w60 text-center">{{i+1}}</td>
+                  <td class="w140">{{row.coupon_code}}</td>
+                  <td class="w140">{{row.coupon_type}}</td>
+                  <td>{{row.product_detail}}</td>
+                </tr>
+              </ng-container>
+              
+              <ng-container *ngIf="skLoading">
+                <tr class="sk-loading" *ngFor="let row of [].constructor(5)">
+                  <td class="w60"><div>&nbsp;</div></td>
+                  <td class="w140"><div>&nbsp;</div></td>
+                  <td class="w140"><div>&nbsp;</div></td>
+                  <td><div>&nbsp;</div></td>
+                </tr>
+              </ng-container>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  
+  
+  
+  <div mat-dialog-actions>
+    <div class="text-right wp100">
+      <button type="text" class="mr10" mat-stroked-button color="warn"  [mat-dialog-close]="false">Cancel</button>
+    </div>
+  </div>
+</div>
+
+
+

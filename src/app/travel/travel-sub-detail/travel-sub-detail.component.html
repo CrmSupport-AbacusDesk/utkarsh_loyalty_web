@@ -1,0 +1,213 @@
+<div class="main-container">
+  <div class="tools-container">
+    <a mat-icon-button matTooltip="Back" routerLink="/travel-list" routerLinkActive="active">
+      <i class="material-icons">arrow_back</i>
+    </a>
+    <h2>Travel Plan Detail</h2>
+  </div>
+
+  <div class="container pt10 pl10 pr10 pb50">
+    <div class="row">
+      <div class="col s12 m3 l3">
+        <div class="calender skeleton" *ngIf="skLoading">
+          <div class="padding10">
+            <div class="month-head">&nbsp;</div>
+          </div>
+          <div class="week">
+            <div class="week-day" *ngFor="let lastDay of [].constructor(7)">&nbsp;</div>
+          </div>
+          <div class="days">
+            <div class="week-day no-hover" *ngFor="let lastDay of [].constructor(31)">&nbsp;</div>
+          </div>
+        </div>
+
+
+        <ng-container *ngIf="!skLoading">
+          <div class="calender">
+            <div class="month-head">
+              <button mat-icon-button (click)="goToLastMonth()">
+                <mat-icon>keyboard_arrow_left</mat-icon>
+              </button>
+              <p>{{currentMonth}} {{currentYear}}</p>
+              <button mat-icon-button (click)="goToNextMonth()">
+                <mat-icon>keyboard_arrow_right</mat-icon>
+              </button>
+            </div>
+            <div class="week">
+              <div class="week-day">Su</div>
+              <div class="week-day">Mo</div>
+              <div class="week-day">Tu</div>
+              <div class="week-day">We</div>
+              <div class="week-day">Th</div>
+              <div class="week-day">Fr</div>
+              <div class="week-day">Sa</div>
+            </div>
+            <div class="days">
+              <div class="week-day no-hover" *ngFor="let lastDay of daysInLastMonth"></div>
+              <!-- /(click)="day.date>=TodayDate?goToPage(day.date, day.travel_planstatus):null" -->
+              <div class="week-day" *ngFor="let day of daysInThisMonth;let i=index"
+                [ngClass]="(day.travel_planstatus=='Approve' || day.travel_planstatus=='Approved') ?'plan-approved':day.travel_planstatus=='Pending'?'plan-pending':day.travel_planstatus=='Reject'?'plan-reject' : day.isSunday=='true'?'week-off':day.isHoliday=='true'?'holiday': day.isOnLeave=='TRUE'?'leave':''">
+                {{day.day}}</div>
+              <div class="week-day no-hover" *ngFor="let lastDay of daysInNextMonth"></div>
+            </div>
+            <div class="indicators">
+              <div class="indicators-text"><span class="no-plan">&nbsp;</span> No Travel Plan</div>
+              <div class="indicators-text"><span class="plan-pending">&nbsp;</span> Plan Approval Pending</div>
+              <div class="indicators-text"><span class="plan-approved">&nbsp;</span> Plan Approved</div>
+              <div class="indicators-text"><span class="plan-reject">&nbsp;</span> Plan Rejected</div>
+              <div class="indicators-text"><span class="holiday">&nbsp;</span> Holiday</div>
+              <div class="indicators-text"><span class="leave">&nbsp;</span> Leave</div>
+              <div class="indicators-text"><span class="week-off">&nbsp;</span> Weekly Off</div>
+            </div>
+          </div>
+          <div class="travel-chart mt15">
+            <div class="circle-1"
+              [ngClass]="{'P-5':percentages>0&&percentages<=5,'P-10':percentages>5&&percentages<=10,'P-15':percentages>10&&percentages<=15,'P-20':percentages>15&&percentages<=20,'P-25':percentages>20&&percentages<=25,'P-30':percentages>25&&percentages<=30,'P-35':percentages>30&&percentages<=35 ,'P-40':percentages>35&&percentages<=40,'P-45':percentages>40&&percentages<=45,'P-50':percentages>45&&percentages<=50,'P-55':percentages>50&&percentages<=55,'P-60':percentages>55&&percentages<=60,'P-65':percentages>60&&percentages<=65,'P-70':percentages>65&&percentages<=70,'P-75':percentages>70&&percentages<=75, 'P-80':percentages>75&&percentages<=80,'P-85':percentages>80&&percentages<=85,'P-90':percentages>85&&percentages<=90,'P-95':percentages>90&&percentages<=99,'P-100':percentages>=100}">
+              <div class="circle-2">
+                <h1>{{percentages}}%</h1>
+              </div>
+            </div>
+            <div class="travel-detail">
+              <div class="item-flex">
+                <p> TOTAL WORKING DAYS</p>
+                <div class="count">
+                  <span class="pink"></span>
+                  <h1>{{day_count.working_days}}</h1>
+                </div>
+              </div>
+              <div class="item-flex">
+                <p> TRAVEL PLANNED</p>
+                <div class="count">
+                  <span class="green"></span>
+                  <h1>{{day_count.travel_plan}}</h1>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </ng-container>
+
+
+      </div>
+      <div class="col s12 m9 l9">
+        <div class="card" *ngIf="!skLoading">
+          <div class="card-head">
+            <h2>Travel Details</h2>
+          </div>
+          <div class="card-body">
+            <div class="grid-box mb10">
+              <div class="block-feilds">
+                <span>Employee Code</span>
+                <p>{{user_detail.employee_id}}</p>
+              </div>
+              <div class="block-feilds">
+                <span>Employee Name</span>
+                <p>{{user_detail.name | titlecase}}</p>
+              </div>
+              <div class="block-feilds">
+                <span>Reporting Manager</span>
+                <p>{{user_detail.reporting_manager_name | titlecase}}</p>
+              </div>
+
+              <div class="block-feilds">
+                <span>Weekly Off</span>
+                <p>{{user_detail.weekly_off}}</p>
+              </div>
+
+            </div>
+
+            <div class="cs-table left-right-10">
+              <div class=" border-top">
+                <div class="table-head">
+                  <table>
+                    <tr>
+                      <th class="w50  text-center">Sr.No</th>
+                      <th class="w100">Date</th>
+                      <th class="w100 text-center">Visit Plan</th>
+                      <th class="text-center">Visit Complete</th>
+                      <th class="w100 text-center">Percentage</th>
+                      <th class="w100">Status</th>
+                      <th class="w80 text-center" *ngIf="assign_login_data2.edit_travel_list=='1'">Action</th>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+
+              <div class="table-container pb0">
+                <div class="table-content none-shadow">
+                  <table>
+                    <tr *ngFor="let row of travel_plan; let i = index;">
+                      <td class="w50  text-center">{{i+1}}</td>
+                      <td class="w100">
+                        <a *ngIf="row.total_travel_count>0" class="link-btn"
+                          [routerLink]="[ 'travel-detail/', travel_id ]"
+                          [queryParams]="{'date':row.date, 'User_id':travel_id, 'currentYear':currentYear, 'currentMonth':currentMonth}">{{row.date
+                          | date : 'd MMM y'}}</a>
+                        <span *ngIf="row.total_travel_count==0">{{row.date | date : 'd MMM y'}}</span>
+                      </td>
+                      <td class="w100 text-center">{{row.total_travel_count}}</td>
+                      <td class="text-center">{{row.checkinDone}}</td>
+                      <td class="w100 text-center">
+                        <ng-container *ngIf="row.percentage > 0">{{row.percentage}}%</ng-container>
+                        <ng-container *ngIf="row.percentage == 0">---</ng-container>
+                      </td>
+                      <td class="w100">
+                        <strong *ngIf="row.travel_planstatus"
+                          class="{{row.travel_planstatus}}">{{row.travel_planstatus}}</strong>
+                        <strong *ngIf="row.travel_planstatus == ''">---</strong>
+
+                      </td>
+                      <td class="w80 w80 text-center" *ngIf="assign_login_data2.edit_travel_list=='1'">
+                        <div class="action-button">
+                          <button mat-icon-button matTooltip="Edit" (click)="statusModal(travel_id, row.date)"
+                            *ngIf="row.travel_planstatus == 'Pending' && assign_login_data2.edit_travel_list=='1'">
+                            <i class="material-icons edit">edit</i>
+                          </button>
+
+
+                        </div>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" *ngIf="skLoading">
+          <div class="sk-head">
+            <h2>&nbsp;</h2>
+          </div>
+          <div class="card-body">
+            <div class="grid-box">
+              <div class="sk-box" *ngFor="let row of [].constructor(10)">
+                &nbsp;
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- product data end -->
+
+
+        <!-- Skeleton start -->
+        <!-- <div class="card" *ngIf="skLoading">
+            <div class="sk-head">
+              <h2>&nbsp;</h2>
+            </div>
+            <div class="card-body">
+              <div class="grid-box">
+                <div class="sk-box" *ngFor="let row of [].constructor(10)">
+                  &nbsp;
+                </div>
+              </div>
+            </div>
+          </div> -->
+        <!-- Skeleton end -->
+
+      </div>
+
+    </div>
+
+  </div>
+</div>

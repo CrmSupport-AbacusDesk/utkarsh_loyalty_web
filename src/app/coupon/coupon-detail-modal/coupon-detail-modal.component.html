@@ -1,0 +1,47 @@
+
+<div class="edit-modal" >
+  <p class="heading">Coupon Details</p>
+  <div mat-dialog-content>
+    <div class="cs-table horizontal-scroll" >
+      <div class="sticky-head">
+        <div class="table-head">
+          <table>
+            <tr>
+              <th class="w60">Sr.No</th>
+              <th class="w110">Coupon Code</th>
+              <th class="w100">Coupon Type</th>
+              <th class="w100">Packing Size</th>
+              <th class="w100">Dispatch Date</th>
+              <th class="w110">Dispatch Type</th>
+              <th class="w110">Invoice Number</th>
+              <th class="w200">Distributor/Dealer Detail</th>
+              <th class="w120 text-center">Scanning Status</th>
+            </tr>
+          </table>
+        </div>
+      </div>
+      
+      <div class="table-container">
+        <div class="table-content">
+          <table>
+            <tr *ngFor="let row of couponList; let i = index;">
+              <td class="w60">{{i+1}}</td>
+              <td class="w110">{{row.coupon_code}}</td>
+              <td class="w100">{{row.coupon_type == 'Master Box' ? 'Box' :'Product'}}</td>
+              <td class="w100">{{row.master_packing_size}}</td>
+              <td class="w100">{{row.dispatch_date | date:'d MMM y'}}</td>
+              <td class="w110">{{row.dispatch_type}}</td>
+              <td class="w110">{{row.invoice_number}}</td>
+              <td class="w200">{{row.dr_detail}}</td>
+              <td class="w120 text-center">{{row.scan_status}}</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div mat-dialog-actions>
+    <button mat-stroked-button  color="warn" [mat-dialog-close]="false">Cancel</button>
+    
+  </div>
+</div>

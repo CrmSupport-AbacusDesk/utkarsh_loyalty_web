@@ -1,0 +1,269 @@
+<div class="main-container" >
+  <div class="tools-container">
+    <h2>Employee Target List</h2>
+    <div class="mat-tabbar">
+      <button mat-button [ngClass]="active_tab == 'Sale' ? 'active' : ''" (click)="active_tab = 'Sale';get_user_data()"><i class="material-icons">moving</i>Primary Sale</button>
+      <button mat-button [ngClass]="active_tab == 'Secondary_Sale' ? 'active' : ''" (click)="active_tab = 'Secondary_Sale';get_user_data()"><i class="material-icons">moving</i>Secondary Sale</button>
+      <button mat-button [ngClass]="active_tab == 'Visit' ? 'active' : ''" (click)="active_tab = 'Visit';get_user_data()
+      "><i class="material-icons">person_pin_circle</i>Visit</button>
+    </div>
+    
+    <div class="left-auto df ac flex-gap-10">
+      <a mat-icon-button  matTooltip="Refresh" (click)="refresh1()">
+        <i class="material-icons">refresh</i>
+      </a>
+
+      <div class="pagination" *ngIf="target_list.length > 0">
+        <div class="pagination-content">
+            Pages
+            <span>{{pagenumber}}</span>
+            of
+            <span>{{total_page}}</span>
+        </div>
+        <div class="page-nav">    
+            <button mat-icon-button  matTooltip="Older" (click)="pervious()"  [disabled]="start == 0">
+                <i class="material-icons">navigate_before</i>
+            </button>
+            <button mat-icon-button  matTooltip="Newer" (click)="nextPage()" [disabled]="pagenumber == total_page ">
+                <i class="material-icons">navigate_next</i>
+            </button>
+        </div>
+    </div>
+    </div>
+    
+  </div>
+  
+  <div class="container pb100">
+    <div class="cs-table horizontal-scroll">
+      <div class="sticky-head border-top">
+        <div class="table-head"> 
+          <table >
+            <tr>
+              <th class="w45 text-center">Sr.No</th>
+              <th class="w160">Employee Name</th>
+              <th class="w100">Employee Code</th>
+              <th class="w160">Reporting Manager</th>
+              <th class="w160">Month</th>
+              <th class="w160">Year</th>
+              <ng-container *ngIf="active_tab == 'Sale' || active_tab == 'Secondary_Sale'">
+                
+                <th *ngIf="active_tab == 'Secondary_Sale'" class="w150">Brand</th>
+                <th class="w100 text-right">Target <small>(in Lakhs)</small></th>
+                <th class="w140 text-right">Achievement <small>(in Lakhs)</small></th>
+              </ng-container>
+              <ng-container *ngIf="active_tab == 'Visit'">
+                <th class="w300 text-center">Retailer</th>
+              </ng-container>
+            </tr>
+          </table>
+          
+        </div>
+        <div class="table-head border-top" >
+          <table>
+            <tr>
+              <th class="w45 text-center"></th>
+              <th class="w160">
+                <div class="th-search-acmt">
+                  <mat-form-field class="example-full-width cs-input select-input">
+                    <input matInput placeholder="Search..." (keyup.enter)="get_user_data()" #name="ngModel" [(ngModel)]="value.name">
+                    
+                  </mat-form-field>
+                </div>
+              </th>
+              <th class="w100">
+                <div class="th-search-acmt">
+                  <mat-form-field class="example-full-width cs-input select-input">
+                    <input matInput placeholder="Search..." (keyup.enter)="get_user_data()" #employee_id="ngModel" [(ngModel)]="value.employee_id">
+                    
+                  </mat-form-field>
+                </div>
+              </th>
+              <th class="w160">
+                <!-- <div class="th-search-acmt">
+                  <mat-form-field>
+                    <input type="text"  matInput placeholder="Search..." (keyup.enter)="get_user_data()" #reporting="ngModel" [(ngModel)]="value.reporting">
+                    
+                  </mat-form-field>
+                </div> -->
+              </th>   
+              <th class="w160">
+                <div class="th-search-acmt">
+                  <mat-form-field>
+                    <mat-label>Select Month</mat-label>
+                    <mat-select name="month" #month="ngModel" [(ngModel)]="value.month" (ngModelChange)="get_user_data()">
+                      <mat-option  value="1">January</mat-option>
+                      <mat-option  value="2">February</mat-option>
+                      <mat-option  value="3">March</mat-option>
+                      <mat-option  value="4">April</mat-option>
+                      <mat-option  value="5">May</mat-option>
+                      <mat-option  value="6">June</mat-option>
+                      <mat-option  value="7">July</mat-option>
+                      <mat-option  value="8">August</mat-option>
+                      <mat-option  value="9">September</mat-option>
+                      <mat-option  value="10">October</mat-option>
+                      <mat-option  value="11">November</mat-option>
+                      <mat-option  value="12">December</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                
+              </th> 
+              <th class="w160">
+                <div class="th-search-acmt">
+                  <mat-form-field>
+                    <input type="text"  matInput placeholder="Search..." (keyup.enter)="get_user_data()" #mobile="ngModel" [(ngModel)]="value.year">
+                  </mat-form-field>
+                </div>
+              </th>  
+              <ng-container *ngIf="active_tab == 'Sale' || active_tab == 'Secondary_Sale'">
+         
+                <th *ngIf=" active_tab == 'Secondary_Sale'" class="w150">
+                  <div class="th-search-acmt">
+                    <mat-form-field >
+                      <mat-select name="sale_type" #category="ngModel" [(ngModel)]="value.category" (ngModelChange)="get_user_data()">
+                        <mat-option *ngFor="let rsm of brandList" value="{{rsm.id}}">{{rsm.brand_code}}</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </th> 
+                <th class="w100"></th> 
+                <th class="w140"></th>   
+              </ng-container>   
+              
+              <ng-container *ngIf="active_tab == 'Visit'">
+                <th class="w300 padding0">
+                  <table style="min-width: 100%;">
+                    <tr>
+                      <th colspan="2" class="text-center">New Counter</th>
+                      <th colspan="2" class="text-center">Existing Counter</th>
+                    </tr>
+                    <tr>
+                      <th class="text-center border-top">Target</th>
+                      <th class="text-center border-top">Achievement</th>
+                      <th class="text-center border-top">Target</th>
+                      <th class="text-center border-top">Achievement</th>
+                    </tr>
+                  </table>
+                </th>
+              </ng-container>
+              
+            </tr>
+          </table>
+          
+          
+        </div>
+      </div>
+      
+      <div class="table-container">
+        <div class="table-content">
+          <table>
+            
+            <ng-container *ngIf="!loader">
+              <tr *ngFor="let row of target_list;let i=index ">
+                <td class="w45 text-center">{{i + 1 + sr_no}}</td>
+                <td class="w160">{{row.name | titlecase}}</td>
+                <td class="w100">{{row.employee_id ? row.employee_id:'--' }}</td>
+                <td class="w160">{{row.repoting_manager_name}}</td>   
+                <td class="w160">{{row.month}}</td> 
+                <td class="w160">{{row.year}}</td>  
+                <ng-container *ngIf="active_tab == 'Sale' || active_tab == 'Secondary_Sale'">   
+                  <td *ngIf=" active_tab == 'Secondary_Sale'" class="w150">{{row.segment_name}}</td> 
+                  <td class="w100 text-right"><strong>&#x20B9; {{row.value}} L</strong></td> 
+                  <td class="w140 text-right"><strong>&#x20B9; {{row.achieve?(row.achieve + ' L'):'--'}} </strong></td>   
+                </ng-container>   
+                <ng-container *ngIf="active_tab == 'Visit'">
+                  <td class="w300 padding0">
+                    <table style="min-width: 100%;">
+                      <tr>
+                        <td class="text-center"><strong>{{row.new_counter_target}}</strong></td>
+                        <td class="text-center"><strong>{{row.new_visit_achieve}}</strong></td>
+                        <td class="text-center"><strong>{{row.old_counter_target}}</strong></td>
+                        <td class="text-center"><strong>{{row.old_visit_achieve}}</strong></td>
+                      </tr>
+                    </table>
+                  </td>
+                </ng-container>
+                
+              </tr>
+            </ng-container>
+
+            <ng-container *ngIf="loader">
+              <tr class="sk-loading" *ngFor="let row of [].constructor(10)">
+                <td class="w45 text-center"><div>&nbsp;</div></td>
+                <td class="w160"><div>&nbsp;</div></td>
+                <td class="w100"><div>&nbsp;</div></td>
+                <td class="w160"><div>&nbsp;</div></td>   
+                <td class="w160"><div>&nbsp;</div></td> 
+                <td class="w160"><div>&nbsp;</div></td>  
+                <ng-container *ngIf="active_tab == 'Sale' || active_tab == 'Secondary_Sale'">   
+                  <td *ngIf=" active_tab == 'Secondary_Sale'" class="w150"><div>&nbsp;</div></td> 
+                  <td class="w100"><div>&nbsp;</div></td> 
+                  <td class="w140"><div>&nbsp;</div></td>   
+                </ng-container>   
+                <ng-container *ngIf="active_tab == 'Visit'">
+                  <td class="w300 padding0">
+                    <table style="min-width: 100%;">
+                      <tr>
+                        <td class="text-right"><div>&nbsp;</div></td>
+                        <td class="text-right"><div>&nbsp;</div></td>
+                        <td class="text-right"><div>&nbsp;</div></td>
+                        <td class="text-right"><div>&nbsp;</div></td>
+                      </tr>
+                    </table>
+                  </td>
+                </ng-container>
+              </tr>
+            </ng-container>
+          </table>
+        </div>
+      </div>
+      
+    </div>
+
+    <ng-container *ngIf="target_list.length == 0 && datanotfound == true">
+      <app-not-result-found></app-not-result-found>
+    </ng-container>
+  </div>
+  <div class="fab-btns">
+    <button class="pulse excel" *ngIf="assign_login_data2.export_employee_target=='1' || assign_login_data2.import_employee_target=='1'" mat-fab color="primary" [ngClass]="{'pulse': fabBtnValue=='add'}" [matMenuTriggerFor]="menu">
+      <i class="material-icons">apps</i>
+      Action
+    </button>
+    <mat-menu #menu="matMenu">
+     
+      <button mat-menu-item (click)="visit_upload_excel('visit add');" *ngIf="active_tab == 'Visit' && assign_login_data2.import_employee_target=='1'">
+        <mat-icon>cloud_upload</mat-icon>
+        <span>Upload New Data</span>
+      </button>
+
+      <button mat-menu-item (click)="visit_upload_excel('visit update');" *ngIf="active_tab == 'Visit' && target_list.length > 0 && assign_login_data2.import_employee_target=='1'">
+        <mat-icon>update</mat-icon>
+        <span>Update</span>
+      </button>
+
+      <button mat-menu-item (click)="upload_excel('secondary sale');" *ngIf="active_tab == 'Secondary_Sale' && assign_login_data2.import_employee_target=='1'">
+        <mat-icon>cloud_upload</mat-icon>
+        <span>Upload New Data</span>
+      </button>
+
+      <button mat-menu-item (click)="upload_excel('secondary sale Update');" *ngIf="active_tab == 'Secondary_Sale' && target_list.length > 0 && assign_login_data2.import_employee_target=='1'">
+        <mat-icon>update</mat-icon>
+        <span>Update</span>
+      </button>
+
+      <button mat-menu-item *ngIf="active_tab == 'Sale' && target_list.length > 0 && assign_login_data2.export_employee_target=='1'" (click)="exportAsXLSX();">
+        <mat-icon>download</mat-icon>
+        <span>Download in excel</span>
+      </button>
+      <button mat-menu-item *ngIf="active_tab == 'Visit' && target_list.length > 0 && assign_login_data2.export_employee_target=='1'" (click)="exportAsXLSX1();">
+        <mat-icon>download</mat-icon>
+        <span>Download in excel</span>
+      </button>
+      <button mat-menu-item *ngIf="active_tab == 'Secondary_Sale' && target_list.length > 0 && assign_login_data2.export_employee_target=='1'" (click)="exportAsXLSX2();">
+        <mat-icon>download</mat-icon>
+        <span>Download in excel</span>
+      </button>
+    </mat-menu>
+  </div>
+</div>
+

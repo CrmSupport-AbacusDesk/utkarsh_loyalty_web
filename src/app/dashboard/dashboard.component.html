@@ -1,0 +1,1269 @@
+<div class="main-container" hidden>
+    <div class="toolsContainer dashboardNavigation">
+        <mat-tab-group mat-stretch-tabs="true" (selectedTabChange)="getTabValue($event)">
+            <mat-tab *ngFor="let tab of tabs; let index = index" [label]="tab"></mat-tab>
+        </mat-tab-group>
+    </div>
+    
+    <div class="container pr8 pl8 pb40">
+        <ng-container *ngIf="tabValue == 'Sales'">
+            <div class="row">
+                <div class="col s12">
+                    <div class="counter-container pt10">
+                        <div class="counter-card salesTargetBox">
+                            <div class="card-head pl0 pr0">
+                                <h2>Sales Target - Mar. 2022</h2>
+                            </div>
+                            <div class="top-column">
+                                <div class="innerBox">
+                                    <div class="valuebox">23,000</div>
+                                    <div class="titlebox">Target</div>
+                                </div>
+                                <div class="innerBox">
+                                    <div class="valuebox">23,000</div>
+                                    <div class="titlebox">Achievement</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="counter-card salesTargetBox">
+                            <div class="card-head pl0 pr0">
+                                <h2>Sales Target (2022-2023)</h2>
+                            </div>
+                            <div class="top-column">
+                                <div class="innerBox">
+                                    <div class="valuebox">70,00,00,000</div>
+                                    <div class="titlebox">Target</div>
+                                </div>
+                                <div class="innerBox">
+                                    <div class="valuebox">73,09,568,730</div>
+                                    <div class="titlebox">Achievement</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="counter-card achievementBox">
+                            <div class="top-column">
+                                <div class="titlebox">
+                                    <span>Target<br>Achievement</span>
+                                </div>
+                                <div class="valuebox">
+                                    <span>100%</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="counter-card currentRateBox">
+                            <div class="card-body">
+                                <div class="titlebox">
+                                    <h2>Current Rate Per Day</h2>
+                                </div>
+                                <div class="valuebox">
+                                    <span>23,000</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="counter-card currentRateBox">
+                            <div class="card-body">
+                                <div class="titlebox">
+                                    <h2>Required Rate Per Day</h2>
+                                </div>
+                                <div class="valuebox">
+                                    <span>23,000</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                
+                <div class="col s12 m6 l6">
+                    <div class="card">
+                        <div class="card-head">
+                            <h2>Sales (Amount) by Product/Category</h2>
+                        </div>
+                        <div class="card-body bulletChartOne">
+                            <div class="indicatorsBox">
+                                <ul type="square">
+                                    <li class="aboveTarget">Above Target</li>
+                                    <li class="belowTarget">Below Target</li>
+                                    <li class="target">Target</li>
+                                </ul>
+                            </div>
+                            <zingchart-angular [config]="vbulletConfig" class="mt-30"
+                            [height]="300"></zingchart-angular>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col s12 m6 l6">
+                    <div class="card">
+                        <div class="card-head">
+                            <h2>Actual Sales vs Target (2022-2023)</h2>
+                        </div>
+                        <div class="card-body bulletChartTwo">
+                            <div class="indicatorsBox">
+                                <ul type="square">
+                                    <li class="above100">Actual >= 100% of Target</li>
+                                    <li class="above90">Actual < 100% of Target and>= 90% of Target</li>
+                                    <li class="below90">Actual < 90% of Target</li>
+                                    <li class="target">Target</li>
+                                </ul>
+                            </div>
+                            <zingchart-angular [config]="vbulletConfig2" class="mt-30"
+                            [height]="300"></zingchart-angular>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s12 m6 l6">
+                    <div class="card">
+                        <div class="card-head">
+                            <h2>State Wise Sale Matrix</h2>
+                        </div>
+                        <div class="card-body mapchart">
+                            <div id="indiaMapBox" class="stateSale"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col s12 m6 l6">
+                    <div class="row">
+                        <div class="col s6 m6 l6">
+                            <div class="card">
+                                <div class="card-head">
+                                    <h2>Sales (Amount) by Region</h2>
+                                </div>
+                                <div class="card-body horizontalBarChartBox">
+                                    <zingchart-angular [config]="horizontalBarChart" class="mt-30 salesByRegionChart"
+                                    [height]="224"></zingchart-angular>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col s12 m6 l6">
+                            <div class="card">
+                                <div class="card-head">
+                                    <h2>Segment</h2>
+                                </div>
+                                <div class="card-body">
+                                    <zingchart-angular [config]="segmentPieChart" [height]="200"
+                                    class="dflex"></zingchart-angular>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col s12 m6 l6">
+                            <div class="card">
+                                <div class="card-head">
+                                    <h2>Sales Target Meter</h2>
+                                </div>
+                                <div class="card-body">
+                                    <zingchart-angular [config]="config" [height]="200"></zingchart-angular>
+                                    <div class="targetDaysBox">
+                                        <table>
+                                            <tr>
+                                                <td>
+                                                    <div><span>Target: </span><span>28,000000</span></div>
+                                                </td>
+                                                <td>
+                                                    <div><span>Achievement: </span><span>28,00000</span></div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <div><span>Current Rate: </span><span>20,000</span></div>
+                                                </td>
+                                                <td>
+                                                    <div><span>Required Rate: </span><span>20,000</span></div>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col s12 m6 l6">
+                            <div class="card">
+                                <div class="card-head">
+                                    <h2>New Counter Opening Meter</h2>
+                                </div>
+                                <div class="card-body">
+                                    <div>
+                                        <zingchart-angular [config]="gaugeConfig" [height]="200"></zingchart-angular>
+                                    </div>
+                                    <div class="targetDaysBox">
+                                        <table>
+                                            <tr>
+                                                <td>
+                                                    <div><span>Target: </span><span>28,000000</span></div>
+                                                </td>
+                                                <td>
+                                                    <div><span>Achievement: </span><span>28,00000</span></div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <div><span>Current Rate: </span><span>20,000</span></div>
+                                                </td>
+                                                <td>
+                                                    <div><span>Required Rate: </span><span>20,000</span></div>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col s12 m12 l12">
+                            <div class="card salesGrowth">
+                                <div class="card-head">
+                                    <h2>Sales Growth (2022-2023)</h2>
+                                </div>
+                                <div class="card-body multiStackchart">
+                                    <zingchart-angular [config]="multiStackedConfig" class="mt-30 mb4"
+                                    [height]="300"></zingchart-angular>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    
+                </div>
+            </div>
+        </ng-container>
+        
+        
+        <ng-container *ngIf="tabValue == 'Enquiry'">
+            <div class="row mt5">
+                <div class="col m4 l4">
+                    <div class="card upperBox">
+                        <div class="card-head">Total Enquiry</div>
+                        <div class="card-body p10">
+                            <div class="dflex h190">
+                                <div class="wp50 detailsBox">
+                                    <ul class="totalEnquiryDetails">
+                                        <li class="total">Total: <span>1,000</span></li>
+                                        <li class="reviewPending">Review Pending: <span>200</span></li>
+                                        <li class="qualified">Qualified: <span>600</span></li>
+                                        <li class="disqualified">Disqualified: <span>200</span></li>
+                                    </ul>
+                                </div>
+                                <div class="wp50 chartBox pt20">
+                                    <zingchart-angular [config]="totalEnquiryPieChart"
+                                    [height]="150"></zingchart-angular>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col  m4 l4">
+                    <div class="upperBox">
+                        <div class="card">
+                            <div class="card-head">Qualified Enquiry</div>
+                            <div class="card-body p10">
+                                <div class="dflex h190">
+                                    <div class="wp50">
+                                        <ul class="totalEnquiryDetails">
+                                            <li class="total">Total: <span>600</span></li>
+                                            <li class="qualified">Win: <span>200</span></li>
+                                            <li class="disqualified">Lost: <span>200</span></li>
+                                            <li class="reviewPending">In Process: <span>200</span></li>
+                                        </ul>
+                                    </div>
+                                    <div class="wp50 chartBox pt20">
+                                        <zingchart-angular [config]="qualifiedEnquiryPieChart"
+                                        [height]="150"></zingchart-angular>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+                
+                <div class="col m4 l4">
+                    <div class="upperBox">
+                        <div class="card">
+                            <div class="card-head">Source Wise Conversion</div>
+                            <div class="card-body p10">
+                                <div class="dflex space-btw">
+                                    <div class="wp50">
+                                        <div class="dflex">
+                                            <ul class="indicators sourceIndicators">
+                                                <li class="Facebook">Facebook (20%)</li>
+                                                <li class="Website">Website (17%)</li>
+                                                <li class="Call">Call (14%)</li>
+                                                <li class="Walk">Walk</li>
+                                                <li class="SMS">SMS (18%)</li>
+                                                <li class="Toll-Free">Toll Free (12%)</li>
+                                                <li class="Instagram">Instagram (5%)</li>
+                                                <li class="Linked-in">Linked-in (5%)</li>
+                                                <li class="Reference">Reference (9%)</li>
+                                                <li class="Whatsapp">Whatsapp (9%)</li>
+                                                <li class="Mail">Mail (9%)</li>
+                                                <li class="IndiaMart">IndiaMart (9%)</li>
+                                                <li class="JustDial">JustDial (9%)</li>
+                                                <li class="Others">Others (9%)</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="wp50 chartBox pt20">
+                                        <zingchart-angular [config]="sourceEnquiryPieChart"
+                                        [height]="150"></zingchart-angular>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col s12 m6 l6">
+                    <div class="card">
+                        <div class="card-head">
+                            <h2>Source Wise Enquiry</h2>
+                        </div>
+                        <div class="card-body sourceWiseLead">
+                            <div class="indicatorsBox">
+                                <ul type="square">
+                                    <li class="above50">Conversion >= 50% of Enquiry</li>
+                                    <li class="above25">Conversion < 50% of Enquiry and> 25% of Enquiry</li>
+                                    <li class="below25">Conversion <= 25% of Enquiry</li>
+                                    <li class="totalEnquiry">Enquiry</li>
+                                </ul>
+                            </div>
+                            <zingchart-angular [config]="sourceleadConfig" class="sourceleadConfig"
+                            [height]="270"></zingchart-angular>
+                        </div>
+                    </div>
+                </div>
+                <div class="col s6 m6 l6">
+                    <div class="card">
+                        <div class="card-head">
+                            <h2>Category Wise Enquiry</h2>
+                        </div>
+                        <div class="card-body categoryWiseLead">
+                            <zingchart-angular [config]="categoryleadConfig" class="categoryleadConfig"
+                            [height]="270"></zingchart-angular>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+            <div class="row">
+                <div class="col s12 m6 l6">
+                    <div class="row">
+                        <div class="col s12 m6 l6">
+                            <div class="topSalesUsers">
+                                <div class="card">
+                                    <div class="card-head">
+                                        <h2>Top Sales Users</h2>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="salesUser" *ngFor="let row of salesusers">
+                                            <div class="userDetail">
+                                                <span>{{row.name}} ({{row.empCode}})</span>
+                                                <span>Haryana - 121001</span>
+                                            </div>
+                                            <div class="innerbox">
+                                                <div class="wp100">
+                                                    <div class="leadDetail">
+                                                        <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
+                                                        width="60" alt="">
+                                                        <div class="leadlist">
+                                                            <ul>
+                                                                <li class="leadData">Assigned: 100</li>
+                                                                <li class="leadData">Win: 80</li>
+                                                                <li class="leadData">Lost: 20</li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                </div>
+                                                <div class="conversionValue">
+                                                    <span>80%</span><br>
+                                                    <span>Conversion</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </div>
+                        <div class="col s12 m6 l6">
+                            <div class="leastSalesUsers">
+                                <div class="card">
+                                    <div class="card-head">
+                                        <h2>Least Sales Users</h2>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="salesUser" *ngFor="let row of salesusers">
+                                            <div class="userDetail">
+                                                <span>{{row.name}} ({{row.empCode}})</span>
+                                                <span>Haryana - 121001</span>
+                                            </div>
+                                            <div class="innerbox">
+                                                <div class="wp100">
+                                                    <div class="leadDetail">
+                                                        <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
+                                                        width="60" alt="">
+                                                        <div class="leadlist">
+                                                            <ul>
+                                                                <li class="leadData">Assigned: 100</li>
+                                                                <li class="leadData">Win: 20</li>
+                                                                <li class="leadData">Lost: 80</li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                </div>
+                                                <div class="conversionValue">
+                                                    <span>20%</span><br>
+                                                    <span>Conversion</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col s12 m12 l12">
+                            <div class="card pt0">
+                                <div class="card-body pt0 pb10">
+                                    <div class="cs-table">
+                                        <div class="bdrt">
+                                            <div class="table-head">
+                                                <table>
+                                                    <tr>
+                                                        <th class="w50">S.No.</th>
+                                                        <th>State</th>
+                                                        <th class="w110 text-right">Assigned</th>
+                                                        <th class="w70 text-right">Qualified</th>
+                                                        <th class="w90 text-right">Disqualified </th>
+                                                        <th class="w70 text-right">Win </th>
+                                                        <th class="w70 text-right">Lost</th>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        
+                                        
+                                        <div class="table-container pb0">
+                                            <div class="table-content scroll340">
+                                                <table>
+                                                    <tr *ngFor="let row of segment; let i =index">
+                                                        <td class="w50">{{i+1}}</td>
+                                                        <td>{{row.state}}</td>
+                                                        <td class="w110 text-right">40</td>
+                                                        <td class="w70 text-right">10 (25%)</td>
+                                                        <td class="w90 text-right">5 (20%)</td>
+                                                        <td class="w70 text-right">15 (35%)</td>
+                                                        <td class="w70 text-right">5 (20%)</td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col s12 m6 l6">
+                    <div class="row">
+                        <div class="col s12 m6 l6">
+                            <div class="card">
+                                <div class="card-head">
+                                    <h2>Lead Categories</h2>
+                                </div>
+                                <div class="card-body">
+                                    <zingchart-angular [config]="leadPieChart" [height]="220"></zingchart-angular>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col s12 m6 l6">
+                            <div class="card">
+                                <div class="card-head mb4">
+                                    <h2>Lead (Count) By Region</h2>
+                                </div>
+                                <div class="card-body horizontalBarChartBox">
+                                    <zingchart-angular [config]="horizontalBarChart" class="mt-30 leadByRegionChart"
+                                    [height]="245"></zingchart-angular>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col s12 m6 l6">
+                            <div class="card">
+                                <div class="card-head">
+                                    <h2>Enquiry Score</h2>
+                                </div>
+                                <div class="card-body">
+                                    <zingchart-angular [config]="enquiryScore" class="enquiryScore"
+                                    [height]="200"></zingchart-angular>
+                                    <div class="enquiryScoreDetails">
+                                        <ul>
+                                            <li class="qualified"><span>32%</span> Qualified</li>
+                                            <li class="disqualified"><span>10%</span> Disqualified</li>
+                                            <li class="reviewPending"><span>58%</span> Review Pending</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col s12 m6 l6">
+                            <div class="card">
+                                <div class="card-head">
+                                    <h2>Disqualified Enquiry</h2>
+                                </div>
+                                <div class="card-body disqualifiedMeter">
+                                    <div class="mt35">
+                                        <zingchart-angular [config]="disqualifiedMeter" class="disqualifiedMeter"
+                                        [height]="170"></zingchart-angular>
+                                    </div>
+                                    <div class="disqualifiedMeterDetails">
+                                        <ul>
+                                            <li>
+                                                <div class="reasonLabel">Reason 1</div>
+                                                <div class="percentageBar">
+                                                    <div class="fillValue wp90"><span>90%</span></div>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="reasonLabel">Reason 2</div>
+                                                <div class="percentageBar">
+                                                    <div class="fillValue wp80"><span>80%</span></div>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="reasonLabel">Reason 3</div>
+                                                <div class="percentageBar">
+                                                    <div class="fillValue wp70"><span>70%</span></div>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="reasonLabel">Reason 4</div>
+                                                <div class="percentageBar">
+                                                    <div class="fillValue wp60"><span>60%</span></div>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="reasonLabel">Reason 5</div>
+                                                <div class="percentageBar">
+                                                    <div class="fillValue wp50"><span>50%</span></div>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="reasonLabel">Reason 6</div>
+                                                <div class="percentageBar">
+                                                    <div class="fillValue wp40"><span>40%</span></div>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="reasonLabel">Reason 7</div>
+                                                <div class="percentageBar">
+                                                    <div class="fillValue wp30"><span>30%</span></div>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="reasonLabel">Reason 8</div>
+                                                <div class="percentageBar">
+                                                    <div class="fillValue wp20"><span>20%</span></div>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col s12 m6 l6">
+                            <div class="card">
+                                <div class="card-head">
+                                    <h2>Data Accuracy Rate</h2>
+                                </div>
+                                <div class="card-body">
+                                    <zingchart-angular [config]="accuracyLead" class="accuracyLead"
+                                    [height]="190"></zingchart-angular>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col s12 m6 l6">
+                            <div class="card">
+                                <div class="card-head">
+                                    <h2>Enquiry</h2>
+                                </div>
+                                <div class="card-body">
+                                    <div class="leadDetailBoxes">
+                                        <div class="totalLead">
+                                            <span>Total Enquiry</span>
+                                            <span>100</span>
+                                        </div>
+                                        <div class="qualified">
+                                            <span>Qualified</span>
+                                            <span>60</span>
+                                        </div>
+                                        <div class="disqualified">
+                                            <span>Disqualified</span>
+                                            <span>30</span>
+                                        </div>
+                                        <div class="reviewPending">
+                                            <span>Review Pending</span>
+                                            <span>10</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+        
+        <ng-container *ngIf="tabValue == 'Account'">
+            <div class="accountsHighlights">
+                <div class="balanceTab tab">
+                    <div>
+                        <img src="assets/img/icons/money-bag.png" alt="">
+                    </div>
+                    <div>
+                        <div class="valueBox">₹ 1,00,000</div>
+                        <div class="titleBox">Balance</div>
+                    </div>
+                </div>
+                <div class="withinDueTab tab">
+                    <div>
+                        <img src="assets/img/icons/process.png" alt="">
+                    </div>
+                    <div>
+                        <div class="valueBox">₹ 75,000</div>
+                        <div class="titleBox">Within Due</div>
+                    </div>
+                </div>
+                <div class="overDueTab tab">
+                    <div>
+                        <img src="assets/img/icons/overdue.png" alt="">
+                    </div>
+                    <div>
+                        <div class="valueBox">₹ 25,000</div>
+                        <div class="titleBox">Over Due</div>
+                    </div>
+                </div>
+                <div class="overDuePercentage tab">
+                    <div>
+                        <img src="assets/img/icons/rate.png" alt="">
+                    </div>
+                    <div>
+                        <div class="valueBox">25%</div>
+                        <div class="titleBox">Over Due %</div>
+                    </div>
+                </div>
+                <div class="expTab tab">
+                    <div>
+                        <img src="assets/img/icons/expenses.png" alt="">
+                    </div>
+                    <div class="expenseBox">
+                        <div class="dflex">
+                            <div class="valueBox"><span>YTD</span><br />₹ <span>10,00,000</span></div>
+                            <div class="valueBox"><span>MTD</span><br />₹ <span>40,000</span></div>
+                        </div>
+                        <div class="titleBox">Expense</div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s12 m6 l6">
+                    <div class="card">
+                        <div class="card-head">
+                            <h2>Invoice v/s Collection ({{currentDate | date: 'MMM, yyyy' }}) </h2>
+                        </div>
+                        <div class="card-body invoiceCollectionBox">
+                            <div class="indicatorsBox">
+                                <ul type="square">
+                                    <li class="invoice">Invoice</li>
+                                    <li class="collection">Collection</li>
+                                </ul>
+                            </div>
+                            <zingchart-angular [config]="invoiceCollectionChart" class="invoiceCollectionChart"
+                            [height]="300"></zingchart-angular>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col s12 m6 l6">
+                    <div class="card">
+                        <div class="card-head">
+                            <h2>Invoice v/s Collection (2022-2023) </h2>
+                        </div>
+                        <div class="card-body invoiceCollectionBarBox">
+                            <div class="indicatorsBox">
+                                <ul type="square">
+                                    <li class="invoice">Invoice</li>
+                                    <li class="collection">Collection</li>
+                                </ul>
+                            </div>
+                            <zingchart-angular [config]="invoiceCollectionBarChart"
+                            class="mt-30 invoiceCollectionBarChart" [height]="325"></zingchart-angular>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s12 m3 l3">
+                    <div class="card">
+                        <div class="card-head">
+                            <h2>Age Analysis of Due Balance </h2>
+                        </div>
+                        <div class="card-body">
+                            <zingchart-angular [config]="duBalanceAgeChart" class="duBalanceAgeChart"
+                            [height]="270"></zingchart-angular>
+                        </div>
+                    </div>
+                </div>
+                <div class="col s12 m3 l3">
+                    <div class="card">
+                        <div class="card-head">
+                            <h2>Overdue Breakup By Region </h2>
+                        </div>
+                        <div class="card-body">
+                            <zingchart-angular [config]="overdueByRegionPieChart" [height]="270"></zingchart-angular>
+                        </div>
+                    </div>
+                </div>
+                <div class="col s12 m6 l6">
+                    <div class="card">
+                        <div class="card-head">
+                            <h2>Top Customers by Over Due Amount </h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="overDueCustomersTableBox">
+                                <table>
+                                    <tr>
+                                        <th class="w150">Customer</th>
+                                        <th>Balance (₹)</th>
+                                        <th>Within Due (₹)</th>
+                                        <th>Over Due (₹)</th>
+                                        <th>Over Due %</th>
+                                        <th>Due Invoices</th>
+                                        <th>Above Credit Limit</th>
+                                    </tr>
+                                </table>
+                                <div class="overDueCustomersTableBody">
+                                    <table>
+                                        <tbody>
+                                            <tr>
+                                                <td class="w150">Mohit Kumar</td>
+                                                <td>₹ 100</td>
+                                                <td>₹ 50</td>
+                                                <td>₹ 30</td>
+                                                <td>30%</td>
+                                                <td>12</td>
+                                                <td class="text-center"><img src="assets/img/icons/flagmini.png"
+                                                    height="20" alt=""></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Aneesh S Nair</td>
+                                                    <td>₹ 100</td>
+                                                    <td>₹ 50</td>
+                                                    <td>₹ 30</td>
+                                                    <td>30%</td>
+                                                    <td>12</td>
+                                                    <td class="text-center"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Puneet Saini</td>
+                                                    <td>₹ 100</td>
+                                                    <td>₹ 50</td>
+                                                    <td>₹ 30</td>
+                                                    <td>30%</td>
+                                                    <td>12</td>
+                                                    <td class="text-center"><img src="assets/img/icons/flagmini.png"
+                                                        height="20" alt=""></td>
+                                                        
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Lakwindar Singh</td>
+                                                        <td>₹ 100</td>
+                                                        <td>₹ 50</td>
+                                                        <td>₹ 30</td>
+                                                        <td>30%</td>
+                                                        <td>12</td>
+                                                        <td class="text-center"></td>
+                                                        
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Dhruv Pandey</td>
+                                                        <td>₹ 100</td>
+                                                        <td>₹ 50</td>
+                                                        <td>₹ 30</td>
+                                                        <td>30%</td>
+                                                        <td>12</td>
+                                                        <td class="text-center"><img src="assets/img/icons/flagmini.png"
+                                                            height="20" alt=""></td>
+                                                            
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Jaspreet</td>
+                                                            <td>₹ 100</td>
+                                                            <td>₹ 50</td>
+                                                            <td>₹ 30</td>
+                                                            <td>30%</td>
+                                                            <td>12</td>
+                                                            <td class="text-center"><img src="assets/img/icons/flagmini.png"
+                                                                height="20" alt=""></td>
+                                                                
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Shivkant Tiwari</td>
+                                                                <td>₹ 100</td>
+                                                                <td>₹ 50</td>
+                                                                <td>₹ 30</td>
+                                                                <td>30%</td>
+                                                                <td>12</td>
+                                                                <td class="text-center"></td>
+                                                                
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Akash Sharma</td>
+                                                                <td>₹ 100</td>
+                                                                <td>₹ 50</td>
+                                                                <td>₹ 30</td>
+                                                                <td>30%</td>
+                                                                <td>12</td>
+                                                                <td class="text-center"><img src="assets/img/icons/flagmini.png"
+                                                                    height="20" alt=""></td>
+                                                                    
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>Sayed Zair</td>
+                                                                    <td>₹ 100</td>
+                                                                    <td>₹ 50</td>
+                                                                    <td>₹ 30</td>
+                                                                    <td>30%</td>
+                                                                    <td>12</td>
+                                                                    <td class="text-center"><img src="assets/img/icons/flagmini.png"
+                                                                        height="20" alt=""></td>
+                                                                        
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>Neel Madhav</td>
+                                                                        <td>₹ 100</td>
+                                                                        <td>₹ 50</td>
+                                                                        <td>₹ 30</td>
+                                                                        <td>30%</td>
+                                                                        <td>12</td>
+                                                                        <td class="text-center"><img src="assets/img/icons/flagmini.png"
+                                                                            height="20" alt=""></td>
+                                                                            
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                            <table>
+                                                                <tr class="totalRow">
+                                                                    <td class="w150">Total</td>
+                                                                    <td>₹ 1,000</td>
+                                                                    <td>₹ 500</td>
+                                                                    <td>₹ 300</td>
+                                                                    <td>30%</td>
+                                                                    <td>120</td>
+                                                                    <td></td>
+                                                                </tr>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                        </div>
+                                    </ng-container>
+                                    
+                                    <ng-container *ngIf="tabValue == 'Influencer Reward'">
+                                        <div class="dflex space-btw influencerHighlights mt10">
+                                            <div class="col">
+                                                <div class="card upperBox">
+                                                    <div class="card-head dflex space-btw"><span>Total Influencer</span> <span
+                                                        class="total">1,000</span></div>
+                                                        <div class="card-body">
+                                                            <div class="dflex">
+                                                                <div class="wp50 detailsBox">
+                                                                    <ul class="totalInfluencerDetails">
+                                                                        <li class="reviewPending">Site: <span>20,000</span></li>
+                                                                        <li class="qualified">Architect: <span>600</span></li>
+                                                                        <li class="disqualified">Contractor: <span>200</span></li>
+                                                                    </ul>
+                                                                </div>
+                                                                <div class="wp50 chartBox">
+                                                                    <zingchart-angular [config]="totalInfluencerPieChart"
+                                                                    [height]="120"></zingchart-angular>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="col">
+                                                    <div class="card upperBox">
+                                                        <div class="card-head dflex space-btw">Influencer Status</div>
+                                                        <div class="card-body">
+                                                            <div class="dflex">
+                                                                <div class="wp50 detailsBox">
+                                                                    <ul class="totalInfluencerDetails">
+                                                                        <li class="reviewPending">Pending: <span>100</span></li>
+                                                                        <li class="qualified">Approved: <span>600</span></li>
+                                                                        <li class="disqualified">Reject: <span>200</span></li>
+                                                                        <li class="suspect">Suspect: <span>100</span></li>
+                                                                    </ul>
+                                                                </div>
+                                                                <div class="wp50 chartBox">
+                                                                    <zingchart-angular [config]="influencerStatusPieChart"
+                                                                    [height]="120"></zingchart-angular>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="col">
+                                                    <div class="card upperBox">
+                                                        <div class="card-head dflex space-btw">KYC & Redeem Request</div>
+                                                        <div class="card-body">
+                                                            <div class="dflex">
+                                                                <div class="wp50 detailsBox">
+                                                                    <ul class="totalInfluencerDetails">
+                                                                        <li class="reviewPending">KYC Pending: <span>100</span></li>
+                                                                        <li class="requestPending">Redeem Request: <span>600</span></li>
+                                                                    </ul>
+                                                                </div>
+                                                                <div class="wp50 chartBox">
+                                                                    <zingchart-angular [config]="kycStatusPieChart" [height]="120"></zingchart-angular>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="col">
+                                                    <div class="card upperBox pt0">
+                                                        <div class="card-body">
+                                                            <div class="dflex">
+                                                                <div class="wp100 detailsBox">
+                                                                    <h2>Total Coupon</h2>
+                                                                    <ul class="totalInfluencerDetails">
+                                                                        <li class="itemCount">Item Coupon: <span>100</span></li>
+                                                                        <li class="boxCount">Box Coupon: <span>600</span></li>
+                                                                    </ul>
+                                                                    <h2 class="mt10">Total Scanning</h2>
+                                                                    <ul class="totalInfluencerDetails">
+                                                                        <li class="itemCount">Item Coupon: <span>100</span></li>
+                                                                        <li class="boxCount">Box Coupon: <span>600</span></li>
+                                                                    </ul>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                
+                                            </div>
+                                            <div class="row">
+                                                <div class="col s12 m6 l6">
+                                                    <div class="card">
+                                                        <div class="card-head">
+                                                            <h2>Last 30 Days Scanning (Item & Box)</h2>
+                                                        </div>
+                                                        <div class="card-body couponChartBox">
+                                                            <div class="indicatorsBox">
+                                                                <ul type="square">
+                                                                    <li class="items">Item</li>
+                                                                    <li class="boxes">Box</li>
+                                                                </ul>
+                                                            </div>
+                                                            <zingchart-angular [config]="scanningInDaysChart" class="invoiceCollectionChart"
+                                                            [height]="300"></zingchart-angular>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="col s12 m6 l6">
+                                                    <div class="card">
+                                                        <div class="card-head">
+                                                            <h2>Coupon Status (2022-2023) </h2>
+                                                        </div>
+                                                        <div class="card-body invoiceCollectionBarBox">
+                                                            <div class="indicatorsBox">
+                                                                <ul type="square">
+                                                                    <li class="invoice">Coupon Generate</li>
+                                                                    <li class="collection">Coupon Scan</li>
+                                                                </ul>
+                                                            </div>
+                                                            <zingchart-angular [config]="couponStatusBarChart" class="mt-30 invoiceCollectionBarChart"
+                                                            [height]="325"></zingchart-angular>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="row">
+                                                <div class="col m6 l6">
+                                                    <div class="card">
+                                                        <div class="card-head">
+                                                            <h2>Top Influencers </h2>
+                                                        </div>
+                                                        <div class="card-body">
+                                                            <div class="cs-table topInfluencersTable">
+                                                                <div class="bdrt">
+                                                                    <div class="table-head">
+                                                                        <table>
+                                                                            <tr>
+                                                                                <th class="w50">Rank</th>
+                                                                                <th class="w150">Name</th>
+                                                                                <th>Mobile No</th>
+                                                                                <th>State</th>
+                                                                                <th>Point Earn</th>
+                                                                                <th>Source</th>
+                                                                            </tr>
+                                                                        </table>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="table-container">
+                                                                    <div class="table-content scroll200">
+                                                                        <table>
+                                                                            <tr *ngFor="let item of salesusers; let i = index">
+                                                                                <td class="w50 text-center">{{i+1}}</td>
+                                                                                <td class="w150">{{item.name}}</td>
+                                                                                <td>9999999999</td>
+                                                                                <td>Haryana</td>
+                                                                                <td>{{item.points}}</td>
+                                                                                <td>Self Registration</td>
+                                                                            </tr>
+                                                                            
+                                                                        </table>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="col m6 l6">
+                                                    <div class="row mb0">
+                                                        <div class="col s12 m6 l6">
+                                                            <div class="card">
+                                                                <div class="card-head mb4">
+                                                                    <h2>Region Wise Influencer v/s Scanning</h2>
+                                                                </div>
+                                                                <div class="card-body horizontalBarChartBox">
+                                                                    <zingchart-angular [config]="regionScanningBarChart"
+                                                                    class="mt-30 regionScanningBarChart" [height]="290"></zingchart-angular>
+                                                                </div>
+                                                            </div>
+                                                            
+                                                        </div>
+                                                        <div class="col s12 m6 l6">
+                                                            <div class="card">
+                                                                <div class="card-head">
+                                                                    <h2>Scan Aging</h2>
+                                                                </div>
+                                                                <div class="card-body">
+                                                                    <zingchart-angular [config]="scanningAgeChart" class="duBalanceAgeChart"
+                                                                    [height]="265"></zingchart-angular>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="row">
+                                                <div class="col m6 l6">
+                                                    <div class="row">
+                                                        <div class="col s12 m6 l6">
+                                                            <div class="topProductCategories">
+                                                                <div class="card">
+                                                                    <div class="card-head">
+                                                                        <h2>Top Product Categories Scanned</h2>
+                                                                    </div>
+                                                                    <div class="card-body">
+                                                                        <div class="productCategoryDetails dflex1 space-btw"
+                                                                        *ngFor="let row of productSegments">
+                                                                        <div class="productCategory">
+                                                                            <h2>{{row.name}}</h2>
+                                                                        </div>
+                                                                        <div class="scannedPercentage">
+                                                                            <span>{{row.percent}}%</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div class="col s12 m6 l6">
+                                                        <div class="topBonusScheme">
+                                                            <div class="card">
+                                                                <div class="card-head">
+                                                                    <h2>Top Bonus Scheme Scanned</h2>
+                                                                </div>
+                                                                <div class="card-body">
+                                                                    <div class="productCategoryDetails dflex1 space-btw"
+                                                                    *ngFor="let row of bonusScheme">
+                                                                    <div class="productCategory">
+                                                                        <h2>{{row.name}}</h2>
+                                                                    </div>
+                                                                    <div class="scannedPercentage">
+                                                                        <span>{{row.percent}}%</span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="col m6 l6">
+                                            <div class="row">
+                                                <div class="col s12 m6 l6">
+                                                    <div class="row">
+                                                        <div class="col s12 m12 l12">
+                                                            <div class="card">
+                                                                <div class="card-head">
+                                                                    <h2>Scanning Meter</h2>
+                                                                </div>
+                                                                <div class="card-body">
+                                                                    <zingchart-angular [config]="scanningMeter"
+                                                                    [height]="200"></zingchart-angular>
+                                                                    <div class="targetDaysBox">
+                                                                        <table>
+                                                                            <tr>
+                                                                                <td>
+                                                                                    <div><span>Total Generate: </span><span>10,000</span></div>
+                                                                                </td>
+                                                                                <td>
+                                                                                    <div><span>Total Scan: </span><span>8,000</span></div>
+                                                                                </td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>
+                                                                                    <div><span>Current Rate Per Day: </span><span>0.8:1</span>
+                                                                                    </div>
+                                                                                </td>
+                                                                                <td>
+                                                                                    <div><span>Scanning Percentage: </span><span>80%</span>
+                                                                                    </div>
+                                                                                </td>
+                                                                            </tr>
+                                                                        </table>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col s12 m12 l12">
+                                                            <div class="card">
+                                                                <div class="card-head">
+                                                                    <h2>Point Redeem Meter</h2>
+                                                                </div>
+                                                                <div class="card-body">
+                                                                    <div>
+                                                                        <zingchart-angular [config]="pointRedeemMeter"
+                                                                        [height]="200"></zingchart-angular>
+                                                                    </div>
+                                                                    <div class="targetDaysBox">
+                                                                        <table>
+                                                                            <tr>
+                                                                                <td>
+                                                                                    <div><span>Total Point Transfer: </span><span>1,000</span>
+                                                                                    </div>
+                                                                                </td>
+                                                                                <td>
+                                                                                    <div><span>total Redeem: </span><span>600</span></div>
+                                                                                </td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>
+                                                                                    <div><span>Redeem Pending: </span><span>400</span></div>
+                                                                                </td>
+                                                                                <td>
+                                                                                    <div><span>Redeem Percentage: </span><span>60%</span></div>
+                                                                                </td>
+                                                                            </tr>
+                                                                        </table>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            
+                                                        </div>
+                                                    </div>
+                                                    
+                                                </div>
+                                                
+                                                <div class="col s12 m6 l6">
+                                                    <div class="card">
+                                                        <div class="card-head">
+                                                            <h2>Top Influencer source</h2>
+                                                        </div>
+                                                        <div class="card-body">
+                                                            <zingchart-angular [config]="influencerConversionPieChart"
+                                                            [height]="270"></zingchart-angular>
+                                                            <div class="enquiryScoreDetails">
+                                                                <ul>
+                                                                    <li class="qualified"><span>58%</span> Self Registration</li>
+                                                                    <li class="reviewPending"><span>32%</span> Register By Sales Executive</li>
+                                                                    <li class="disqualified"><span>10%</span> Referral By Influencer</li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </ng-container>
+                                
+                                <ng-container *ngIf="tabValue=='Forecasting'">
+                                    <div style="
+                                    text-align: center;
+                                    display: flex;
+                                    align-items: center;
+                                    justify-content: center;
+                                    height: 70vh;">
+                                    <img src="https://img.freepik.com/free-vector/flat-coming-soon-background-with-megaphone_1017-33737.jpg?w=2000"
+                                    style="height:500px;">
+                                </div>
+                            </ng-container>
+                        </div>
+                    </div>
+                    
+                    <div class="main-container">
+                        <div class="container pr8 pl8 pb40">
+                            <div style="
+                            text-align: center;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            height: 70vh;">
+                            <img src="https://img.freepik.com/free-vector/flat-coming-soon-background-with-megaphone_1017-33737.jpg?w=2000" style="height:500px;">
+                        </div>
+                    </div>
+                </div>

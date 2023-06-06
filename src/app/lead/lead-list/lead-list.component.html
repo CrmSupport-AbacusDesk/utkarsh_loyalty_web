@@ -1,0 +1,268 @@
+<div class="main-container">
+  
+  <div class="tools-container">
+    <h2>Enquiry List</h2>
+    <div class="left-auto left-auto df ac flex-gap-10">
+      <button mat-icon-button matTooltip="Refresh" (click)="refresh() ">
+        <i class="material-icons">refresh</i>
+      </button>
+      <div class="pagination" *ngIf="lead_List.length > 0 ">
+        <div class="pagination-content">
+          Pages
+          <span>{{pagenumber}}</span>
+          of
+          <span>{{total_page}}</span>
+        </div>
+        <div class="page-nav">    
+          <button mat-icon-button  matTooltip="Older" (click)="pervious()"  [disabled]="start == 0 || total_page == 0">
+            <i class="material-icons">navigate_before</i>
+          </button>
+          <button mat-icon-button  matTooltip="Newer" (click)="nextPage()" [disabled]="pagenumber == total_page || total_page == 0">
+            <i class="material-icons">navigate_next</i>
+          </button>
+        </div>
+      </div>
+      
+      <div class="mat-tabbar">
+        <button mat-button [ngClass]="active_tab == 'Pending' ? 'active' : ''"
+        (click)="active_tab = 'Pending'; leadList('Pending')"><i
+        class="material-icons">pending_actions</i>Review Pending ({{count.Pending}})</button>
+        <button mat-button [ngClass]="active_tab == 'Qualified' ? 'active' : ''"
+        (click)="active_tab = 'Qualified'; refresh(); leadList('Qualified')"><i class="material-icons">thumb_up_alt</i>Qualified
+        ({{count.Qualified}})</button>
+        <button mat-button [ngClass]="active_tab == 'Disqualified' ? 'active' : ''"
+        (click)="active_tab = 'Disqualified'; leadList('Disqualified')"><i
+        class="material-icons">thumb_down_alt</i>Disqualified ({{count.Disqualified}})</button>
+        <button mat-button [ngClass]="active_tab == 'Win' ? 'active' : ''"
+        (click)="active_tab = 'Win'; leadList('Win')"><i class="material-icons">emoji_events</i>Win
+        ({{count.Win}})</button>
+        <button mat-button [ngClass]="active_tab == 'Lost' ? 'active' : ''"
+        (click)="active_tab = 'Lost'; leadList('Lost')"><i class="material-icons">cancel</i>Lost
+        ({{count.Lost}})</button>
+      </div>
+    </div>
+  </div>
+  
+  <div class="container container-scroll">
+    <div class="cs-table horizontal-scroll">
+      <div class="sticky-head">
+        <div class="table-head">
+          <table>
+            <tr>
+              <th class="w40">Sr.No</th>
+              <th class="w90">Date</th>
+              <th class="w80">Created By</th>
+              <th class="w100">Enquiry Type</th>
+              <th class="w100">Enquiry ID</th>
+              <th class="w200" *ngIf="active_tab == 'Qualified'">Assigned To</th>
+              <th class="w100">Source</th>
+              <th class="w150">Name</th>
+              <th class="w120">Mobile Number</th>
+              <th class="w220">Remark</th>
+              <th class="w100">Last Checkin</th>
+              <th class="w100">Last Activity</th>
+              <th class="w200" *ngIf="active_tab == 'Disqualified' ">Reason</th>
+              <th class="w70 text-center" *ngIf="login_data5.edit_enquiry=='1' && active_tab != 'Qualified'">Action</th>
+            </tr>
+          </table>
+        </div>
+        
+        <div class="table-head border-top">
+          <table>
+            <tr>
+              <th class="w40">&nbsp;</th>
+              <th class="w90">
+                <div class="th-search-acmt">
+                  <mat-form-field class="cs-input date-column infix-bodr">
+                    <input matInput [matDatepicker]="picker" placeholder="Date" name="date_created"
+                    [(ngModel)]="filter.date_created" (dateChange)="date_format()" [max]="today_date" disabled>
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker disabled="false"></mat-datepicker>
+                  </mat-form-field>
+                </div>
+              </th>
+              <th class="w80">
+                <div class="th-search-acmt">
+                  <mat-form-field class="example-full-width cs-input select-input">
+                    <input matInput placeholder="Search..." type="text" name="created_by_name"
+                    [(ngModel)]="filter.created_by_name" (keyup.enter)="leadList(active_tab)">
+                  </mat-form-field>
+                </div>
+              </th>
+              <th class="w100">
+                <div class="th-search-acmt">
+                  <mat-form-field class="example-full-width cs-input select-input">
+                    <mat-label>Select...</mat-label>
+                    <mat-select name="enquiry_type" #enquiry_type="ngModel" [(ngModel)]="filter.enquiry_type" (selectionChange)="leadList(active_tab)">
+                      <mat-option disabled="">Select Enquiry</mat-option>
+                      <mat-option *ngFor="let item of influencerType" value="item.id" >{{item.module_name}}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </th>
+              
+              <th class="w100">
+                <div class="th-search-acmt">
+                  <mat-form-field class="example-full-width cs-input select-input">
+                    <input matInput placeholder="Search..." type="text" name="enquiry_id" [(ngModel)]="filter.enquiry_id"
+                    (keyup.enter)="leadList(active_tab)">
+                  </mat-form-field>
+                </div>
+              </th>
+              <th class="w200" *ngIf="active_tab == 'Qualified'">
+                <div class="th-search-acmt">
+                  <mat-form-field class="example-full-width cs-input select-input">
+                    <input matInput placeholder="Search..." type="text" name="user_name"
+                    [(ngModel)]="filter.user_name" (keyup.enter)="leadList(active_tab)">
+                  </mat-form-field>
+                </div>
+              </th>
+              <th class="w100">
+                <div class="th-search-acmt">
+                  <mat-form-field class="example-full-width cs-input select-input">
+                    <input matInput placeholder="Search..." type="text" name="source" [(ngModel)]="filter.source"
+                    (keyup.enter)="leadList(active_tab)">
+                  </mat-form-field>
+                </div>
+              </th>
+              <th class="w150">
+                <div class="th-search-acmt">
+                  <mat-form-field class="example-full-width cs-input select-input">
+                    <input matInput placeholder="Search..." type="text" name="name" [(ngModel)]="filter.name"
+                    (keyup.enter)="leadList(active_tab)">
+                  </mat-form-field>
+                </div>
+              </th>
+              <th class="w120">
+                <div class="th-search-acmt">
+                  <mat-form-field class="example-full-width cs-input select-input">
+                    <input matInput placeholder="Search..." type="text" name="mobile_number"
+                    [(ngModel)]="filter.mobile" (keyup.enter)="leadList(active_tab)">
+                  </mat-form-field>
+                </div>
+              </th>
+              <th class="w220">&nbsp;</th>
+              <th class="w100">&nbsp;</th>
+              <th class="w100">&nbsp;</th>
+              <th class="w200" *ngIf="active_tab == 'Disqualified' ">&nbsp;</th>
+              <th class="w70 text-center"*ngIf="login_data5.edit_enquiry=='1' && active_tab != 'Qualified' ">&nbsp;</th>
+            </tr>
+          </table>
+        </div>
+      </div>
+      
+      <div class="table-container">
+        <div class="table-content">
+          <table>
+            <ng-container *ngIf="!loader">
+              <tr *ngFor="let row of lead_List; let i = index;" [ngClass]="{'Current': serve.currentUserID == row.id}" >
+                <td class="w40">{{i+1+sr_no}}</td>
+                <td class="w90">{{row.date_created | date:'dd MMM yyyy'}}</td>
+                <td class="w80">{{row.created_by_name}}</td>
+                <td class="w100">{{row.influencer_type}}</td>
+                <td class="w100"><a class="link-btn" (click)="serve.setData(filter)" routerLink="lead-detail/{{row.id}}">{{row.enquiry_id}}</a></td>
+                <td class="w200" *ngIf="active_tab == 'Qualified'">{{row.assigned_to_user_name}} - {{row.emp_code}}</td>
+                <td class="w100">{{row.source}}</td>
+                <td class="w150">{{row.name}}</td>
+                <td class="w120">{{row.mobile}}</td>
+                <td class="w220">{{row.description}}</td>
+                <td class="w100">{{row.last_checkin!=='0000-00-00 00:00:00'?(row.last_checkin | date:'dd MMM yyyy'):'-- -- ----'}}</td>
+                <td class="w100">({{row.log.date_created | date:'dd MMM yyyy'}}) {{row.log.changes_by_name}}</td>
+                <td class="w200" *ngIf="active_tab == 'Disqualified' ">{{row.description}}</td>
+                <td class="w70 text-center"*ngIf="login_data5.edit_enquiry=='1' && active_tab != 'Qualified' ">
+                  <div class="action-button">
+                    <button mat-icon-button matTooltip="Change Status" (click)="changeStatus(row.id, row.name, row.enquiry_id)" *ngIf="active_tab == 'Pending'">
+                      <i class="material-icons edit">change_circle</i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </ng-container>
+            <ng-container *ngIf="loader">
+              <tr class="sk-loading" *ngFor="let row of [].constructor(10)">
+                <td class="w40">
+                  <div>&nbsp;</div>
+                </td>
+                <td class="w90">
+                  <div>&nbsp;</div>
+                </td>
+                <td class="w80">
+                  <div>&nbsp;</div>
+                </td>
+                <td class="w100">
+                  <div>&nbsp;</div>
+                </td>
+                <td class="w100">
+                  <div>&nbsp;</div>
+                </td>
+                <td class="w100" *ngIf="active_tab == 'qualified'">
+                  <div>&nbsp;</div>
+                </td>
+                <td class="w100">
+                  <div>&nbsp;</div>
+                </td>
+                <td class="w150">
+                  <div>&nbsp;</div>
+                </td>
+                <td class="w120">
+                  <div>&nbsp;</div>
+                </td>
+                <td class="w220">
+                  <div>&nbsp;</div>
+                </td>
+                <td class="w200" *ngIf="active_tab == 'disqualified' ">
+                  <div>&nbsp;</div>
+                </td>
+                <td class="w90" *ngIf="active_tab == 'qualified' ">
+                  <div>&nbsp;</div>
+                </td>
+                <td class="w100">
+                  <div>&nbsp;</div>
+                </td>
+                <td class="w100">
+                  <div>&nbsp;</div>
+                </td>
+                <td class="w70">
+                  <div>&nbsp;</div>
+                </td>
+              </tr>
+            </ng-container>
+          </table>
+        </div>
+      </div>
+      
+      
+      <div *ngIf="datanotfound == true">
+        <app-not-result-found ></app-not-result-found>
+      </div>
+    </div>
+  </div>
+  
+  
+  
+  <div class="fab-btns">
+    <button class="pulse excel" mat-fab *ngIf="login_data5.export_enquiry=='1' || login_data5.import_enquiry=='1' || login_data5.edit_enquiry=='1' || login_data5.add_enquiry=='1'" color="primary"  [ngClass]="{'pulse': fabBtnValue=='add'}" [matMenuTriggerFor]="menu" (click)="lastBtnValue('upload');">
+      <i class="material-icons">apps</i>
+      Action
+    </button>
+    <mat-menu #menu="matMenu">
+      <button *ngIf="login_data5.export_enquiry=='1'" mat-menu-item (click)="getEnquiryExcel(active_tab);">
+        <mat-icon>download</mat-icon>
+        <span>Download Excel</span>
+      </button>
+      <button *ngIf="login_data5.import_enquiry=='1'" mat-menu-item (click)="upload_excel('insert');">
+        <mat-icon>cloud_upload</mat-icon>
+        <span>Upload New Data</span>
+      </button>
+      <!-- <button *ngIf="login_data5.import_enquiry=='1'" mat-menu-item (click)="upload_excel('update');">
+        <mat-icon>update</mat-icon>
+        <span>Update Existing Data</span>
+      </button> -->
+      <button *ngIf="login_data5.add_enquiry=='1'" mat-menu-item routerLink="add-lead" (click)="lastBtnValue('add')" [ngClass]="{'pulse': fabBtnValue=='add'}">
+        <mat-icon>add</mat-icon>
+        Add New
+      </button>
+    </mat-menu>
+  </div>
+  
+</div>

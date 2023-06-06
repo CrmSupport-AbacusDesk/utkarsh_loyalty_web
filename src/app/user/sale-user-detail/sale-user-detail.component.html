@@ -1,0 +1,349 @@
+<div class="main-container">
+  <div class="tools-container">
+    <a mat-icon-button matTooltip="Back" (click)="back()">
+      <i class="material-icons">arrow_back</i>
+    </a>
+    <h2>{{detail.user_type | titlecase}} Details</h2>
+    <div class="left-auto">
+      <!-- <button class="mr16" matTooltip="Transfer Data" *ngIf="detail.user_type != 'System User' "
+        (click)="openDialog('transferData')" mat-raised-button color="primary"><i class="material-icons">swap_horiz</i>
+        Transfer Data</button> -->
+      <button class="mr16" matTooltip="Transfer Data" *ngIf="detail.user_type == 'System User' "
+        (click)="openDialog('updatePassword')" mat-raised-button color="primary"><i class="material-icons">vpn_key</i>
+        Change Credentials</button>
+      <ng-container *ngIf="login_data.edit_master=='1'">
+        <button matTooltip="Edit product" *ngIf="login_data.edit_master=='1'" [routerLink]="[ 'user-edit/', user_id ]"
+          mat-raised-button color="primary"><i class="material-icons">edit</i> Edit {{detail.user_type |
+          titlecase}}</button>
+      </ng-container>
+    </div>
+  </div>
+  <div class="container pt10 pl10 pr10 pb50">
+    <div class="row">
+      <div class="col s12 m8 l8" [ngClass]="{'m12 l12': detail.user_type != 'System User'}">
+        <div class="card" *ngIf="!skLoading">
+          <div class="card-head">
+            <h2>Basic Details</h2>
+          </div>
+          <div class="card-body">
+            <div class="grid-box">
+              <div class="block-feilds">
+                <span>Designation</span>
+                <p>{{detail.designation_name}}</p>
+              </div>
+              <div class="block-feilds">
+                <span>Name</span>
+                <p>{{detail.name | titlecase}}</p>
+              </div>
+              <div class="block-feilds">
+                <span>Employee Code</span>
+                <p>{{detail.employee_id}}</p>
+              </div>
+              <div class="block-feilds">
+                <span>Mobile Number</span>
+                <p>{{detail.contact_01}}</p>
+              </div>
+              <div class="block-feilds">
+                <span>Email ID</span>
+                <p>{{detail.email ? detail.email :'---'}}</p>
+              </div>
+              <div class="block-feilds">
+                <span>Date of joining</span>
+                <p *ngIf="detail.date_of_joining != '0000-00-00'">{{detail.date_of_joining | date}}</p>
+                <p *ngIf="detail.date_of_joining == '0000-00-00'">---</p>
+              </div>
+              <div class="block-feilds">
+                <span>Weekly off</span>
+                <p>{{detail.weekly_off ? detail.weekly_off :'---'}}</p>
+              </div>
+
+              <div class="block-feilds" *ngIf="detail.user_type == 'Sales User' ">
+                <span>Order Type</span>
+                <p>{{detail.order_type ? detail.order_type :'---'}}</p>
+              </div>
+              <div class="block-feilds">
+                <span>Status</span>
+                <p>{{detail.status == '1' ? 'Active' : 'Deactive'}}</p>
+              </div>
+
+              <div class="block-feilds">
+                <span>Reporting Manager</span>
+                <p *ngIf="detail.assign_user != ''">{{detail.assign_user | titlecase}}</p>
+                <p *ngIf="!detail.assign_user">---</p>
+              </div>
+              <div class="block-feilds">
+                <span>Manager Code</span>
+                <p *ngIf="detail.assign_user != ''">{{detail.assign_user_code}}</p>
+                <p *ngIf="!detail.assign_user">---</p>
+              </div>
+              <div class="block-feilds">
+                <span>Last Updated By</span>
+                <p>{{detail.last_updated_by_name ? detail.last_updated_by_name : '--'}}</p>
+              </div>
+
+              <div class="block-feilds">
+                <span>Last Updated On</span>
+                <p>
+                  {{detail.last_updated_on && detail.last_updated_on != '0000-00-00 00:00:00'? (detail.last_updated_on |
+                  date:'medium') : '--'}}
+                </p>
+              </div>
+              <div class="block-feilds" *ngIf="detail.user_type == 'Sales User' ">
+                <span>First Mobile App Login</span>
+                <p>
+                  {{detail.first_login && detail.first_login != '0000-00-00 00:00:00'? (detail.first_login | date:'MMM d, y, h:mm:a') : '--'}}
+                </p>
+              </div>
+              <div class="block-feilds" *ngIf="detail.user_type == 'Sales User' ">
+                <span>Latest Mobile App Login</span>
+                <p>
+                  {{detail.latest_login && detail.latest_login != '0000-00-00 00:00:00'? (detail.latest_login |
+                  date:'MMM d, y, h:mm:a') : '--'}}
+                </p>
+              </div>
+
+              <div class="block-feilds" *ngIf="detail.user_type == 'Sales User' ">
+                <span>Device Information</span>
+                <p>
+                  {{detail.device_info ? detail.device_info : '---'}}
+                </p>
+              </div>
+            </div>
+
+            <div class="grid-box  mt16"
+              [ngClass]="{'two': detail.user_type != 'System User', 'single': detail.user_type == 'System User'}">
+              <div class="block-feilds">
+                <span>Address</span>
+                <p>{{detail.address}} {{detail.city ? ',' + detail.city + ',' : ''}} {{detail.district_name ?
+                  detail.district_name + ',' : ''}} {{detail.state_name ? detail.state_name + ',' : ''}}
+                  {{detail.pincode}}</p>
+              </div>
+
+              <div class="block-feilds" *ngIf="detail.user_type != 'System User'">
+                <span>Working State</span>
+                <p><span *ngFor="let row of detail.working_state_name">{{row}} &nbsp;&nbsp;</span> </p>
+              </div>
+            </div>
+
+
+          </div>
+
+        </div>
+        <!-- product data end -->
+
+
+        <!-- Skeleton start -->
+        <div class="card" *ngIf="skLoading">
+          <div class="sk-head">
+            <h2>&nbsp;</h2>
+          </div>
+          <div class="card-body">
+            <div class="grid-box">
+              <div class="sk-box" *ngFor="let row of [].constructor(10)">
+                &nbsp;
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Skeleton end -->
+
+      </div>
+
+      <div class="col s12 m4 l4">
+        <!-- <ng-container *ngIf="detail.user_type != 'System User'">
+          <div class="card pb0 mt10" *ngIf="!skLoading">
+            <div class="card-head">
+              <h2>Assigned Brand</h2>
+            </div>
+            <div class="card-body pt0">
+              <mat-list class="cs-list-box pt0">
+                <mat-list-item *ngFor="let row of detail.brand;">
+                  <div class="alphabet">{{row ? row[0].toUpperCase():'' }}</div>
+                  {{row | titlecase}}
+                </mat-list-item>
+              </mat-list>
+            </div>
+          </div>
+        </ng-container> -->
+        <ng-container *ngIf="detail.user_type == 'System User'">
+          <div class="card" *ngIf="!skLoading">
+            <div class="card-head">
+              <h2>Login Credentials</h2>
+            </div>
+            <div class="card-body">
+              <div class="grid-box single">
+                <div class="block-feilds">
+                  <span>User Name</span>
+                  <p>{{detail.username}}</p>
+                </div>
+              </div>
+              <div class="grid-box single mt16">
+                <div class="block-feilds">
+                  <span>Password</span>
+                  <p>{{detail.password}}</p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+          <div class="card pb0 mt10" *ngIf="!skLoading">
+            <div class="card-head">
+              <h2>Assigned Users</h2>
+            </div>
+            <div class="card-body pt0">
+              <mat-list class="cs-list-box pt0">
+                <mat-list-item *ngFor="let row of detail.assign_system_user_name;">
+                  <div class="alphabet">{{row ? row[0].toUpperCase():'' }}</div>
+                  {{row | titlecase}}
+                </mat-list-item>
+              </mat-list>
+            </div>
+          </div>
+        </ng-container>
+        <!-- product data end -->
+
+
+        <!-- Skeleton start -->
+        <div class="card" *ngIf="skLoading">
+          <div class="sk-head">
+            <h2>&nbsp;</h2>
+          </div>
+          <div class="card-body">
+            <div class="grid-box">
+              <div class="sk-box" *ngFor="let row of [].constructor(4)">
+                &nbsp;
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Skeleton end -->
+      </div>
+      <div class="col s12 m4 l4">
+        <!-- <ng-container *ngIf="detail.user_type != 'System User'">
+          <div class="card pb0 mt10" *ngIf="!skLoading">
+            <div class="card-head">
+              <h2>Leave Master</h2>
+            </div>
+            <div class="card-body pt0">
+              <mat-list class="cs-list-box pt0">
+                <mat-list-item *ngFor="let row of detail.leaveTypes;">
+                  <div class="alphabet">{{row ? row.leave_type[0].toUpperCase():'' }}</div>
+                  {{row.leave_type | titlecase}} - {{row.leave_count}}
+                </mat-list-item>
+              </mat-list>
+            </div>
+          </div>
+        </ng-container> -->
+
+        <!-- product data end -->
+
+
+        <!-- Skeleton start -->
+        <div class="card" *ngIf="skLoading">
+          <div class="sk-head">
+            <h2>&nbsp;</h2>
+          </div>
+          <div class="card-body">
+            <div class="grid-box">
+              <div class="sk-box" *ngFor="let row of [].constructor(4)">
+                &nbsp;
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Skeleton end -->
+      </div>
+    </div>
+
+
+    <div *ngIf="detail.user_type == 'System User'">
+      <div class="cs-table left-right-10">
+        <div class="stickyHead">
+
+          <div class="table-head">
+            <table>
+              <tr>
+                <th class="w50">S.No.</th>
+                <th>Module Name</th>
+                <th class="w120 text-center">View</th>
+                <th class="w120 text-center">Edit</th>
+                <th class="w120 text-center">Delete</th>
+                <th class="w120 text-center">Add</th>
+                <th class="w120 text-center">Download Excel</th>
+                <th class="w120 text-center">Upload Excel</th>
+              </tr>
+            </table>
+          </div>
+
+        </div>
+
+        <div class="table-container">
+          <div class="table-content">
+            <table>
+              <tr *ngFor="let data of assign_module_data; let i = index">
+                <td class="w50">{{i+1}}</td>
+                <td>{{data.module_name}}</td>
+                <td class="w120 text-center">
+
+                  <mat-checkbox [disabled]=true
+                    *ngIf="data.view!= '' &&  data.view  == false || data.view  == 'false' || data.view  == 'true' || data.view  == true"
+                    [checked]="data.view==true || data.view== 'true'"
+                    (change)="assign_module('view',$event,i)"></mat-checkbox>
+                  <mat-checkbox *ngIf="data.view== 'disable'" [disabled]=true></mat-checkbox>
+
+                </td>
+                <td class="w120 text-center">
+
+                  <mat-checkbox [disabled]=true
+                    *ngIf="data.edit!= '' &&  data.edit  == false || data.edit  == 'false' || data.edit  == 'true' || data.edit  == true"
+                    [checked]="data.edit==true || data.edit== 'true'"
+                    (change)="assign_module('edit',$event,i)"></mat-checkbox>
+                  <mat-checkbox *ngIf="data.edit== 'disable'" [disabled]=true [indeterminate]=true></mat-checkbox>
+
+                </td>
+                <td class="w120 text-center">
+
+                  <mat-checkbox [disabled]=true
+                    *ngIf="data.delete!= '' &&  data.delete  == false || data.delete  == 'false' || data.delete  == 'true' || data.delete  == true"
+                    [checked]="data.delete==true || data.delete== 'true'"
+                    (change)="assign_module('delete',$event,i)"></mat-checkbox>
+                  <mat-checkbox *ngIf="data.delete== 'disable'" [disabled]=true [indeterminate]=true></mat-checkbox>
+
+                </td>
+                <td class="w120 text-center">
+
+                  <mat-checkbox [disabled]=true [disabled]=true
+                    *ngIf="data.add!= '' &&  data.add  == false || data.add  == 'false' || data.add  == 'true' || data.add  == true"
+                    [checked]="data.add==true || data.add== 'true'"
+                    (change)="assign_module('add',$event,i)"></mat-checkbox>
+                  <mat-checkbox *ngIf="data.add== 'disable'" [disabled]=true [indeterminate]=true></mat-checkbox>
+
+                </td>
+                <td class="w120 text-center">
+
+                  <mat-checkbox [disabled]=true
+                    *ngIf="data.export!= '' &&  data.export  == false || data.export  == 'false' || data.export  == 'true' || data.export  == true"
+                    [checked]="data.export==true || data.export== 'true'"
+                    (change)="assign_module('export',$event,i)"></mat-checkbox>
+                  <mat-checkbox *ngIf="data.export== 'disable'" [disabled]=true [indeterminate]=true></mat-checkbox>
+
+                </td>
+                <td class="w120 text-center">
+
+                  <mat-checkbox [disabled]=true
+                    *ngIf="data.import!= '' &&  data.import  == false || data.import  == 'false' || data.import  == 'true' || data.import  == true"
+                    [checked]="data.import==true || data.import== 'true'"
+                    (change)="assign_module('import',$event,i)"></mat-checkbox>
+                  <mat-checkbox *ngIf="data.import== 'disable'" [disabled]=true [indeterminate]=true></mat-checkbox>
+
+                </td>
+              </tr>
+            </table>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

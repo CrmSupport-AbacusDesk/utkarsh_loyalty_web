@@ -1,0 +1,145 @@
+<div class="main-container">
+
+  <div class="tools-container">
+    <h2>PRODUCT WISE SECONDARY REPORT</h2>
+
+    <div class="left-auto df ac flex-gap-10">
+      <button mat-icon-button matTooltip="Refresh" (click)="openBottomSheet()">
+        <i class="material-icons">filter_alt</i>
+      </button>
+
+    </div>
+
+  </div>
+
+  <div class="container container-scroll">
+    <div class="cs-table horizontal-scroll">
+      <div class="sticky-head">
+        <div class="table-head">
+          <table>
+            <tr>
+              <th class="w50">S.No</th>
+              <th class="w150">Sales User Name</th>
+              <th class="w200">Customer Name</th>
+              <th class="w60">Id</th>
+              <th class="w100">State</th>
+              <th class="w100">District</th>
+              <th class="w100">City</th>
+              <th class="w100">Pincode</th>
+              <th class="w220">Channel Partner</th>
+              <th class="w100">Location</th>
+              <th class="padding0 w350">
+                <table>
+                  <tbody>
+                    <tr>
+                      <th class="w200">Category</th>
+                      <th class="w50 text-center">Qty</th>
+                      <th class="w100 text-right">Amount</th>
+                    </tr>
+                  </tbody>
+                </table>
+              </th>
+            </tr>
+          </table>
+        </div>
+        <!-- <div class="table-head bdrt">
+          <table>
+            <tr>
+              <th class="w50"></th>
+              <th class="w150"></th>
+              <th class="w150"></th>
+              <th class="w60"></th>
+              <th class="w100"></th>
+              <th class="w100 text-center"></th>
+              <th class="w100 text-center"></th>
+              <th class="w100 text-center"></th>
+              <th class="w100 text-center"></th>
+              <th class="w100 text-center"></th>
+              <th class="padding0 w350">
+                <table>
+                  <tbody>
+                    <tr>
+                      <th class="w100">&nbsp;</th>
+                      <th class="w50">&nbsp;</th>
+                      <th class="w100">&nbsp;</th>
+                    </tr>
+                  </tbody>
+                </table>
+              </th>
+            </tr>
+          </table>
+        </div> -->
+      </div>
+
+      <div class="table-container">
+        <div class="table-content">
+          <table>
+            <ng-container *ngIf="!loader">
+              <tr>
+                <td class="w50">1</td>
+                <td class="w150">MAHESH SHARMA</td>
+                <td class="w200">Ankit senatory and hardware</td>
+                <td class="w60">60510</td>
+                <td class="w100">Rajasthan</td>
+                <td class="w100">Jaipur</td>
+                <td class="w100">Jaipur</td>
+                <td class="w100">303901</td>
+                <td class="w220">SHRI SHYAM DISTRIBUTORS</td>
+                <td class="w100">Rajasthan</td>
+                <td class="padding0 w350">
+                  <table class="inner-table">
+                    <tbody>
+                      <tr>
+                        <td class="w200">
+                          <a class="link-btn">P.T.M.T TAPS</a>
+                        </td>
+                        <td class="w50 text-center">168</td>
+                        <td class="w100 text-right">₹ 23865</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </td>
+              </tr>
+            </ng-container>
+
+            <ng-container *ngIf="loader">
+              <tr class="sk-loading" *ngFor="let row of [].constructor(10);">
+                <td class="w50"><div>&nbsp;</div></td>
+                <td class="w150"><div>&nbsp;</div></td>
+                <td class="w200"><div>&nbsp;</div></td>
+                <td class="w60"><div>&nbsp;</div></td>
+                <td class="w100"><div>&nbsp;</div></td>
+                <td class="w100"><div>&nbsp;</div></td>
+                <td class="w100"><div>&nbsp;</div></td>
+                <td class="w100"><div>&nbsp;</div></td>
+                <td class="w220"><div>&nbsp;</div></td>
+                <td class="w100"><div>&nbsp;</div></td>
+                <td class="padding0 w350"><div>&nbsp;</div></td>
+              </tr>
+            </ng-container>
+          </table>
+        </div>
+      </div>
+
+      <ng-container *ngIf="secondaryProductReportList.length == 0">
+        <app-not-result-found></app-not-result-found>
+      </ng-container>
+
+    </div>
+
+  </div>
+
+
+  <div class="fab-btns">
+    <button class="pulse excel" mat-fab color="primary" [matMenuTriggerFor]="menu">
+      <i class="material-icons">apps</i>
+      Action
+    </button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item>
+        <mat-icon>add</mat-icon>
+        <span>Add New</span>
+      </button>
+    </mat-menu>
+  </div>
+</div>

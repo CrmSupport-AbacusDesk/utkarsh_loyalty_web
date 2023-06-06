@@ -1,0 +1,20 @@
+
+<div class="edit-modal" >
+  <div mat-dialog-content>
+    <p class="heading">Travel Summary</p>
+    <div class="tracking">
+      <ul>
+        <!-- <p>Start Address</p> -->
+        <p><span>Attendance Started</span></p>
+        <li class="active" *ngFor="let p of dist_list">
+          <div>
+            <span class="waves"></span>
+            <p><span>{{p.start_address}}{{p.company_name}}</span></p>
+            <p class="sm-font">Distance From Last Location :<span>{{p.km+'Km'}}</span></p>
+          </div>
+        </li>
+        <span>Total Distance Travelled:{{this.total_distance +'Km'}} </span>
+        </ul>
+    </div>
+  </div>
+  </div>

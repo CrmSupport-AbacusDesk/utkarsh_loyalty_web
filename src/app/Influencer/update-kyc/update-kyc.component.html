@@ -1,0 +1,96 @@
+<div class="edit-modal" *ngIf="!modelData.from_Item">
+  <p class="heading">Update KYC Details</p>
+  <form #f="ngForm" (ngSubmit)=" f.valid && submitDetail()">
+    <div class="cs-form">
+      <div class="row">
+        <div class="col s12" >
+          <mat-form-field appearance="outline">
+            <mat-label>KYC Status</mat-label>
+            <mat-select  name="kyc_status" [(ngModel)]="data.kyc_status" #kyc_status="ngModel" required>
+              <mat-option  value="Verified">Verified</mat-option>
+              <mat-option  value="Reject">Reject</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <div class="alert alert-danger" *ngIf="kyc_status.touched || f.submitted">
+            <p *ngIf="kyc_status.errors?.required">This field is required</p>
+          </div>
+        </div>
+      </div>
+      <div class="row" *ngIf="data.kyc_status == 'Reject'">
+        <div class="col s12" >
+          <mat-form-field  appearance="outline">
+            <mat-label>Reason For Reject</mat-label>
+            <textarea matInput placeholder="Type Here ..." name="kyc_remark" #kyc_remark="ngModel"
+            [(ngModel)]="data.kyc_remark" class="h80" required></textarea>
+          </mat-form-field>
+          <div class="alert alert-danger" *ngIf="kyc_remark.touched || f.submitted">
+            <p *ngIf="kyc_remark.errors?.required">This field is required</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div mat-dialog-actions>
+      <button mat-stroked-button color="warn" [mat-dialog-close]="false">Cancel</button>
+      <button [ngClass]="{'loading': savingFlag == true}" mat-raised-button color="accent" type="submit" [disabled]="savingFlag == true">{{savingFlag == true ? 'Saving' : 'Update'}}</button>
+    </div>
+  </form>
+</div>
+
+
+      <div mat-dialog-title *ngIf="modelData.from_Item">Bill Image
+        <a mat-icon-button class="fix-btn" (click)="close()">
+          <i class="material-icons edit">clear</i>
+        </a>
+      </div>
+
+        <div mat-dialog-content *ngIf="modelData.from_Item">
+          <!-- <div class="cs-table horizontal-scroll">
+            <div class="sticky-head">
+              <div class="table-head">
+                <table>
+                  <tr>
+                    <th class="w20">Sno.</th>
+                    <th class="w150">Product Detail</th>
+                    <th class="w60">Qty</th>
+                    <th class="w250 text-center">Image</th>
+
+                  </tr>
+                </table>
+              </div>
+            </div>
+
+            <div class="table-container">
+              <div class="table-content">
+                <table>
+                  <ng-container>
+                    <tr *ngFor="let row of ItemData.total_details; let i = index;">
+                      <td class="w20">{{i + 1}}</td>
+                      <td class="w150"><strong>{{row.product_detail |titlecase}}</strong></td>
+                      <td class="w60"><strong>{{row.qty ? row.qty : '---'}}</strong></td>
+                    </ng-container>
+                    <ng-container *ngIf="ItemData.total_details.length == 0">
+                      <app-not-result-found></app-not-result-found>
+                    </ng-container>
+                  </table>
+                </div>
+              </div>
+            </div> -->
+
+            <div class="col s8">
+            <!-- <p mat-dialog-title>Bill Image </p> -->
+
+              <div class="uploade-image mt15">
+                <ul>
+                  <li class="df" *ngFor=" let item of ItemData.image" >
+                    <img [src]="imgUrl+item.image" (click)="goToImage(imgUrl + item.image)">
+
+                  </li>
+
+                </ul>
+              </div>
+            </div>
+
+        </div>
+
+
+

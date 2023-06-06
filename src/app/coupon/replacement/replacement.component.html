@@ -1,0 +1,234 @@
+<div class="main-container" >
+  <div class="tools-container">
+    <a mat-icon-button  matTooltip="Back" (click)="back();">
+      <i class="material-icons">arrow_back</i>
+    </a>
+    <h2>MRP Replacement</h2>
+  </div>
+  <div class="container pt10 pl10 pr10 pb50" >
+    <div class="row ">
+      <div class="col s12">
+        <div class="card pb0">
+          <div class="card-body cs-form">
+            <div class="row">
+              <div class="col s12 m6 l6">
+                <mat-form-field  appearance="outline">
+                  <mat-label>Coupon Number</mat-label>
+                  <input matInput placeholder="Type Here ..."  name="coupon_number" #coupon_number="ngModel" [(ngModel)]="couponNumber.coupon_number"   minlength="12" maxlength="12" min="0" #focusInput  (ngModelChange)="checkCoupon(couponNumber.coupon_number)">
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row mb100">
+      <div class="col s12 m12 l12 grid-two-box">
+        <div class="card" *ngFor="let row of qrCode">
+          <div class="card-head">
+            <div class="qr-head">
+              <h2 class="mb0">{{row.product_detail}}</h2>
+              <h2 class="mb0" >{{row.sku_code}} {{row.remarks ? '('+ row.remarks + ')' : ''}}</h2>
+              <h2  class="mb0" *ngIf="row.hardner_code">{{row.hardner_code}} {{row.hardner_qty}}</h2>
+            </div>
+          </div>
+          <div class="card-body">
+            <div  [ngClass]="row.coupon_type == 'Item Box' ? 'qr-box' : 'bar-code-box'">
+              <div class="qr-content">
+                <ul>
+                  <li>
+                    <p>MRP &#8377; {{row.product_mrp == 0  ? '': row.product_mrp }} (Inclusive of all Taxes)</p>
+                  </li>
+                  <li>
+                    <p>Net Content {{row.product_qty | titlecase}}</p>
+                  </li>
+                  <ng-container *ngIf="row.product_source == 'Imported'">
+                    <li>COUNTRY OF ORIGIN ITALY</li>
+                    <li>Imported Packed and Marketed by</li>
+                  </ng-container>
+                  <ng-container *ngIf="row.product_source == 'Manufactured'">
+                    <li>Manufactured By</li>
+                  </ng-container>
+                  <li>PEARL PRECISION PRODUCTS PVT. LTD.</li>
+                  <li>B-14, Block B, Sector 80, Noida, Uttar Pradesh 201305</li>
+                  <li>Customer Care No:0120-4219233, 0120-4219235, +91-9899328840</li>
+                  <li>Email- enquiry@pproducts.in</li>
+                </ul>
+              </div>
+              <div class="cs-barcode" *ngIf="row.coupon_type == 'Master Box' ">
+                <ngx-barcode [bc-value]="row.coupon_code" [bc-display-value]="true"></ngx-barcode>
+              </div>
+              
+              <div class="cs-barcode" *ngIf="row.coupon_type == 'Item Box' ">
+                <ngx-qrcode 
+                [elementType]="elementType" 
+                value="{{row.coupon_code}}"
+                cssClass="aclass"
+                errorCorrectionLevel="L">
+              </ngx-qrcode>
+              <span>{{row.coupon_code}}</span>
+            </div>
+            
+          </div>
+          <div class="qr-box" *ngFor="let subRow of row.itembox">
+            <div class="qr-content">
+              <ul>
+                <li>
+                  <p>MRP &#8377; {{subRow.product_mrp == 0  ? '': subRow.product_mrp }} (Inclusive of all Taxes)</p>
+                </li>
+                <li>
+                  <p>Net Content {{subRow.product_qty | titlecase}}</p>
+                </li>
+                <ng-container *ngIf="row.product_source == 'Imported'">
+                  <li>COUNTRY OF ORIGIN ITALY</li>
+                  <li>Imported Packed and Marketed by</li>
+                </ng-container>
+                <ng-container *ngIf="row.product_source == 'Manufactured'">
+                  <li>Manufactured By</li>
+                </ng-container>
+                <li>PEARL PRECISION PRODUCTS PVT. LTD.</li>
+                <li>B-14, Block B, Sector 80, Noida, Uttar Pradesh 201305</li>
+                <li>Customer Care No:0120-4219233, 0120-4219235, +91-9899328840</li>
+                <li>Email- enquiry@pproducts.in</li>
+              </ul>
+            </div>
+            <div class="cs-barcode">
+              <ngx-qrcode 
+              [elementType]="elementType" 
+              value="{{subRow.coupon_code}}"
+              cssClass="aclass"
+              errorCorrectionLevel="L">
+            </ngx-qrcode>
+            <span>{{subRow.coupon_code}}</span> 
+          </div>
+        </div>
+      </div>
+
+
+
+      
+
+
+
+    </div>
+
+   
+
+    <div class="fab-btns" *ngIf="qrCode.length > 0">
+      <div class="fab-btns" >
+        <button class="pulse excel" mat-fab color="primary"  (click)="printData();">
+          <i class="material-icons">print</i>
+          Print Coupon
+        </button>
+      </div>
+    </div>
+    
+    <div class="card card-statistics" style="width: 50%;margin-left: 250px;" hidden>
+      
+      <div id="print_card" >
+        
+        <div  id='qr_code_container' *ngFor="let row of qrCode">
+          <div style="padding:0px;height: 226.77165354px;width: 340.15748031px; border-radius: 10px;margin: 0 auto;display: flex;background-color: #fff; position: relative;">
+            <div style="width: 250px;">
+              <h5 style="font-family: 'Roboto', sans-serif;border-bottom: 1px solid #000;font-size: 14px;margin: 0;margin-bottom: 3px;padding-bottom: 3px;">
+                <span style="display:block;font-family: 'Roboto', sans-serif;margin: 0;">{{row.product_detail}}
+                  <span style="display:inline-block;font-family: 'Roboto', sans-serif;font-size: 10px;margin: 0;">{{row.sku_code}}</span>
+                  <span  *ngIf="row.hardner_code" style="display:block;font-family: 'Roboto', sans-serif;font-size: 10px;margin: 0;">{{row.hardner_code}} {{row.hardner_qty}}</span>
+                  <span  *ngIf="row.remarks" style="display:block;font-family: 'Roboto', sans-serif;font-size: 10px;margin: 0;">{{row.remarks}}</span>
+                </span>
+              </h5>
+              <p style="font-family: 'Roboto', sans-serif;margin: 0;font-size: 8px;"></p>
+              <h4 style="font-family: 'Roboto', sans-serif;border-bottom: 1px solid #000;font-size: 12px;margin: 0;margin-bottom: 3px;padding-bottom: 3px;font-weight:600">MRP &#8377;  {{row.product_mrp == 0  ? '': row.product_mrp }} <span style="font-size: 12px">(Inclusive of all Taxes)</span></h4>
+              <p style="font-family: 'Roboto', sans-serif;margin: 0;font-size: 12px;font-weight:700">Net Content  {{row.product_qty | titlecase}}
+              </p>
+              <p style="font-family: 'Roboto', sans-serif;font-size: 12px;margin:0">Date of pkg. {{row.date_created | date:'d MMM y'}}</p>
+              <p style="font-family: 'Roboto', sans-serif;font-size: 12px;margin:0;">Batch No. {{row.batch_no ? row.batch_no : '---'}}</p>
+              <span style="margin: 0;font-size: 12px;font-weight: 400;">Item Code: {{row.coupon_code}}</span>
+              <div style="  position: absolute;  bottom: 20px;">
+                <ng-container *ngIf="row.product_source == 'Imported'">
+                  <p style="font-family: 'Roboto', sans-serif;font-size: 8px;margin:0;">COUNTRY OF ORIGIN ITALY</p>
+                  <p style="font-family: 'Roboto', sans-serif;font-size: 8px;margin:0;">Imported Packed and Marketed by</p>
+                </ng-container>
+                <ng-container *ngIf="row.product_source == 'Manufactured'">
+                  <p style="font-family: 'Roboto', sans-serif;font-size: 8px;margin:0;">Manufactured By</p>
+                </ng-container>
+                <p style="font-family: 'Roboto', sans-serif;font-size: 8px;margin:0;">PEARL PRECISION PRODUCTS PVT. LTD.</p>
+                <p style="font-family: 'Roboto', sans-serif;font-size: 8px;margin:0;">B-14, Block B, Sector 80, Noida, Uttar Pradesh 201305</p>
+                <p style="font-family: 'Roboto', sans-serif;font-size: 8px;margin:0;">Customer Care No:0120-4219233, 0120-4219235, +91-9899328840</p>
+                <p style="font-family: 'Roboto', sans-serif;font-size: 8px;margin:0;">Email- enquiry@pproducts.in</p>
+              </div>
+            </div>
+            <div style="text-align: right">
+              
+              <div class="bar-code-img" style="overflow: hidden;" *ngIf="row.coupon_type == 'Master Box' ">
+                <ngx-barcode [bc-value]="row.coupon_code" [bc-display-value]="true"></ngx-barcode>
+              </div>
+              <div class="qr-img" style="width: 105px;overflow: hidden;height: 105px;"  *ngIf="row.coupon_type == 'Item Box' ">
+                <ngx-qrcode 
+                [elementType]="elementType" 
+                value="{{row.coupon_code}}"
+                cssClass="aclass"
+                errorCorrectionLevel="L">
+              </ngx-qrcode>
+            </div>
+            <span *ngIf="row.coupon_type == 'Item Box' " style="margin: 0;font-size: 12px;font-weight: 400;display: block;text-align: center;">{{row.coupon_code}}</span>
+            <span style="font-family: 'Roboto', sans-serif;font-size: 12px;margin-left:-50px;">Shake well before use</span>
+          </div>
+          
+        </div>
+        <div style="padding:0px;height: 226.77165354px;width: 340.15748031px; border-radius: 10px;margin: 0 auto;display: flex;background-color: #fff; position: relative;" *ngFor="let subRow of row.itembox">
+          <div style="width: 250px;">
+            <h5 style="font-family: 'Roboto', sans-serif;border-bottom: 1px solid #000;font-size: 14px;margin: 0;margin-bottom: 3px;padding-bottom: 3px;"><span style="display:block;font-family: 'Roboto', sans-serif;margin: 0;">{{row.product_detail}}
+              <span style="display:inline-block;font-family: 'Roboto', sans-serif;font-size: 10px;margin: 0;">
+              </span>
+            </span>
+          </h5>
+          <p style="font-family: 'Roboto', sans-serif;margin: 0;font-size: 8px;"></p>
+          <h4 style="font-family: 'Roboto', sans-serif;border-bottom: 1px solid #000;font-size: 12px;margin: 0;margin-bottom: 3px;padding-bottom: 3px;font-weight:600">MRP  &#8377;  {{subRow.product_mrp == 0  ? '': subRow.product_mrp }} <span style="font-size: 12px">(Inclusive of all Taxes)</span></h4>
+          <p style="font-family: 'Roboto', sans-serif;margin: 0;font-size: 12px;font-weight:700">Net Content {{subRow.product_qty | titlecase}}
+          </p>
+          <p style="font-family: 'Roboto', sans-serif;font-size: 12px;margin:0">Date of pkg. {{row.date_created | date:'d MMM y'}}</p>
+          <p style="font-family: 'Roboto', sans-serif;font-size: 12px;margin:0;">Batch No. {{row.batch_no ? row.batch_no : '---'}}</p>
+          <span style="margin: 0;font-size: 12px;font-weight: 400;">Item Code: {{subRow.coupon_code}}</span>
+
+
+          <div style="  position: absolute;  bottom: 20px;">
+            <ng-container *ngIf="row.product_source == 'Imported'">
+              <p style="font-family: 'Roboto', sans-serif;font-size: 8px;margin:0;">COUNTRY OF ORIGIN ITALY</p>
+              <p style="font-family: 'Roboto', sans-serif;font-size: 8px;margin:0;">Imported Packed and Marketed by</p>
+            </ng-container>
+            <ng-container *ngIf="row.product_source == 'Manufactured'">
+              <p style="font-family: 'Roboto', sans-serif;font-size: 8px;margin:0;">Manufactured By</p>
+            </ng-container>
+            <p style="font-family: 'Roboto', sans-serif;font-size: 8px;margin:0;">PEARL PRECISION PRODUCTS PVT. LTD.</p>
+            <p style="font-family: 'Roboto', sans-serif;font-size: 8px;margin:0;">B-14, Block B, Sector 80, Noida, Uttar Pradesh 201305</p>
+            <p style="font-family: 'Roboto', sans-serif;font-size: 8px;margin:0;">Customer Care No:0120-4219233, 0120-4219235, +91-9899328840</p>
+            <p style="font-family: 'Roboto', sans-serif;font-size: 8px;margin:0;">Email- enquiry@pproducts.in</p>
+          </div>
+        </div>
+        <div style="text-align: right">
+          <div class="qr-img" style="width: 105px;overflow: hidden;height: 105px;">
+            <ngx-qrcode 
+            [elementType]="elementType" 
+            value="{{subRow.coupon_code}}"
+            cssClass="aclass"
+            errorCorrectionLevel="L">
+          </ngx-qrcode>
+        </div>
+        <span style="margin: 0;font-size: 12px;font-weight: 400;display: block;text-align: center;">{{subRow.coupon_code}}</span>
+        <span style="font-family: 'Roboto', sans-serif;font-size: 12px;margin-left:-50px;">Shake well before use</span>
+      </div>
+    </div>
+
+
+
+    
+    
+    
+    
+    
+    
+  </div>
+</div>
+

@@ -1,0 +1,113 @@
+.file-border
+{
+    border: 1px solid #ccc;
+    background: #ffffff;
+    height: 45px;
+    line-height: 45px;
+    margin-top: 15px;
+    padding: 0px 10px;
+}
+.border-erea
+{
+    
+    label
+    {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        
+        input
+        {
+            width: 100%;
+            height: 100%;
+        }
+        
+        i
+        {
+            padding-right: 10px;
+            
+        }
+        
+        
+        
+        h4
+        {
+            font-size: 14px;
+            color: #002341;
+            padding-left: 20px;
+        }
+        
+    }
+    
+    
+}
+
+.excel-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-column-gap: 16px;
+    padding: 24px 0px;
+    
+    .excel-box {
+        
+        label{
+            border: 1px dashed #3a7d33;
+            text-align: center;
+            padding: 16px;
+            display: block;
+            cursor: pointer;
+            background: #fafffa;
+            border-radius: 10px;
+            box-shadow: 2px 5px 6px -2px #00000033, 0px 2px 2px 0px #00000024, 0px 1px 5px 0px #0000001f;
+            
+            img{
+                height: 30px;
+                transition: transform 0.6s;
+            }
+            
+            p{
+                font-size: 11px;
+                line-height: 20px;
+                margin-top: 16px;
+                font-weight: 600;
+                color: #262626;
+                transition: transform 0.6s;
+            }
+            
+            &:hover{
+                img{
+                    transform: rotateY(360deg);
+                }
+                p{
+                    color: #3a7d33;
+                }
+            }
+        }
+        
+        a{
+            color: #000000;
+            font-size: 13px;
+            text-align: center;
+            margin: 0 auto;
+            display: block;
+            margin-top: 10px;
+            transition: transform 0.6s;
+            cursor: pointer;
+            border: 1px solid #4a4949;
+            border-radius: 10px;
+            padding: 10px 10px 10px 10px;
+            // box-shadow: 0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%);
+            box-shadow: 0px 3px 6px -2px #00000033, 0px 2px 2px 0px #00000024, 0px 1px 5px 0px #0000001f;
+            
+            &:hover{
+                color: #f00000;
+            }
+        }
+        
+    }
+}
+
+
+.grid-one-column{
+    grid-template-columns: 1fr !important;
+}

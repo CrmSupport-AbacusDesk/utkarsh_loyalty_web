@@ -1,0 +1,1321 @@
+.card-body{
+    background:var(--light) !important;
+}
+
+.box-group {
+    display: flex;
+    flex-direction: column;
+    grid-column-gap: 10px;
+    grid-row-gap: 10px;
+    
+    .box-content {
+        display: grid;
+        grid-template-columns: 50px 1fr 1fr;
+        border: 2px solid rgba(255, 255, 255, 0.7);
+        align-items: center;
+        padding: 10px;
+        border-radius: 4px;
+        grid-column-gap: 10px;
+        
+        
+        i{
+            font-size: 30px;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            border-radius: 100%;
+            background: #fff;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color:#000;
+        }
+        
+        h2{
+            text-align: right;
+            font-size: 16px;
+        }
+        
+        &.target_rate{
+            background: #43A047;
+            color: #ffff;
+        }
+        &.current_rate{
+            background: #FFCA28;
+        }
+        
+        &.required_rate{
+            background: #26C6DA;
+        }
+    }
+}
+
+.mt-30{
+    margin-top: -30px;
+}
+
+.salesByRegionChart{
+    width: 110%;
+}
+
+.stateSale{
+    height: 780px;
+    background-size: contain;
+    background-position: center;
+}
+
+.leadState{
+    height: 460px;
+}
+
+.salesTargetBox{
+    .card-head{
+        margin-bottom: 4px;
+    }
+    
+}
+
+.card-body{
+    background-color: #fff;
+}
+
+.currentRateBox{
+    .card-body{
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 100%;
+        
+    }
+    // background-color: rgba($color: #000000, $alpha: 0.04);
+    h2{
+        font-size: 18px;
+        font-weight: 400;
+        text-align: center;
+        color:var(--text)
+    }
+    .valuebox{
+        text-align: center;
+        background-color: var(--grey);
+        margin-top: 4px;
+        border-radius: 4px;
+        padding: 1px 0;
+        color:var(--text);
+        span{
+            font-size: 20px;
+            color:var(--text);
+        }
+    }
+}
+.counter-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    grid-column-gap: 10px;
+    grid-row-gap: 10px;
+    
+    
+    .achievementBox{
+        .top-column{
+            height: 100%;
+            align-items: stretch;
+            background-color: var(--grey);
+            border-radius: 4px;
+            
+            .titlebox{
+                display: flex;
+                align-items: center;
+                border-radius: 4px;
+                padding: 4px;
+                width: 68%;
+                color:var(--text);
+                
+                span{
+                    font-size: 18px;
+                    font-weight: 400;
+                    color:var(--text);
+                    
+                }
+            }
+            .valuebox{
+                background-color: var(--surface);
+                // background-color: white;
+                border-radius: 4px;
+                display: flex;
+                margin: 4px;
+                justify-content: center;
+                align-items: center;
+                span{
+                    font-size: 22px;
+                    color:var(--text);
+                }
+            }
+        }
+    }
+    .counter-card {
+        border: 1.5px solid var(--bodrColor);
+        padding: 4px;
+        // height: 100px;
+        border-radius:8px;
+        .card-head{
+            border: none;
+            h2{
+                border-bottom: 1px solid var(--bodrColor);
+                padding:5px 0px;
+                font-size:13px;
+            }
+            
+        }
+        .innerBox{
+            background-color: var(--grey);
+            border-radius: 4px;
+            text-align: center;
+            width: 49%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
+            .titlebox{
+                background-color: var(--surface);
+                margin: 0 3px;
+                border-radius: 4px;
+                font-size: 13px;
+                padding:5px 0px;
+                color:var(--text);
+            }
+            .valuebox{
+                padding: 5px 0px;
+                font-size: 18px;
+                color:var(--text);
+            }
+        }
+        
+        
+        
+        .top-column {
+            display: flex;
+            justify-content: space-between;
+            
+            h2{
+                font-size: 14px;
+                letter-spacing: 0.1px;
+            }
+            
+            
+            i{
+                width: 40px;
+                height: 40px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: rgba(0, 0, 0, 0.2);
+                border-radius: 100%;
+            }
+            span{
+                font-size: 18px;
+                font-weight: bold;
+            }
+        }
+        
+        .bottom-column{
+            height: 50%;
+            display: flex;
+            align-items: center;
+            
+            h2{
+                font-size: 14px;
+                letter-spacing: 0.1px;
+                margin-top: 15px;
+            }
+            
+            ul {
+                display: flex;
+                justify-content: space-between;
+                width: 100%;
+                
+                li{
+                    text-align: center;
+                    line-height: 20px;
+                    
+                    
+                    span{
+                        font-size: 11px;
+                    }
+                    p{
+                        font-size: 14px;
+                        font-weight: bold;
+                    }
+                    
+                    
+                }
+            }
+        }
+    }
+}
+
+// enquiry
+.p10{
+    padding: 10px;
+}
+.upperBox{
+    .card-head{
+        padding-bottom: 10px;
+        font-size: 18px;
+    }
+    .card-body{
+        height: 210px;
+        background-color: rgba($color: #000000, $alpha: 0.02);
+    }
+    .chartBox{
+        background-color: white;
+        border-radius: 5px;
+        padding: 5px;
+        overflow: hidden;
+    }
+    .sourceIndicators{
+        li{
+            margin-bottom: 5px;
+            display: block !important;
+        }
+    }
+    div.titleText{
+        font-size: 18px;
+    }
+    
+    .totalEnquiryDetails{
+        
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        
+        li{
+            background: #eee;
+            padding: 12px 5px;
+            border-radius: 5px;
+            position: relative;
+            span{
+                position: absolute;
+                right: 0;
+                top: 50%;
+                transform: translateY(-50%);
+                display: inline-block;
+                padding: 0 5px;
+                border-radius: 5px;
+                color: white;
+                font-size: 18px;
+                font-weight: bold;
+            }
+        }
+        li.qualified{
+            span{
+                background-color: #00a54d;
+            }
+        }
+        li.total{
+            span{
+                color:#000;
+            }
+        }
+        li.disqualified{
+            span{
+                background-color: #ff4b4a;
+            }
+        }
+        li.reviewPending{
+            span{
+                background-color: #ffc300;
+            }
+        }
+        
+    }
+    
+    .indicators{
+        position: relative;
+        width: 100%;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-column-gap: 9px;
+        
+        li{
+            font-size: 12px;
+            position: relative;
+            padding:7px 0px 7px 14px;
+            
+            
+            &:before{
+                content: '';
+                position: absolute;
+                left: 0;
+                top: 50%;
+                transform: translateY(-50%);
+                height: 8px;
+                width: 8px;
+            }
+        }
+        
+        li.qualified{
+            &:before{
+                background-color: #009fb5;
+            }
+        }
+        li.disqualified{
+            &:before{
+                background-color: #ff4b4a;
+            }
+        }
+        li.reviewPending{
+            &:before{
+                background-color: #ffc300;
+            }
+        }
+        
+        li.win{
+            &:before{
+                background-color: #95ce50;
+            }
+        }
+        li.lost{
+            &:before{
+                background-color: #ff4b4a;
+            }
+        }
+        
+        li.Facebook{
+            &:before{
+                background-color: #95ce50;
+            }
+        }
+        li.Website{
+            &:before{
+                background-color: #ffb300;
+            }
+        }
+        li.Call{
+            &:before{
+                background-color: #ff6f00;
+            }
+        }
+        li.Walk{
+            &:before{
+                background-color: #00897b;
+            }
+        }
+        li.SMS{
+            &:before{
+                background-color: #43a047;
+            }
+        }
+        
+        li.Toll-Free{
+            &:before{
+                background-color: #2e7d32;
+            }
+        }
+        li.Others{
+            &:before{
+                background-color: #989c25;
+            }
+        }
+        li.Instagram{
+            &:before{
+                background-color: #f70474;
+            }
+        }
+        
+        li.Linked-in{
+            &:before{
+                background-color: #0077b5;
+            }
+        }
+        li.Reference{
+            &:before{
+                background-color: #d778b3;
+            }
+        }
+        li.Whatsapp{
+            &:before{
+                background-color: #1bd741;
+            }
+        }
+        li.Mail{
+            &:before{
+                background-color: #ea4335;
+            }
+        }
+        li.IndiaMart{
+            &:before{
+                background-color: #1c124f;
+            }
+        }
+        li.JustDial{
+            &:before{
+                background-color: #fc6904;
+            }
+        }
+    }
+    
+    
+}
+
+.enquiryScoreDetails{
+    padding: 0 10px 10px 10px;
+    ul{
+        li{
+            background-color: #eee;
+            border-radius: 40px;
+            margin-bottom: 20px;
+            padding: 10px;
+            position: relative;
+            text-align: center;
+            font-weight: bold;
+            font-size: 18px;
+            color: #888;
+            span{
+                position: absolute;
+                top: 50%;
+                transform: translateY(-50%);
+                left: 0;
+                height: 45px;
+                width: 45px;
+                line-height: 45px;
+                vertical-align: middle;
+                text-align: center;
+                color: white;
+                display: block;
+                border-radius: 50%;
+                font-size: 16px;
+            }
+            &:last-child{
+                margin-bottom: 0;
+            }
+        }
+        
+    }
+    
+    .qualified{
+        span{
+            background-color: #2e7d32;
+        }
+    }
+    .disqualified{
+        span{
+            background-color: #ea4335;
+        }
+    }
+    .reviewPending{
+        span{
+            background-color: #ffc300;
+        }
+    }
+}
+
+.leadDetailBoxes{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    padding:5px 10px 10px;
+    grid-column-gap: 8px;
+    grid-row-gap: 8px;
+    
+    div{
+        border: 1px solid rgba($color: #000000, $alpha: .08);
+        border-radius: 5px;
+        text-align: center;
+        padding: 10px;
+        
+        span:first-child{
+            font-size: 16px;
+            font-weight: bold;
+            line-height: 24px;
+            display: block;
+        }
+        span:last-child{
+            font-size: 30px;
+            display: block;
+            font-weight: 500;
+        }
+    }
+    .totalLead{
+        span:last-child{
+            color: #6a567d;
+        }
+    }
+    .qualified{
+        span:last-child{
+            color: #2e7d32;
+        }
+    }
+    .disqualified{
+        span:last-child{
+            color: #ea4335;
+        }
+    }
+    .reviewPending{
+        span:last-child{
+            color: #0077b5;
+        }
+    }
+    
+    &.lead-column{
+        
+    }
+    
+}
+
+.disqualifiedMeterDetails{
+    height: 170px;
+    overflow-y: auto;
+    width: 90%;
+    margin: auto;
+    .reasonLabel{
+        font-weight: 200;
+    }
+    li{
+        margin-bottom: 5px;
+        &:nth-child(1){
+            .fillValue{
+                background-color: #ea4335;
+            }
+        }
+        &:nth-child(2){
+            .fillValue{
+                background-color: #ef6356;
+            }
+        }
+        &:nth-child(3){
+            .fillValue{
+                background-color: #f0887f;
+            }
+        }
+        &:nth-child(4){
+            .fillValue{
+                background-color: #ed9891;
+            }
+        }
+        &:nth-child(5){
+            .fillValue{
+                background-color: #f5b5af;
+            }
+        }
+        &:nth-child(6){
+            .fillValue{
+                background-color: #fee8e6;
+            }
+        }
+        &:nth-child(7){
+            .fillValue{
+                background-color: #fef6f5;
+            }
+        }
+        
+        &:nth-child(8){
+            .fillValue{
+                background-color: #fef6f5;
+            }
+        }
+    }
+    .percentageBar{
+        background-color: #eee;
+        height: 15px;
+        .fillValue{
+            text-align: center;
+            height: inherit;
+        }
+        
+    }
+}
+
+.sourceWiseLead, .categoryWiseLead{
+    .indicatorsBox{
+        ul{
+            li{
+                font-size: 10px;
+            }
+        }
+    }
+    li.above50{
+        &:before{
+            background-color: #95ce50;
+        }
+    }
+    li.above25{
+        &:before{
+            background-color: #ffb300;
+        }
+    }
+    li.below25{
+        &:before{
+            background-color: #ff4b4a;
+        }
+    }
+    li.totalEnquiry{
+        &:before{
+            background-color: #000;
+        }
+    }
+}
+.topSalesUsers, .leastSalesUsers{
+    .card{
+        border: none;
+        padding: 0;
+    }
+    .card-head{
+        border: 1px solid #acacac;
+        border-radius: 4px;
+        *{
+            margin: 0;
+            padding: 5px 0;
+        }
+    }
+    .card-body{
+        // height: 488px;
+        // overflow-y: scroll;
+        &::-webkit-scrollbar{
+            display: none;
+        }
+    }
+}
+.salesUser{
+    overflow: hidden;
+    .innerbox{
+        display: flex;
+        padding: 5px;
+        justify-content: space-between;
+    }
+    border: 1px solid #acacac;
+    border-radius: 15px;
+    padding:0;
+    margin-bottom: 5px;
+    .username{
+        font-size: 18px;
+    }
+    .leadData{
+        font-size: 12px;
+        margin-bottom: 5px;
+    }
+    
+    .empcode{
+        font-weight: 200;
+        color: #aaa;
+        font-size: 12px;
+        
+    }
+    
+    .userDetail{
+        background-color: #eee;
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 5px;
+        padding: 3px 10px;
+    }
+    
+    .leadDetail{
+        .leadlist{
+            padding-left: 10px;
+            margin-left: 10px;
+            border-left: 1px solid rgba($color: #000000, $alpha: 0.08);
+        }
+        padding-right: 5px;
+        display: flex;
+        align-items: center;
+        width: 100%;
+        img{
+            border-radius: 50%;
+        }        
+    }
+    .dflex{
+        width: 100%;
+        align-items: center;
+    }
+    
+    .conversionValue{
+        background-color: #eee;
+        border-radius: 10px;
+        padding: 8px 20px;
+        text-align: center;
+        span{
+            font-size: 24px;
+            &:last-child{
+                font-size: 12px;
+            }
+        }
+    }
+}
+
+.topSalesUsers{
+    img{
+        border: 3px solid #46a345;
+    }    
+    .conversionValue{
+        span:first-child{
+            color: #46a345;
+        }
+    }
+}
+
+.leastSalesUsers{
+    img{
+        border: 3px solid #ef5350;
+    }    
+    .conversionValue{
+        span:first-child{
+            color: #ef5350;
+        }
+    }
+}
+
+.card{
+    height: calc(100% - 10px) !important;
+    border: 1px solid #ddd;
+}
+
+.mapchart{
+    position: relative;
+    &:before{
+        content: '';
+        position: absolute;
+        bottom: 0;
+        height: 15px;
+        width: 100%;
+        background-color: white;
+        z-index: 999;
+        
+    }
+}
+
+.targetDaysBox{
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    bottom: 5px;
+    width: 100%;
+    font-weight: 500;
+    table{
+        max-width: calc(100% - 10px);
+        border: 0.5px solid rgba($color: #000000, $alpha: 0.08);
+        text-overflow: ellipsis;
+    }
+    td{
+        padding: 4px;
+        border: 0.5px solid rgba($color: #000000, $alpha: 0.08);
+        div{
+            span:last-child{
+                float: right;
+                padding: 2px 4px;
+                border-radius: 2px;
+                background-color: rgba($color: #000000, $alpha: 0.08);
+            }
+        }
+    }
+    
+}
+
+.indicatorsBox{
+    background-color: white;
+    padding: 8px 0;
+    display: flex;
+    position: absolute;
+    width: 100%;
+    top: 12px;
+    z-index: 1;
+    left: 0;
+    justify-content: center;
+    ul{
+        justify-content: center;
+        display: flex;
+        margin: 0;
+        padding: 0 0 0 12px;
+        li{
+            padding:0 12px;
+            font-size: 12px;
+            list-style: none;
+            position: relative;
+            &:before{
+                content: '';
+                height: 8px;
+                width: 8px;
+                position: absolute;
+                transform: translateY(-50%);
+                top: 50%;
+                left: 0;
+            }
+        }
+        
+    }
+}
+
+.bulletChartOne{
+    li.aboveTarget{
+        &:before{
+            background-color: #64b5f6;
+        }
+    }
+    li.belowTarget{
+        &:before{
+            background-color: #bfbfbf;
+        }
+    }
+    li.target{
+        &:before{
+            background-color: #000;
+        }
+    }
+}
+
+
+
+.bulletChartTwo{
+    li.above100{
+        &:before{
+            background-color: #009fb5;
+        }
+    }
+    li.above90{
+        &:before{
+            background-color: #ffc300;
+        }
+    }
+    li.below90{
+        &:before{
+            background-color: #ff4b4a;
+        }
+    }
+    li.target{
+        &:before{
+            background-color: #000;
+        }
+    }
+}
+.multiStackchart{
+    li.distributedProduct{
+        &:before{
+            background-color: #00889f;
+        }
+    }
+    li.productDev{
+        &:before{
+            background-color: #ff4f3f;
+        }
+    }
+}
+.card{
+    padding: 10px 0 0 0;
+    overflow: hidden;
+    background-color: #fff;
+}
+.card-head{
+    padding: 0 10px;
+    border-bottom: 1px solid rgba(0,0,0,.05);
+    z-index: 2;
+    position: relative;
+    color:var(--black);
+    h2{
+        display: flex;
+        align-items: center;
+        i{
+            margin-left: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    }
+}
+
+.dflex{
+    display: flex;
+}
+
+.salesGrowth{
+    .card-head{
+        position: relative;
+        z-index: 2;
+        background-color: #fff;
+    }
+}
+
+.totalLeadbox{
+    .card-body{
+        padding: 5px;
+        background-color: rgba($color: #000000, $alpha: 0.04);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 100%;
+        .titlebox{
+            span{
+                font-size: 16px;
+            }
+        }
+        .valuebox{
+            background-color: var(--surface);
+            border-radius: 4px;
+            span{
+                font-size: 18px;
+            }
+        }
+    }
+}
+
+.salesUserBoxes{
+    display: flex;
+    justify-content: space-around;
+    
+}
+
+.salesUserBoxes>div{
+    width: 18%;
+}
+
+.pieChartBox{
+    border-top: 3px solid #00889f;
+    padding-bottom: 10px;
+}
+
+.userData{
+    li{
+        margin: 5px 5px;
+        padding: 5px;
+        background-color: rgba($color: #000000, $alpha: .04);
+        border-radius: 3px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        span{
+            padding: 3px;
+            background-color: rgba($color: #000000, $alpha: .08);
+            border-radius: 3px;
+        }
+    }
+}
+
+.salesUserPosition{
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    font-size: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #eee;
+    margin-right: 5px;
+}
+
+.salesUserBoxes{
+    .card{
+        padding: 0;
+    }
+}
+
+.salesUserCard{
+    .usernameBox{
+        padding: 0 5px;
+        display: flex;
+        align-items: center;
+        .username{
+            .usernameText{
+                font-size: 16px;
+                font-weight: 500;
+            }
+            .empCode{
+                font-size: 12px;
+                font-weight: 400;
+                color: #aaa;
+            }
+        }
+    }
+}
+
+.invoiceDetailBox{
+    padding: 5px;
+    table{
+        tr:first-child{
+            background-color: #f3f7fa;
+        }
+        td{
+            border: 1px solid #ddd;
+            padding: 5px;
+        }
+    }
+}
+
+// accounts section
+.accountsHighlights{
+    padding: 5px 5px;
+    margin-bottom: 5px;
+    display: flex;
+    grid-column-gap: 12px;
+    justify-content: space-between;
+    .tab{
+
+        flex-grow: 1;
+        // background-color: rgba($color: #000000, $alpha: .02);
+        border-radius: 5px;
+        align-items: center;
+        justify-content: center;
+        grid-column-gap: 10px;
+        display: flex;
+        padding: 0 5px;
+        .valueBox{
+            font-weight: bold;
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+        .titleBox{
+            color: #aaa;
+            font-weight: 500;
+        }
+        img{
+            width: 40px;
+        }
+    }
+    .overDuePercentage{
+        img{
+        width: 32px;
+        }
+
+    }
+    .expTab{
+        .expenseBox{
+            .dflex{
+                grid-column-gap: 20px;
+                .valueBox{
+                        span{
+                            &:first-child{
+                                font-size: 12px;
+                                font-weight: normal;
+                            }
+                            &:last-child{
+                                font-size: 18px;
+                            }
+                        }
+                }
+            }
+        }
+    }
+}
+.overDueCustomersTableBody{
+    height: 205px;
+    overflow-y: auto;
+}
+.overDueCustomersTableBox{
+    th{
+      border-bottom: 2px solid black;  
+    }
+    td, th{
+        text-align: left;
+        padding: 5px;
+        border-bottom: 1px solid #eee;
+    }
+
+    .totalRow{
+        background-color: #eee;
+        font-weight: bold;
+        td:not(:last-child){
+            border-right: 1px solid #fff;
+            
+        }
+    }
+    
+}
+
+
+// influencer rewards
+.influencerHighlights{
+    grid-column-gap: 10px;
+    .col{
+        flex: 1;
+    }
+}
+
+.couponChartBox{
+    li.items{
+        &:before{
+            background-color: var(--primary-tint);
+        }
+    }
+    li.boxes{
+        &:before{
+            background-color: var(--text);
+        }
+    }
+}
+
+.influencerHighlights{
+    .card-body{
+        height: auto;
+        padding-left: 10px;
+        padding-bottom: 10px;
+    }
+    
+    .totalInfluencerDetails{
+        // height: 135px;
+        overflow-y: auto;
+        padding-right: 3px;
+    }
+    .totalInfluencerDetails::-webkit-scrollbar{
+        width: 3px;
+        background-color: #eee;
+    }
+    .totalInfluencerDetails::-webkit-scrollbar-thumb{
+        width: 3px;
+        background-color: #000;
+    }
+}
+
+.influencerHighlights{
+    .total{
+        font-size: 18px;
+        font-weight: bold;
+        color: var(--black);
+    }
+    .card-head{
+        span:first-child{
+            font-size: 18px;
+            font-weight: 400;
+        }
+    }
+}
+
+.totalInfluencerDetails{
+    overflow-y: auto;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+    
+    li{
+        margin-bottom: 5px;
+        background: var(--grey);
+        padding: 3px;
+        border-radius: 5px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        span{
+            padding: 0 5px;
+            border-radius: 5px;
+            color: var(--light);
+            font-size: 18px;
+            font-weight: bold;
+        }
+    }
+    li.qualified{
+        span{
+            background-color: var(--success);
+        }
+    }
+    li.total{
+        span{
+           color:var(--black);
+        }
+    }
+    li.disqualified{
+        span{
+            background-color: var(--danger);
+        }
+    }
+    li.reviewPending{
+        span{
+            background-color: var(--warning);
+        }
+    }
+    li.suspect{
+        span{
+            background-color: var(--secondary);
+        }
+    }
+    li.requestPending{
+        span{
+            background-color: var(--primary-tint);
+        }
+    }
+
+    li.itemCount{
+        span{
+            background-color: var(--primary-tint);
+        }
+    }
+
+    li.boxCount{
+        span{
+            background-color: var(--text);
+        }
+    }
+    
+}
+
+.topInfluencersTable{
+    .scroll200 {
+        min-height: 215px;
+        max-height: 215px;
+        overflow: auto;
+        table {
+            tr {
+                th {
+                    top: 0px;
+                }
+            }
+            &:last-child{
+                border-bottom: 1px solid var(--bodrColor);
+            }
+        }
+    }
+}
+
+
+.topProductCategories, .topBonusScheme{
+ .productCategoryDetails{
+    padding: 5px;
+    border: 1px solid var(--medium);
+    border-radius: 25px;
+    margin:0 5px 10px 5px;
+    
+ }
+    .productCategory{
+    h2{
+        font-size: 18px;
+        color: var(--text);
+        font-weight: 400;
+    }
+ }
+    .card-body{
+        height: 465px;
+        overflow-y: auto;
+        .scannedPercentage{
+            span{
+                font-size: 28px;
+                display: inline-block;
+                padding: 0 10px;
+                border-radius: 25px;
+                color: var(--light);
+                background-color: var(--medium);
+            }
+        }
+
+        .productCategoryDetails:nth-child(1), .productCategoryDetails:nth-child(2){
+            .scannedPercentage{
+                span{
+                background-color: var(--success);
+                }
+            }
+        }
+        .productCategoryDetails:nth-child(3), 
+        .productCategoryDetails:nth-child(4),
+        .productCategoryDetails:nth-child(5){
+            .scannedPercentage{
+                span{
+                background-color: var(--warning);
+                }
+            }
+        }
+        
+        .productCategoryDetails:nth-child(n+6){
+            .scannedPercentage{
+                span{
+                background-color: var(--danger);
+                }
+            }
+        }
+        
+    }
+}

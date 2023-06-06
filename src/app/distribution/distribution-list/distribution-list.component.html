@@ -1,0 +1,466 @@
+<div class="main-container">
+  <app-loader *ngIf="excelLoader"></app-loader>
+  <div class="tools-container">
+    <h2>{{type}}</h2>
+    <div class="left-auto df flex-gap-10">
+      <a mat-icon-button matTooltip="Refresh" (click)="refresh()">
+        <i class="material-icons">refresh</i>
+      </a>
+
+      <div class="pagination" *ngIf="dr_list_temp.length > 0">
+        <div class="pagination-content">
+          Pages
+          <span>{{pagenumber}}</span>
+          of
+          <span>{{total_page}}</span>
+        </div>
+        <div class="page-nav">
+          <button mat-icon-button matTooltip="Older" (click)="pervious()" [disabled]="start == 0 || total_page == 0">
+            <i class="material-icons">navigate_before</i>
+          </button>
+          <button mat-icon-button matTooltip="Newer" (click)="nextPage()"
+            [disabled]="pagenumber == total_page || total_page == 0 ">
+            <i class="material-icons">navigate_next</i>
+          </button>
+        </div>
+      </div>
+
+      <!-- <div class="mat-tabbar" *ngIf="type=='Retailer'">
+      <button mat-button (click)="active_tab = 'active'; filter.active_tab=active_tab; distributorList('', '', '')" [ngClass]="active_tab == 'active' ? 'active' : ''">
+        <span [ngClass]="active_tab == 'active'? 'material-icons': 'material-icons-outlined'">toggle_on</span> Active
+      </button>
+      <button mat-button (click)="active_tab = 'inactive'; filter.active_tab=active_tab; distributorList('', '', '')" [ngClass]="active_tab == 'inactive' ? 'active' : ''">
+        <span [ngClass]="active_tab == 'inactive'? 'material-icons': 'material-icons-outlined'">toggle_off</span> Inactive
+      </button>
+    </div> -->
+
+    </div>
+
+    <div class="mat-tabbar" *ngIf="type_id==3">
+      <button mat-button (click)="active_tab = 'Active'; filter.active_tab=active_tab; distributorList('', '', '')"
+        [ngClass]="active_tab == 'Active' ? 'active' : ''">
+        <span [ngClass]="active_tab == 'active'? 'material-icons': 'material-icons-outlined'">toggle_on</span> Active
+      </button>
+      <button mat-button (click)="active_tab = 'Inactive'; filter.active_tab=active_tab; distributorList('', '', '')"
+        [ngClass]="active_tab == 'Inactive' ? 'active' : ''">
+        <span [ngClass]="active_tab == 'inactive'? 'material-icons': 'material-icons-outlined'">toggle_off</span>
+        Inactive
+      </button>
+    </div>
+
+  </div>
+
+  <div class="container container-scroll">
+    <div class="cs-table horizontal-scroll">
+      <div class="sticky-head">
+        <div class="table-head">
+          <table>
+            <tr>
+              <th class="w60">S.No.</th>
+              <th class="w110">Date Created
+                <div class="sorting">
+                  <a class=""
+                    (click)="column = 'date_created';sorting_type='ASC';distributorList('','date_created','ASC')">
+                    <i class="material-icons">arrow_drop_up</i>
+                  </a>
+                  <a class=""
+                    (click)="column = 'date_created';sorting_type='DESC';distributorList('','date_created','DESC')">
+                    <i class="material-icons">arrow_drop_down</i>
+                  </a>
+                </div>
+              </th>
+              <th class="w100">Created By
+                <div class="sorting">
+                  <a class=""
+                    (click)="column = 'created_by_name';sorting_type='ASC';distributorList('', 'created_by_name', 'ASC')">
+                    <i class="material-icons">arrow_drop_up</i>
+                  </a>
+                  <a class=""
+                    (click)="column = 'created_by_name';sorting_type='DESC';distributorList('', 'created_by_name', 'DESC')">
+                    <i class="material-icons">arrow_drop_down</i>
+                  </a>
+                </div>
+              </th>
+              <th class="w180">Company Name
+                <div class="sorting">
+                  <a class=""
+                    (click)="column = 'company_name';sorting_type='ASC';distributorList('', 'company_name', 'ASC')">
+                    <i class="material-icons">arrow_drop_up</i>
+                  </a>
+                  <a class=""
+                    (click)="column = 'company_name';sorting_type='DESC';distributorList('', 'company_name', 'DESC')">
+                    <i class="material-icons">arrow_drop_down</i>
+                  </a>
+                </div>
+              </th>
+              <th class="w150">Contact Person
+                <div class="sorting">
+                  <a class="" (click)="column = 'name';sorting_type='ASC';distributorList('', 'name', 'ASC')">
+                    <i class="material-icons">arrow_drop_up</i>
+                  </a>
+                  <a class="" (click)="column = 'name';sorting_type='DESC';distributorList('', 'name', 'DESC')">
+                    <i class="material-icons">arrow_drop_down</i>
+                  </a>
+                </div>
+              </th>
+              <th class="w120">Contact Number
+                <div class="sorting">
+                  <a class="" (click)="column = 'mobile';sorting_type='ASC';distributorList('', 'mobile', 'ASC')">
+                    <i class="material-icons">arrow_drop_up</i>
+                  </a>
+                  <a class="" (click)="column = 'mobile';sorting_type='DESC';distributorList('', 'mobile', 'DESC')">
+                    <i class="material-icons">arrow_drop_down</i>
+                  </a>
+                </div>
+              </th>
+              <th class="w120" *ngIf="type != 'Retailer' ">Account Code
+                <div class="sorting">
+                  <a class="" (click)="column = 'dr_code';sorting_type='ASC';distributorList('', 'dr_code', 'ASC' )">
+                    <i class="material-icons">arrow_drop_up</i>
+                  </a>
+                  <a class="" (click)="column = 'dr_code';sorting_type='DESC';distributorList('', 'dr_code', 'DESC' )">
+                    <i class="material-icons">arrow_drop_down</i>
+                  </a>
+                </div>
+              </th>
+              <th class="w120" *ngIf="type_id!=1 && type_id !=3 && type_id==7">Type</th>
+              <th class="w120">State Name
+                <div class="sorting">
+                  <a class="" (click)="column = 'state';sorting_type='ASC';distributorList('', 'sorting_type', 'ASC')">
+                    <i class="material-icons">arrow_drop_up</i>
+                  </a>
+                  <a class=""
+                    (click)="column = 'state';sorting_type='DESC';distributorList('', 'sorting_type', 'DESC')">
+                    <i class="material-icons">arrow_drop_down</i>
+                  </a>
+                </div>
+              </th>
+              <th *ngIf="type_id=='3'" class="w150">Assign Distributor
+              </th>
+              <th class="w150">Assigned To
+
+              </th>
+              <th class="w90">Category
+                <div class="sorting">
+                  <a class=""
+                    (click)="column = 'dr_sale_category';sorting_type='ASC';distributorList('', 'dr_sale_category', 'ASC')">
+                    <i class="material-icons">arrow_drop_up</i>
+                  </a>
+                  <a class=""
+                    (click)="column = 'dr_sale_category';sorting_type='DESC';distributorList('', 'dr_sale_category', 'DESC')">
+                    <i class="material-icons">arrow_drop_down</i>
+                  </a>
+                </div>
+              </th>
+              <th class="w100">Last Visit
+              </th>
+              <th class="w100">Last Order
+              </th>
+              <th class="w100">Order Frequency
+                <div class="sorting">
+                  <a class=""
+                    (click)="column = 'order_frequency';sorting_type='ASC';distributorList('', 'order_frequency', 'ASC')">
+                    <i class="material-icons">arrow_drop_up</i>
+                  </a>
+                  <a class=""
+                    (click)="column = 'order_frequency';sorting_type='DESC';distributorList('', 'order_frequency', 'DESC')">
+                    <i class="material-icons">arrow_drop_down</i>
+                  </a>
+                </div>
+              </th>
+              <th class="w100">Current Year Sales
+              </th>
+              <th class="w70 text-center" *ngIf="assign_login_data2.edit_customer_network=='1'">Status</th>
+              <th class="w110 text-center">Action</th>
+            </tr>
+          </table>
+        </div>
+
+        <div class="table-head border-top">
+          <table>
+            <tr>
+              <th class="w60">&nbsp;</th>
+              <th class="w110">
+                <div class="th-search-acmt">
+                  <mat-form-field class="cs-input date-column infix-bodr">
+                    <input matInput [matDatepicker]="picker" placeholder="Date" name="date_created"
+                      #date_created="ngModel" [(ngModel)]="filter.date_created" (ngModelChange)="date_format()"
+                      [max]="today_date" readonly>
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                  </mat-form-field>
+                </div>
+              </th>
+              <th class="w100">
+                <div class="th-search-acmt">
+                  <mat-form-field class="example-full-width cs-input select-input">
+                    <input matInput placeholder="Search..." name="created_by_name"
+                      (keyup.enter)="distributorList('', '', '')" [(ngModel)]="filter.created_by_name">
+                  </mat-form-field>
+                </div>
+              </th>
+              <th class="w180">
+                <div class="th-search-acmt">
+                  <mat-form-field class="example-full-width cs-input select-input">
+                    <input matInput placeholder="Search..." name="company_name"
+                      (keyup.enter)="distributorList('', '', '')" [(ngModel)]="filter.company_name">
+                  </mat-form-field>
+                </div>
+              </th>
+              <th class="w150">
+                <div class="th-search-acmt">
+                  <mat-form-field class="example-full-width cs-input select-input">
+                    <input matInput placeholder="Search..." name="name" (keyup.enter)="distributorList('', '', '')"
+                      [(ngModel)]="filter.name">
+                  </mat-form-field>
+                </div>
+              </th>
+              <th class="w120">
+                <div class="th-search-acmt">
+                  <mat-form-field class="example-full-width cs-input select-input">
+                    <input matInput placeholder="Search..." name="mobile" (keyup.enter)="distributorList('', '', '')"
+                      [(ngModel)]="filter.mobile">
+                  </mat-form-field>
+                </div>
+              </th>
+
+              <th class="w120" *ngIf="type != 'Retailer' ">
+                <div class="th-search-acmt">
+                  <mat-form-field class="example-full-width cs-input select-input">
+                    <input matInput placeholder="Search..." name="acc_code" (keyup.enter)="distributorList('', '', '')"
+                      [(ngModel)]="filter.acc_code">
+                  </mat-form-field>
+                </div>
+              </th>
+              <th class="w120" *ngIf="type_id!=1 && type_id !=3 && type_id==7">
+                <div class="th-search-acmt">
+                  <mat-form-field class="example-full-width cs-input select-input">
+                    <input matInput placeholder="Search..." name="direct_dealer_type"
+                      (keyup.enter)="distributorList('', '', '')" [(ngModel)]="filter.direct_dealer_type">
+                  </mat-form-field>
+                </div>
+              </th>
+              <th class="w120">
+                <div class="th-search-acmt">
+                  <mat-form-field class="example-full-width cs-input select-input">
+                    <input matInput placeholder="Search..." name="state" (keyup.enter)="distributorList('', '', '')"
+                      [(ngModel)]="filter.state">
+                  </mat-form-field>
+                </div>
+              </th>
+              <th *ngIf="type_id=='3'" class="w150">
+                <div class="th-search-acmt">
+                  <mat-form-field class="example-full-width cs-input select-input">
+                    <input matInput placeholder="Search..." name="assign_distributors_company_name"
+                      (keyup.enter)="distributorList('', '', '')" [(ngModel)]="filter.assign_distributors_company_name">
+                  </mat-form-field>
+                </div>
+              </th>
+              <th class="w150">
+                <div class="th-search-acmt">
+                  <mat-form-field>
+                    <input type="text" matInput placeholder="Search ..." (keyup.enter)="distributorList('', '', '')"
+                      [(ngModel)]="filter.assign_user">
+                  </mat-form-field>
+                </div>
+              </th>
+              <th class="w90 text-right">
+                <div class="th-search-acmt">
+                  <mat-form-field class="example-full-width cs-input select-input">
+                    <input matInput placeholder="Search..." name="customer_category"
+                      (keyup.enter)="distributorList('', '', '')" [(ngModel)]="filter.customer_category">
+                  </mat-form-field>
+                </div>
+              </th>
+              <th class="w100 text-right">&nbsp;</th>
+              <th class="w100 text-right">&nbsp;</th>
+              <th class="w100 text-right">&nbsp;</th>
+              <th class="w100 text-right">&nbsp;</th>
+              <th class="w70 text-center" *ngIf="assign_login_data2.edit_customer_network=='1'">
+                <div class="th-search-acmt">
+                  <mat-form-field class="cs-input select-input">
+                    <mat-select name="status" #status="ngModel" [(ngModel)]="filter.status"
+                      (selectionChange)="distributorList('', '', '')">
+                      <mat-option value="">All</mat-option>
+                      <mat-option value="1">Active</mat-option>
+                      <mat-option value="0">Deactive </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </th>
+              <th class="w110">
+                <div>&nbsp;</div>
+              </th>
+
+            </tr>
+          </table>
+        </div>
+      </div>
+      <div class="table-container">
+        <div class="table-content">
+          <table>
+            <ng-container *ngIf="!loader">
+              <tr *ngFor="let row of dr_list_temp; let i = index;"
+                [ngClass]="{'Current': serve.currentUserID == row.id}">
+                <td class="w60">{{i + 1 + sr_no}}</td>
+                <td class="w110">{{row.date_created | date}}</td>
+                <td class="w100">{{row.created_by_name}}</td>
+                <td class="w180">
+                  <a class="link-btn" mat-button (click)="serve.setData(filter)"
+                    [routerLink]="[ 'distribution-detail/', row.id ]"
+                    [queryParams]="{'state':row.state, 'id':row.id, 'type':row.type}">
+                    {{row.company_name | titlecase}}
+                  </a>
+                </td>
+                <td class="w150">{{row.name | titlecase}}</td>
+                <td class="w120">{{row.mobile}}</td>
+                <td class="w120" *ngIf="type != 'Retailer'">{{row.dr_code}}</td>
+                <td class="w120" *ngIf="type_id!=1 && type_id !=3 && type_id==7">{{row.direct_dealer_type}}</td>
+                <td class="w120">{{row.state}}</td>
+                <td *ngIf="type_id=='3'" class="w150">{{row.assign_distributors_company_name}}</td>
+                <td class="w150">
+                  <ng-container *ngFor="let item of row.assign_user; let j = index;">
+                    <span>{{item.name}} <ng-container *ngIf="item.length > 1">, </ng-container></span>
+                  </ng-container>
+                </td>
+                <td class="w90 text-center"><strong>{{row.dr_sale_category}}</strong></td>
+                <td class="w100 text-right">
+                  <ng-container *ngIf="row.last_visit_days">
+                    {{row.last_visit_days == 0 ? 'Today' : row.last_visit_days + " day's ago" }}
+
+
+                  </ng-container>
+                </td>
+                <td class="w100 text-right">
+                  <ng-container *ngIf="row.last_order_days">
+                    {{row.last_order_days == 0 ? 'Today' : row.last_order_days + " day's ago" }}
+                  </ng-container>
+
+                </td>
+                <td class="w100 text-right">
+                  {{row.order_frequency == '0' ? '---' : row.order_frequency + " day"}}</td>
+                <td class="w100 text-right"><strong>&#x20B9;
+                    {{row.current_year_sales}}</strong></td>
+                <td class="w70 text-center" *ngIf="assign_login_data2.edit_customer_network=='1'">
+                  <div class="action-button">
+                    <mat-slide-toggle color="accent" [name]="'status'+i" [(ngModel)]="row.newStatus"
+                      (change)="updateStatus(i,row.id,$event)">
+                    </mat-slide-toggle>
+                  </div>
+                </td>
+                <td class="w110">
+                  <button mat-raised-button color="accent" *ngIf="row.device_unique_id != ''"
+                    (click)="resetDevice(i,row.id)">Reset Device </button>
+                </td>
+              </tr>
+            </ng-container>
+            <ng-container *ngIf="loader">
+              <tr class="sk-loading" *ngFor="let row of [].constructor(100)">
+                <td class="w60">
+                  <div>&nbsp;</div>
+                </td>
+                <td class="w110">
+                  <div>&nbsp;</div>
+                </td>
+                <td class="w100">
+                  <div>&nbsp;</div>
+                </td>
+                <td class="w180">
+                  <div>&nbsp;</div>
+                </td>
+                <td class="w150">
+                  <div>&nbsp;</div>
+                </td>
+                <td class="w120">
+                  <div>&nbsp;</div>
+                </td>
+                <td class="w120" *ngIf="type != 'Retailer' ">
+                  <div>&nbsp;</div>
+                </td>
+                <td class="w120">
+                  <div>&nbsp;</div>
+                </td>
+                <td *ngIf="type_id=='3'" class="w150">
+                  <div>&nbsp;</div>
+                </td>
+                <td class="w150">
+                  <div>&nbsp;</div>
+                </td>
+                <td class="w90">
+                  <div>&nbsp;</div>
+                </td>
+                <td class="w100">
+                  <div>&nbsp;</div>
+                </td>
+                <td class="w100">
+                  <div>&nbsp;</div>
+                </td>
+                <td class="w100">
+                  <div>&nbsp;</div>
+                </td>
+                <td class="w100">
+                  <div>&nbsp;</div>
+                </td>
+                <td class="w70 text-center" *ngIf="assign_login_data2.edit_customer_network=='1'">
+                  <div>&nbsp;</div>
+                </td>
+                <td class="w110">
+                  <div>&nbsp;</div>
+                </td>
+              </tr>
+            </ng-container>
+          </table>
+        </div>
+      </div>
+
+      <ng-container *ngIf="dr_list_temp.length <= 0 && datanotfound ==  true">
+        <app-not-result-found></app-not-result-found>
+      </ng-container>
+    </div>
+  </div>
+
+  <div class="fab-btns"
+    *ngIf="(assign_login_data2.add_customer_network=='1' || ((type_id==1 && assign_login_data2.add_channel_partner=='1') || (type_id==3 && assign_login_data2.add_dealer=='1') || (type_id==7 && assign_login_data2.add_direct_dealers=='1') ) )          || ( assign_login_data2.import_customer_network=='1' || (type_id==1 && assign_login_data2.import_channel_partner=='1') || (type_id==3 && assign_login_data2.import_dealer=='1') || (type_id==7 && assign_login_data2.import_direct_dealers=='1'))    || ((assign_login_data2.export_customer_network=='1' || (type_id==1 && assign_login_data2.export_channel_partner=='1') || (type_id==3 && assign_login_data2.export_dealer=='1') || (type_id==7 && assign_login_data2.export_direct_dealers=='1')) )  ">
+    <button class="pulse excel" mat-fab color="primary" [ngClass]="{'pulse': fabBtnValue=='add'}"
+      [matMenuTriggerFor]="menu">
+      <i class="material-icons">apps</i>
+      Action
+    </button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item
+        *ngIf="assign_login_data2.add_customer_network=='1' || ((type_id==1 && assign_login_data2.add_channel_partner=='1') || (type_id==3 && assign_login_data2.add_dealer=='1') || (type_id==7 && assign_login_data2.add_direct_dealers=='1'))"
+        (click)="lastBtnValue('add')" routerLink="add-distribution/{{type}}/{{type_id}}/add"
+        [queryParams]="{pageType:'add'}">
+        <mat-icon>add</mat-icon>
+        Add New
+      </button>
+
+      <button mat-menu-item (click)="upload_excel('insert');"
+        *ngIf="( assign_login_data2.import_customer_network=='1' || (type_id==1 && assign_login_data2.import_channel_partner=='1') || (type_id==3 && assign_login_data2.import_dealer=='1') || (type_id==7 && assign_login_data2.import_direct_dealers=='1'))">
+        <mat-icon>cloud_upload</mat-icon>
+        <span>Upload New Data</span>
+      </button>
+      <button mat-menu-item (click)="upload_excel('update');"
+        *ngIf="dr_list_temp.length > 0 && ( assign_login_data2.import_customer_network=='1' || (type_id==1 && assign_login_data2.import_channel_partner=='1') || (type_id==3 && assign_login_data2.import_dealer=='1') || (type_id==7 && assign_login_data2.import_direct_dealers=='1'))">
+        <mat-icon>update</mat-icon>
+        <span>Update Existing Data</span>
+      </button>
+      <button mat-menu-item (click)="upload_excel('credit_limit');"
+        *ngIf="dr_list_temp.length > 0 && type_id != 3 && ( assign_login_data2.import_customer_network=='1' || (type_id==1 && assign_login_data2.import_channel_partner=='1')  || (type_id==7 && assign_login_data2.import_direct_dealers=='1'))">
+        <mat-icon>currency_rupee</mat-icon>
+        <span>Credit Limit</span>
+      </button>
+      <button mat-menu-item (click)="upload_excel('geo_location');"
+        *ngIf="dr_list_temp.length > 0 && ( assign_login_data2.import_customer_network=='1' || (type_id==1 && assign_login_data2.import_channel_partner=='1') || (type_id==3 && assign_login_data2.import_dealer=='1') || (type_id==7 && assign_login_data2.import_direct_dealers=='1'))">
+        <mat-icon>edit_location_alt</mat-icon>
+        <span>Update Geo Location</span>
+      </button>
+      <button mat-menu-item (click)="downloadExcel();"
+        *ngIf="dr_list_temp.length > 0 && ((assign_login_data2.export_customer_network=='1' || (type_id==1 && assign_login_data2.export_channel_partner=='1') || (type_id==3 && assign_login_data2.export_dealer=='1') || (type_id==7 && assign_login_data2.export_direct_dealers=='1')) )">
+        <mat-icon>download</mat-icon>
+        <span>Download in excel</span>
+      </button>
+    </mat-menu>
+
+  </div>
+</div>

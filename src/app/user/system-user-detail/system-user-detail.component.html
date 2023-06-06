@@ -1,0 +1,225 @@
+<div class="main-container" >
+    <div class="tools-container">
+      <div class="page-heading">
+        <div class="heading-text bc-space">
+          <div class="back-btn">
+            <a mat-button routerLink="/sale-user-list" routerLinkActive="active"><i class="material-icons">west</i></a>
+          </div>
+          <h2>{{detail.name}}</h2>
+          <p class="light">System Executive</p>
+        </div>
+      </div>
+      <div class="tabs right-tab">
+        <ul>
+          <!-- <li><a routerLink="/sale-user-detail/{{detail.id}}" routerLinkActive="active">DETAIL</a></li>
+          <li><a routerLink="/my-network/{{detail.id}}" routerLinkActive="active">My Network</a></li>
+          <li><a>ORDERS</a></li>
+          <li><a>LEADS</a></li>
+          <li><a>FOLLOWUP</a></li> -->
+        </ul>
+      </div>
+    </div>
+    
+    
+    <div class="container-outer">
+      <div class="container" >
+        <div class="row">
+          <div class="col s12">
+            <div class="details-info">
+              <div class="img-box">
+                <img src="assets/img/user.png">
+              </div>
+              <div class="basic-details">
+                <div class="profile-info">
+                  <ul>
+                    <li class="col s4">
+                      <div class="cs-box">
+                        <img src="assets/img/gmail.svg" class="fix-img">
+                        <span>Email</span>
+                        <p class="link-clr">{{detail.email}}</p>
+                        <a  class="edit-icon" color="accent" matRipple matTooltip="EDIT"  ><i class="material-icons">create</i></a>
+                      </div>
+                    </li>
+                    <li  class="col s4">
+                      <div class="cs-box">
+                        <img src="assets/img/phone.svg" class="fix-img">
+                        <span>Mobile no</span>
+                        <p>{{detail.contact_01}}</p>
+                        <a  class="edit-icon" color="accent" matRipple matTooltip="EDIT" ><i class="material-icons">create</i></a>
+                      </div>
+                    </li>
+                    <!-- <li  class="col s4">
+                      <div class="cs-box">
+                        <img src="assets/img/map-location.svg" class="fix-img">
+                        <span>Assign Location</span>
+                        <p>{{detail.city}}</p>
+                        <a  class="edit-icon" color="accent" matRipple matTooltip="EDIT"  ><i class="material-icons">create</i></a>
+                      </div>
+                    </li> -->
+                    <br>
+                    <br>
+                    <br>
+                    <!-- <li class="col s4">
+                        <div class="cs-box">
+                          <img src="assets/img/gmail.svg" class="fix-img">
+                          <span>User Name</span>
+                          <p class="link-clr">{{detail.username}}</p>
+                          <a  class="edit-icon" color="accent" matRipple matTooltip="EDIT" ><i class="material-icons">create</i></a>
+                        </div>
+                      </li>
+                      <li class="col s4">
+                          <div class="cs-box">
+                            <img src="assets/img/gmail.svg" class="fix-img">
+                            <span>Password</span>
+                            <p class="link-clr">{{detail.password}}</p>
+                            <a  class="edit-icon" color="accent" matRipple matTooltip="EDIT" ><i class="material-icons">create</i></a>
+                            <div class="td-input" [ngClass]="{'active':active.password==true}">
+                                <input type="password" placeholder="{{u.password}}" name="password">
+                                <i class="material-icons password show-pass" (click)="toggleterritory('password','open')" >visibility</i>
+                                <i class="material-icons password show-hide" (click)="toggleterritory('password','close')">visibility_off</i>
+                              </div>
+                          </div>
+                        </li> -->
+                  </ul>
+                </div>
+                
+                <mat-divider class="mt15 mb15"></mat-divider>
+                
+                <!-- <div class="col s6 cs-figure">
+                  <ul>
+                    <li class="pink-bg">
+                      <div class="outer">
+                        <div class="inner">
+                          <span>Target</span>
+                          <p>&#8377;  32500.00</p>
+                        </div>
+                      </div>
+                    </li>
+                    <li class="pink-bg">
+                      <div class="outer">
+                        <div class="inner">
+                          <span>Achieve</span>
+                          <p>&#8377;  2500.00</p>
+                        </div>
+                      </div>
+                    </li>
+                    <li>
+                      <div class="outer">
+                        <div class="inner">
+                          <span>Order Value</span>
+                          <p>&#8377;  2500.00</p>
+                        </div>
+                      </div>
+                    </li>
+                  </ul>
+                </div> -->
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="row">
+          <form (ngSubmit)="updateDetail()">
+          <div class="col s8">
+            <div class="sprate-box padding0">
+              <div class="full-address">
+                <div class="top-heading">
+                  <h2>ADDRESS</h2>
+                </div>
+                <a mat-button class="address-edit" matTooltip="EDIT" color="accent" ><i class="material-icons">edit</i></a>
+                <div class="nationality">
+                  <img src="assets/img/india.svg" alt="">
+                  <p>India</p>
+                </div>
+                <div class="ds-from-fields">
+                  <div class="cs-row">
+                      <div class="static-info">
+                        <p>State</p>
+                        <p>{{detail.state_name}}</p>
+                      </div>
+                      <div class="static-info">
+                        <p>District</p>
+                        <p>{{detail.district_name}}</p>
+                      </div>
+                      <div class="static-info">
+                        <p>City</p>
+                        <p>{{detail.city}}</p>
+                      </div>
+                      <div class="static-info">
+                          <p>Pin Code</p>
+                          <p>{{detail.pincode}}</p>
+                     </div>
+                    </div>
+                    <div class="cs-row">
+                      <div class="static-info">
+                        <p>address</p>
+                        <p>{{detail.street}}</p>
+                      </div>
+                    </div>
+                    
+                </div>
+              </div>
+            </div>
+  
+  
+            <div class="row">
+                <div class="col s12">
+                    <div class="cs-btn fixedd mt32 text-right">
+                        <!-- <div class="in-btn">
+                          <button mat-raised-button color="accent" type="save">Save</button>
+                        </div> -->
+                      </div>
+                </div>
+             </div>
+          </div>
+        </form>
+          <div class="col s4">
+
+              <div class="sprate-box padding0 mb15">
+                  <div class="cs-logs">
+                    <div class="top-heading">
+                      <h2>ACCOUNT INFO</h2>
+                    </div>
+                    <div class="logs-outer">
+                    <div class="logs-list">
+                    <div class="account-details">
+                      <ul>
+                        <li>
+                          <div class="outer">
+                            <div class="inner">
+                              <div class="cs-account">
+                                  <p>User Name</p>
+                                   <a  class="edit-icon" color="accent" matRipple matTooltip="EDIT"  ><i class="material-icons">create</i></a>
+                                  <h5>{{detail.username}}</h5>
+                              </div>
+                            </div>
+                          </div>
+                        </li>
+                        <li>
+                            <div class="outer">
+                              <div class="inner">
+                                <div class="cs-account">
+                                    <p>Password</p>
+                                     <a  class="edit-icon" color="accent" matRipple matTooltip="EDIT"><i class="material-icons">create</i></a>
+                                    <input type="{{input_type}}" placeholder="" value={{detail.password}}>
+                                        <i *ngIf="visible==true" class="material-icons" (click)="show_password()" [ngClass]="[input_type == 'password' ? 'pass-hide' : 'pass-show' ]" >visibility</i>
+                                        <i *ngIf="visible==false" class="material-icons" (click)="hide_password()" [ngClass]="[input_type == 'password' ? 'pass-show' : 'pass-hide' ]">visibility_off</i>
+                                </div>
+                              </div>
+                            </div>
+                          </li>
+                        
+                      </ul>
+                    </div>
+                    </div>
+                    </div>
+                  </div>
+                </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  
+  
