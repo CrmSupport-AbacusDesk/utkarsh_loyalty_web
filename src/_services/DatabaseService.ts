@@ -21,13 +21,19 @@ export class DatabaseService implements OnInit {
 
 
     // <------------------ Test Link ------------------------------>
-    dbUrl = "https://devcrm.abacusdesk.com/utkarshindia/api/index.php/";
-    uploadUrl = "https://devcrm.abacusdesk.com/utkarshindia/api/uploads/";
-    downloadUrl = "https://devcrm.abacusdesk.com/utkarshindia/api/uploads/Download_excel/";
-    purchaseUrl = "https://devcrm.abacusdesk.com/utkarshindia/api/uploads/influencer_doc/";
+    // dbUrl = "https://devcrm.abacusdesk.com/utkarshindia/api/index.php/";
+    // uploadUrl = "https://devcrm.abacusdesk.com/utkarshindia/api/uploads/";
+    // downloadUrl = "https://devcrm.abacusdesk.com/utkarshindia/api/uploads/Download_excel/";
+    // purchaseUrl = "https://devcrm.abacusdesk.com/utkarshindia/api/uploads/influencer_doc/";
 
 
     // <------------------ Live Link ------------------------------>
+
+
+    dbUrl = "https://apps.basiq360.com/utkarshindia/api/index.php/";
+    uploadUrl = "https://apps.basiq360.com/utkarshindia/api/uploads/";
+    downloadUrl = "https://apps.basiq360.com/utkarshindia/api/uploads/Download_excel/";
+    purchaseUrl = "https://apps.basiq360.com/utkarshindia/api/uploads/influencer_doc/";
 
 
 
