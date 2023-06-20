@@ -29,7 +29,7 @@ const influencerRouters = [
 
 ]
 @NgModule({
-  declarations: [InfluencerListComponent, UpdateKycComponent, AddInfluencerComponent, AdvanceAddGiftComponent,],
+  declarations: [InfluencerListComponent, UpdateKycComponent, AddInfluencerComponent,AdvanceAddGiftComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(influencerRouters),
